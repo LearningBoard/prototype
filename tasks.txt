@@ -1,0 +1,8 @@
+learning behaviors
+    - backward/forward
+    - distribution of genre of courses
+    - assignments download times
+    - users' browsering behavior
+    - keywords searched
+    - focus of attention when reading long materials
+    
