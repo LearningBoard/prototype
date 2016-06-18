@@ -38,6 +38,16 @@ body > .container {
   position: absolute;
   top: 15px;
   left: 30px;
+  font-weight: bold;
+  padding: 2px 5px;
+  border: 2px solid #EEE;
+  background-color: #00BFFF;
+  opacity: 0.5;
+}
+
+.boardEditButton a {
+  color: #FFF;
+  text-decoration: none;
 }
 
 .activityList {
@@ -49,12 +59,26 @@ body > .container {
 }
 
 .activityList > .activity {
+  position: relative;
   padding: 10px;
   border: 2px solid #EEE;
 }
 
-.activityList > .activity > h4 {
+.activityList > .activity > h2, .activityList > .activity > h4 {
   color: #FF8C00;
+}
+
+.activityList > .activity .control ul {
+  list-style: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.activityList > .activity .control ul li {
+  display: inline-block;
+  padding: 0 2px;
+  cursor: pointer;
 }
 
 .tagList ul {
