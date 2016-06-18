@@ -1,0 +1,98 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
+code {
+  font-size: 80%;
+}
+
+.page-header {
+  margin: 0 0 20px;
+}
+
+body > .container {
+  padding: 100px 15px 0;
+}
+
+.navbar .glyphicon {
+  font-size: 22px;
+}
+
+.boardInfoBox {
+  background-color: #E8E8E7;
+  font-size: 12px;
+}
+
+.boardInfoBox .glyphicon {
+  font-size: 20px;
+  padding: 8px;
+}
+
+.boardEditButton {
+  position: absolute;
+  top: 15px;
+  left: 30px;
+}
+
+.activityList {
+  margin-top: 10px;
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 2px dashed #EEE;
+}
+
+.activityList > .activity {
+  padding: 10px;
+  border: 2px solid #EEE;
+}
+
+.activityList > .activity > h4 {
+  color: #FF8C00;
+}
+
+.tagList ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tagList ul li {
+  position: relative;
+  display: inline-block;
+  background-color: #EEE;
+  margin: 3px 0;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.tagList ul li span {
+  position: absolute;
+  top: -2px;
+  right: 5px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.footer > .container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}

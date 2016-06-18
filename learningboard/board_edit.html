@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/favicon.ico">
+    <title>Learning Boards</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">Learning Board</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right text-center">
+            <li><a href="#">
+              <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+              <br />Save Board
+            </a></li>
+            <li><a href="#">
+              <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+              <br />Delete Board
+            </a></li>
+            <li><a href="#">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              <br />Publish Board
+            </a></li>
+            <li><a href="#">
+              <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+              <br />Preview Board
+            </a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <form>
+        <div class="row">
+          <div class="col-md-3">
+            <p><img src="https://placehold.it/300x200" alt="Upload image here" class="img-responsive"></p>
+            <div class="form-group">
+              <input type="text" class="form-control" id="boardTitle" placeholder="Board Title" required>
+              <p class="text-muted text-right"><i>Characters left: <span id="boardTitleCount">150</span></i></p>
+            </div>
+            <p><b><i>Curated by:</i></b></p>
+            <p>bel.a.sanchez</p>
+            <div class="form-group">
+              <label for="activityID"><i>myLearning Activity ID:</i></label>
+              <input type="text" class="form-control" id="activityID" placeholder="myLearning Activity ID">
+            </div>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                  <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      MIT Faculty Boards
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                  <div class="panel-body">
+                    <textarea style="width:100%;" rows="5">Join us in a journey through data manipulation, callbacks, and non-blocking compuation. We will start with callbacks, filters, sort, map, and reduce. ...</textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                  <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      Accenture Technology
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                  <div class="panel-body">
+                    <select>
+                      <option>Accenture Technology</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingThree">
+                  <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                      Beginner
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                  <div class="panel-body">
+                    <input type="radio" name="contentLevel" /> Beginner<br />
+                    <input type="radio" name="contentLevel" /> Beginner<br />
+                    <input type="radio" name="contentLevel" /> Beginner
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p>
+              <b><i>Tag</i></b>
+              <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            </p>
+            <div class="tagList">
+              <ul>
+                <li>JavaScript <span>x</span></li>
+                <li>Node <span>x</span></li>
+                <li>Node.js <span>x</span></li>
+                <li>npm <span>x</span></li>
+                <li>callbacks <span>x</span></li>
+                <li>very very very very very very very long tag <span>x</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <p class="lead">Create your own learning activity or search for one to tell your story</p>
+            <button type="button" class="btn btn-default btn-block btn-lg">+ Add/Edit Learning Activity</button>
+            <div class="activityList">
+              <div class="activity">
+                <h4>01</h4>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img src="https://placehold.it/300x200" alt="" class="img-responsive">
+                  </div>
+                  <div class="col-md-8">
+                    <p class="lead">Introduction - Callbacks, Non-Blocking, Node.JS, and NPM (3 mins)</p>
+                    <p>Join us in a journey through data manipulation, callbacks, and non-blocking computation. We will then leverage the work on callbacks to move into Node.js and non-blocking computation. We will finish with npm, the package manager for Node.js, and the largest ecosystem of open source libraries in the world. <a href="#">Exercise Instructions</a></p>
+                  </div>
+                  <div class="col-md-12">
+                    <p>https://www.youtube.com/watch?v=blR0qohzG4Y</p>
+                    <p>Dr. Abel Sanchez</p>
+                  </div>
+                </div>
+                <div class="control">
+                  <ul>
+                    <li></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Learning Board</p>
+      </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+
+    <script>
+    $(document).ready(function(){
+      $('.tagList ul li span').on('click', function(e){
+        var $this = $(this).parent();
+        $this.fadeOut('slow', function(){
+          $this.remove();
+        });
+      });
+    });
+    </script>
+  </body>
+</html>
