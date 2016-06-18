@@ -8,7 +8,6 @@ class StudentAdmin(admin.ModelAdmin):
     model = lb.Student
 
 class StaffAdmin(admin.ModelAdmin):
-
     model = lb.Staff
 
 class ActivityInline(admin.StackedInline):
