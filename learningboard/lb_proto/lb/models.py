@@ -31,9 +31,12 @@ class LearningBoard(models.Model):
             (UNPUB, 'unpublished')
         ), max_length = 127
     )
-    endorsed = models.ForeignKey(Staff)
     completed = models.BooleanField(default = False)
     following = models.BooleanField(default = False)
+
+class Endorsement(models.Model):
+    endorser = models.ForeignKey(Staff, related_name = "endorsed_by")
+    board = models.ForeignKey(LearningBoard, related_name = "endorsed_lb")
 
 class Activity(models.Model):
 
