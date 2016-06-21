@@ -21,19 +21,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ALLOWED_HOSTS = ['*']
 
+# django-cors-headers (https://github.com/ottoyiu/django-cors-headers)
 CORS_ORIGIN_ALLOW_ALL = True
-ACCESS_CONTROL_ALLOW_ORIGIN = 'Access-Control-Allow-Origin'
-ACCESS_CONTROL_EXPOSE_HEADERS = 'Access-Control-Expose-Headers'
-ACCESS_CONTROL_ALLOW_CREDENTIALS = 'Access-Control-Allow-Credentials'
-ACCESS_CONTROL_ALLOW_HEADERS = 'Access-Control-Allow-Headers'
-ACCESS_CONTROL_ALLOW_METHODS = 'Access-Control-Allow-Methods'
-ACCESS_CONTROL_MAX_AGE = 'Access-Control-Max-Age'
 
 
 # Application definition
 
 INSTALLED_APPS = (
     'lb',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +39,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
