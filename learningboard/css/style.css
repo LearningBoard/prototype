@@ -24,12 +24,44 @@ body > .container {
   font-size: 22px;
 }
 
+.navbar-brand {
+  margin-top: 12px;
+  font-size: 26px;
+}
+
+.navbar-form {
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-form .form-control {
+  height: 77px;
+  width: 360px;
+  font-size: 18px;
+}
+
+.navbar-form .form-group span {
+  position: absolute;
+  margin-top: 26px;
+  margin-left: 12px;
+  color: #FFF;
+  opacity: 0.8;
+}
+
+.navbar-form .form-group input {
+  padding-left: 43px;
+  border-radius: 0;
+  border: none;
+  color: #FFF;
+  background-color: #158CB2;
+}
+
 .boardInfoBox {
   background-color: #E8E8E7;
   font-size: 12px;
 }
 
-.boardInfoBox .glyphicon {
+.boardInfoBox .glyphicon, .boardInfoBox .fa {
   font-size: 20px;
   padding: 8px;
 }
@@ -42,7 +74,7 @@ body > .container {
   padding: 2px 5px;
   border: 2px solid #EEE;
   background-color: #00BFFF;
-  opacity: 0.5;
+  opacity: 0.65;
 }
 
 .boardEditButton a {
