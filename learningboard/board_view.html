@@ -5,15 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="img/favicon.ico">
-    <title>Learning Boards</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <title>JavaScript Callbacks and Non-Blocking Computation | Learning Boards</title>
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="dist/common.js"></script>
+    <link href="dist/style.css" rel="stylesheet">
   </head>
 
   <body>
@@ -26,7 +24,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html">Learning Board</a>
+          <a class="navbar-brand" href="index.html">Learning Boards</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <form class="navbar-form navbar-left" role="search">
@@ -39,12 +37,12 @@
               <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
               <br />Browse
             </a></li>
-            <li><a href="#boards">
+            <li><a href="boards.html">
               <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
               <br />My Boards
             </a></li>
             <li><a href="#Whatsnew">
-              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
               <br />What's New
             </a></li>
             <li><a href="login.html">
@@ -59,7 +57,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-9">
-          <p><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><a href="#">MIT Faculty Boards</a></p>
+          <p><span class="fa fa-arrow-left" aria-hidden="true"></span> <a href="#">MIT Faculty Boards</a></p>
           <p class="lead">JavaScript Callbacks and Non-Blocking Computation</p>
           <p>By <a href="#">Abel Sanchez</a> | Content Level: Beginner</p>
           <button type="button" class="btn btn-default text-uppercase">Follow</button>
@@ -96,22 +94,5 @@
         <p class="text-muted">Learning Board</p>
       </div>
     </footer>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
-    <script src="js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="js/ie10-viewport-bug-workaround.js"></script>
-
-    <script>
-    $(document).ready(function(){
-      $('.tagList ul li span').on('click', function(e){
-        var $this = $(this).parent();
-        $this.fadeOut('slow', function(){
-          $this.remove();
-        });
-      });
-    });
-    </script>
   </body>
 </html>
