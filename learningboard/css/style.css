@@ -90,6 +90,11 @@ body > .container {
   border: 2px dashed #EEE;
 }
 
+.activityList.viewMode {
+  padding: 2px;
+  border: none;
+}
+
 .activityList > .activity {
   position: relative;
   padding: 10px;
@@ -111,6 +116,10 @@ body > .container {
   display: inline-block;
   padding: 0 2px;
   cursor: pointer;
+}
+
+.activityList > .activity .comment span, .activityList > .activity .comment a {
+  padding: 0 5px;
 }
 
 .tagList ul {
