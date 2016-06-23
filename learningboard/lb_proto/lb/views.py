@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from models import *
 # Create your views here.
 
+@csrf_exempt
 def method_required(required_method):
     ''' returns a decorator specifing the method required for a request '''
     # parameters of the decorator
@@ -18,6 +19,7 @@ def method_required(required_method):
 
 @csrf_exempt
 def account_add(request):
+    print request.POST
     return HttpResponse("done");
 
 @csrf_exempt
