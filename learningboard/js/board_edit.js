@@ -23,7 +23,7 @@ $(document).ready(function(){
     }
     $('#headingThree a').text(level);
   });
-  $('.tagList ul li span').on('click', function(e){
+  $(document).on('click', '.tagList ul li span', function(e){
     var $this = $(this).parent();
     $this.fadeOut('slow', function(){
       $this.remove();
@@ -32,9 +32,10 @@ $(document).ready(function(){
   $('#addTagModal').on('show.bs.modal', function(e){
     var modal = $(this);
     modal.find('.modal-footer button:eq(1)').on('click', function(e){
-      var tag = modal.find('.modal-body input[name=tag]').val();
-      $('.tagList ul').append(`<li>${tag} <span>x</span></li>`);
+      var tag = modal.find('.modal-body input[name=tag]');
+      $('.tagList ul').append(`<li>${tag.val()} <span>x</span></li>`);
       $('#addTagModal').modal('hide');
+      tag.val('');
     });
   });
   $('button.addActivityBtn').on('click', function(e){
@@ -98,12 +99,22 @@ $(document).ready(function(){
         </div>`;
         break;
     }
+    // ajax send to backend
     $('.activityList').append(htmlPeddingToInsert);
     $(this).parent()[0].reset();
+  });
+  $(document).on('click', '.activity span.glyphicon-pencil', function(e){
+    var $this = $(this).parents('div.activity');
+    // ajax unpublish activity id
+  });
+  $(document).on('click', '.activity span.glyphicon-pencil', function(e){
+    var $this = $(this).parents('div.activity');
+    // ajax get latest data by id
   });
   $(document).on('click', '.activity span.glyphicon-remove', function(e){
     var $this = $(this).parents('div.activity');
     $this.fadeOut('slow', function(){
+      // ajax delete activity id
       $this.remove();
     });
   });
