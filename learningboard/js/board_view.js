@@ -1,6 +1,31 @@
 $(document).ready(function(){
+  $('.action button:eq(0)').on('click', function(){
+    if($(this).hasClass('btn-primary')){
+      $('.progress_following').text(parseInt($('.progress_following').text()) - 1);
+      $(this).removeClass('btn-primary');
+    }else{
+      $('.progress_following').text(parseInt($('.progress_following').text()) + 1);
+      $(this).addClass('btn-primary');
+    }
+  });
+  $('.action button:eq(1)').on('click', function(){
+    if($(this).hasClass('btn-primary')){
+      $('.progress_endorsed').text(parseInt($('.progress_endorsed').text()) - 1);
+      $(this).removeClass('btn-primary');
+    }else{
+      $('.progress_endorsed').text(parseInt($('.progress_endorsed').text()) + 1);
+      $(this).addClass('btn-primary');
+    }
+  });
   $('.activity .control .glyphicon-ok').parent().on('click', function(){
     $(this).css('color', 'green');
+  });
+  $('.activity .comment .glyphicon-heart').on('click', function(e){
+    if($(this).attr('style')){
+      $(this).css('color', '');
+    }else{
+      $(this).css('color', 'red');
+    }
   });
   $('.activity .comment a').on('click', function(e){
     e.preventDefault();

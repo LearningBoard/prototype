@@ -33,6 +33,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
               <input type="text" class="form-control" placeholder="What do you want to learn today?" size="30" required>
             </div>
           </form>
@@ -64,16 +65,18 @@
           <p><span class="fa fa-arrow-left" aria-hidden="true"></span> <a href="#">MIT Faculty Boards</a></p>
           <p class="lead">JavaScript Callbacks and Non-Blocking Computation</p>
           <p>By <a href="#">Abel Sanchez</a> | Content Level: Beginner</p>
-          <button type="button" class="btn btn-default text-uppercase">Follow</button>
-          <button type="button" class="btn btn-default text-uppercase">Endorse</button>
-          <button type="button" class="btn btn-default text-uppercase">Share</button>
+          <div class="action">
+            <button type="button" class="btn btn-default text-uppercase">Follow</button>
+            <button type="button" class="btn btn-default text-uppercase">Endorse</button>
+            <button type="button" class="btn btn-default text-uppercase">Share</button>
+          </div>
           <div class="row progressBox">
             <div class="col-md-2">
               <span class="glyphicon glyphicon-book" aria-hidden="true"></span> 15<br />
               Learning Activities
             </div>
             <div class="col-md-2">
-              <span aria-hidden="true" class="fa fa-thumb-tack"></span> 0<br />
+              <span aria-hidden="true" class="fa fa-thumb-tack"></span> <span class="progress_endorsed">0</span><br />
               Have endorsed
             </div>
             <div class="col-md-2">
@@ -81,12 +84,15 @@
               Has completed
             </div>
             <div class="col-md-2">
-              <span aria-hidden="true" class="fa fa-users"></span> 4<br />
+              <span aria-hidden="true" class="fa fa-users"></span> <span class="progress_following">4</span><br />
               Are following
             </div>
             <div class="col-md-4">
               <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 0%<br />
-              0 completed
+              0 completed<br />
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+              </div>
             </div>
           </div>
           <div class="activityList viewMode">
@@ -97,6 +103,9 @@
                   Posted date: 09 | May | 2016
                   <a href="#">Author/Publisher: Dr. Abel Sanchez</a>
                 </p>
+                <div class="embed-responsive embed-responsive-16by9">
+                  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/rDcLMiH_Q4k" allowfullscreen></iframe>
+                </div>
                 <p>Join us in a journey through data manipulation, callbacks, and non-blocking computation. We will then leverage the work on callbacks to move into Node.js and non-blocking computation. We will finish with npm, the package manager for Node.js, and the largest ecosystem of open source libraries in the world. <a href="#">Exercise Instructions</a></p>
                 <div class="comment">
                   <span class="glyphicon glyphicon-heart"></span> 0

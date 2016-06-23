@@ -110,8 +110,9 @@ $(document).ready(function(){
     $('.activityList').append(htmlPeddingToInsert);
     $(this).parent()[0].reset();
   });
-  $(document).on('click', '.activity span.glyphicon-pencil', function(e){
+  $(document).on('click', '.activity span.glyphicon-floppy-remove', function(e){
     var $this = $(this).parents('div.activity');
+    $this.css('background-color', '#EEE');
     // ajax unpublish activity id
   });
   $(document).on('click', '.activity span.glyphicon-pencil', function(e){
