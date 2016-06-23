@@ -14,6 +14,7 @@
     <script src="js/board_edit.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/css/fileinput.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
   </head>
 
@@ -55,7 +56,11 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3">
-          <form class="addBoardForm"> <p><img src="https://placehold.it/300x200" alt="Upload image here" class="img-responsive"></p> <div class="form-group">
+          <form class="addBoardForm">
+            <div class="kv-avatar center-block">
+              <input type="file" class="file-loading uploadImage">
+            </div>
+            <div class="form-group">
               <input type="text" class="form-control" id="boardTitle" placeholder="Board Title" maxlength="150" name="title" required>
               <p class="text-muted text-right"><i>Characters left: <span id="boardTitleCount">150</span></i></p>
             </div>

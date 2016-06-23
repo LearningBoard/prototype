@@ -1,4 +1,22 @@
 
+$.getScript("js/lib.js");
+$.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
+  $(document).ready(function(){
+    $(".uploadImage").fileinput({
+      overwriteInitial: true,
+      showClose: false,
+      showCaption: false,
+      showBrowse: false,
+      showRemove: false,
+      browseOnZoneClick: true,
+      defaultPreviewContent: `<img src="https://placehold.it/300x200" alt="Your Avatar" class="img-responsive">
+      <h6 class="text-muted text-center">Click to select cover image</h6>`,
+      layoutTemplates: {main2: '{preview} {remove} {browse}'},
+      allowedFileExtensions: ['jpg', 'png', 'gif']
+    });
+  });
+});
+
 $(document).ready(function(){
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
@@ -59,7 +77,7 @@ $(document).ready(function(){
     $.post(serv_addr+'act/add/', o, function(data)
       {
         alert(data);
-      }); 
+      });
 
     switch(dataObject['type']){
       case 'video':
