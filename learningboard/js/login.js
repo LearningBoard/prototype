@@ -9,7 +9,7 @@ $(document).ready(function()
     console.log(o);
     $.get(serv_addr+'accts/login/', o, function(data) 
     {
-      console.log(data);
+      console.log(data.pk);
     });
   });
 

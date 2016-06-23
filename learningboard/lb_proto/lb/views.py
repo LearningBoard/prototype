@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 import tools
@@ -42,5 +42,4 @@ def user_login(request):
 
     if stu.password != pwd:
         return HttpResponse("auth error", status = 401);
-
-    return HttpResponse("done")
+    return JsonResponse({"pk": stu.id});
