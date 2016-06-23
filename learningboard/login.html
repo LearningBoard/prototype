@@ -69,7 +69,12 @@
       <div class="page-header">
         <h1>Login</h1>
       </div>
-      <p class="lead">Please login to start learning!</p>
+      <p class="lead login_text">
+        Please login to start learning! Click <a herf="#">here</a> to register if you do not have account.
+      </p>
+      <p class="lead register_text hidden">
+        Register now to join the learning journal! Click <a herf="#">here</a> to login if you already have account.
+      </p>
       <form class="loginForm">
         <div class="form-group">
           <label for="inputUsername">Username</label>
@@ -80,6 +85,7 @@
           <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password" required>
         </div>
         <button class="btn btn-default loginBtn">Login</button>
+        <button class="btn btn-default registerBtn hidden">Register</button>
         <button type="reset" class="btn btn-default">Reset</button>
       </form>
     </div>

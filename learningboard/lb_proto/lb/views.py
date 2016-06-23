@@ -22,13 +22,23 @@ def method_required(required_method):
 @csrf_exempt
 def account_add(request):
     print request.POST
-    return HttpResponse("done")
+    stu = Student.objects.create(
+        username = request.POST['username'],
+        password = request.POST['password']
+    )
+    if stu.id is not None:
+      return JsonResponse({"pk": stu.id});
+    else:
+      return HttpResponse("register error", status = 401);
 
 @csrf_exempt
 def lb_add(request):
     data = dict(request.POST.iterlists())
     print request.POST
-    LearningBoard.objects.create(title = request.POST['title'])
+    LearningBoard.objects.create(
+        title = request.POST['title'],
+        description = request.POST['description']
+    )
     return HttpResponse("done")
 
 @csrf_exempt
@@ -42,8 +52,9 @@ def user_login(request):
     pwd = request.GET['password']
 
     stu = tools.get_or_None(Student, username = usr)
+    if stu is None:
+        return HttpResponse("auth error", status = 401);
 
     if stu.password != pwd:
         return HttpResponse("auth error", status = 401);
     return JsonResponse({"pk": stu.id});
-
