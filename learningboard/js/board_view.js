@@ -1,4 +1,7 @@
 $(document).ready(function(){
+  $('.activity .control .glyphicon-ok').parent().on('click', function(){
+    $(this).css('color', 'green');
+  });
   $('.activity .comment a').on('click', function(e){
     e.preventDefault();
     $(this).parent().find('.commentBox').toggleClass('hidden');
