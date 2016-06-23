@@ -10,8 +10,9 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script src="https://cdn.jsdelivr.net/jquery/1.12.4jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery/1.12.4/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/board_view.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -79,6 +80,15 @@
                   <span class="glyphicon glyphicon-heart"></span> 0
                   <span class="glyphicon glyphicon-comment"></span> 0 comment
                   <a href="#">Add comment</a>
+                  <div class="commentBox hidden">
+                    <form>
+                      <input type="text" name="comment">
+                      <button type="button" class="btn btn-default btn-xs">Submit</button>
+                    </form>
+                  </div>
+                  <div class="commentList">
+                    <ul></ul>
+                  </div>
                 </div>
               <div class="control">
                 <ul class="text-muted">
