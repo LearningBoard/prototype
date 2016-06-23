@@ -20,6 +20,7 @@ from lb import views
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accts/add/$', views.account_add),
+    url(r'^accts/login/$', views.user_login),
     url(r'^lb/add/$', views.lb_add),
     url(r'^act/add/$', views.activity_add),
 ]

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate
+import tools
 from models import *
 # Create your views here.
 
@@ -20,13 +22,25 @@ def method_required(required_method):
 @csrf_exempt
 def account_add(request):
     print request.POST
-    return HttpResponse("done");
+    return HttpResponse("done")
 
 @csrf_exempt
 def lb_add(request):
-    return HttpResponse("done");
+    return HttpResponse("done")
 
 @csrf_exempt
 def activity_add(request):
-    return HttpResponse("done");
+    return HttpResponse("done")
 
+@csrf_exempt
+def user_login(request):
+    print request.GET
+    usr = request.GET['username']
+    pwd = request.GET['password']
+
+    stu = Student.objects.get(username = usr);
+
+    if stu.password != pwd:
+        return HttpResponse("auth error", status = 401);
+
+    return HttpResponse("done")
