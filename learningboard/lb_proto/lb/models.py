@@ -16,16 +16,16 @@ class Staff(models.Model):
     is_staff = True
 
 class LearningBoard(models.Model):
-    image = models.ImageField(null=True)
+    image = models.ImageField(null=True, blank=True)
     title = models.CharField(max_length = 127)
-    description = models.CharField(max_length = 1023)
+    description = models.CharField(max_length = 1023, null=True, blank=True)
     PUB = "PB"
     UNPUB = "UP"
     status = models.CharField(
         choices=(
             (PUB, 'published'), 
             (UNPUB, 'unpublished')
-        ), max_length = 127
+        ), max_length = 127, default=UNPUB
     )
     completed = models.BooleanField(default = False)
     following = models.BooleanField(default = False)

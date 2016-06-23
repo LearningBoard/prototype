@@ -1,6 +1,4 @@
 
-$.getScript("js/lib.js");
-
 $(document).ready(function(){
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
@@ -38,6 +36,15 @@ $(document).ready(function(){
       tag.val('');
     });
   });
+  $('button.addBoardBtn').on('click', function(e)
+  {
+    e.preventDefault();
+    var dataObject = $('form.addBoardForm').serializeObject();
+    $.post(serv_addr+'lb/add/', dataObject, function(data)
+    {
+      console.log(data);
+    })
+  })
   $('button.addActivityBtn').on('click', function(e){
     e.preventDefault();
     var data = $(this).parent().serializeArray();
@@ -49,7 +56,7 @@ $(document).ready(function(){
 
     var o = $('form.addActivityForm').serializeObject();
     console.log(o);
-    $.post(serv_addr+'accts/add/', o, function(data)
+    $.post(serv_addr+'act/add/', o, function(data)
       {
         alert(data);
       }); 

@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
+<html lang="en"> <head> <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="img/favicon.ico">
@@ -57,17 +55,15 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3">
-          <form>
-            <p><img src="https://placehold.it/300x200" alt="Upload image here" class="img-responsive"></p>
-            <div class="form-group">
-              <input type="text" class="form-control" id="boardTitle" placeholder="Board Title" maxlength="150" required>
+          <form class="addBoardForm"> <p><img src="https://placehold.it/300x200" alt="Upload image here" class="img-responsive"></p> <div class="form-group">
+              <input type="text" class="form-control" id="boardTitle" placeholder="Board Title" maxlength="150" name="title" required>
               <p class="text-muted text-right"><i>Characters left: <span id="boardTitleCount">150</span></i></p>
             </div>
             <p><b><i>Curated by:</i></b></p>
             <p>bel.a.sanchez</p>
             <div class="form-group">
               <label for="activityID"><i>myLearning Activity ID:</i></label>
-              <input type="text" class="form-control" id="activityID" placeholder="myLearning Activity ID">
+              <input type="text" class="form-control" id="activityID" placeholder="myLearning Activity ID" name="activityID">
             </div>
             <div class="panel-group">
               <div class="panel panel-default">
@@ -75,7 +71,7 @@
                   <h4 class="panel-title">Description</h4>
                 </div>
                 <div class="panel-body">
-                  <textarea style="width:100%;" rows="5">Join us in a journey through data manipulation, callbacks, and non-blocking compuation. We will start with callbacks, filters, sort, map, and reduce. ...</textarea>
+                  <textarea style="width:100%;" name="description" rows="5">Join us in a journey through data manipulation, callbacks, and non-blocking compuation. We will start with callbacks, filters, sort, map, and reduce. ...</textarea>
                 </div>
               </div>
               <div class="panel panel-default">
@@ -114,6 +110,7 @@
                 <li>very very very very very very very long tag <span>x</span></li>
               </ul>
             </div>
+            <button type="button" class="btn btn-default addBoardBtn" >Submit</button>
           </form>
         </div>
         <div class="col-md-9">
@@ -163,7 +160,7 @@
                           <label for="text_text">Text</label>
                           <textarea class="form-control" id="text_text" name="text_text" rows="8" placeholder="Text"></textarea>
                         </div>
-                        <button type="button" class="btn btn-default addActivityBtn">Submit</button>
+                        <button type="button" class="btn btn-default addBoardBtn">Submit</button>
                       </form>
                     </div>
                   </div>
