@@ -1,3 +1,6 @@
+
+$.getScript("js/lib.js");
+
 $(document).ready(function(){
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
@@ -42,7 +45,14 @@ $(document).ready(function(){
       dataObject[data[i].name] = data[i].value;
     }
     var htmlPeddingToInsert = '';
-    console.log($('form.addActivityForm').serialize());
+
+    var o = $('form.addActivityForm').serializeObject();
+    console.log(o);
+    $.post(serv_addr+'accts/add/', o, function(data)
+      {
+        alert(data);
+      }); 
+
     switch(dataObject['type']){
       case 'video':
         htmlPeddingToInsert = `
