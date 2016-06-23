@@ -53,7 +53,7 @@ $(document).ready(function(){
                 <iframe class="embed-responsive-item" src="${dataObject['video_link']}" allowfullscreen></iframe>
               </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-offset-1 col-md-7">
               <p class="lead">${dataObject['video_title']}</p>
               <p>${dataObject['video_description']}</p>
             </div>
