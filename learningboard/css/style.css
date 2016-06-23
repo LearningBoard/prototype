@@ -86,6 +86,28 @@ body > .container {
   text-decoration: none;
 }
 
+.progressBox {
+  padding: 25px 0 0;
+}
+
+.progressBox > div {
+  border-right: 1px solid #CCC;
+  color: #555;
+}
+
+.progressBox > div:hover {
+  color: #111;
+}
+
+.progressBox > div:last-child {
+  border-right: none;
+}
+
+.progressBox > div .glyphicon, .progressBox > div .fa {
+  font-size: 20px;
+  padding: 5px;
+}
+
 .activityList {
   margin-top: 10px;
   width: 100%;
