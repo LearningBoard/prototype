@@ -42,6 +42,7 @@ $(document).ready(function(){
       dataObject[data[i].name] = data[i].value;
     }
     var htmlPeddingToInsert = '';
+    console.log($('form.addActivityForm').serialize());
     switch(dataObject['type']){
       case 'video':
         htmlPeddingToInsert = `
