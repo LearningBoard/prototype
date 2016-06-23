@@ -20,6 +20,7 @@ from lb_proto.deployment import *
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ALLOWED_HOSTS = ['*']
+APPEND_SLASH = False
 
 # django-cors-headers (https://github.com/ottoyiu/django-cors-headers)
 CORS_ORIGIN_ALLOW_ALL = True

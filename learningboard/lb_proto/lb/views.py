@@ -26,6 +26,9 @@ def account_add(request):
 
 @csrf_exempt
 def lb_add(request):
+    data = dict(request.POST.iterlists())
+    print request.POST
+    LearningBoard.objects.create(title = request.POST['title'])
     return HttpResponse("done")
 
 @csrf_exempt
@@ -38,8 +41,9 @@ def user_login(request):
     usr = request.GET['username']
     pwd = request.GET['password']
 
-    stu = Student.objects.get(username = usr);
+    stu = tools.get_or_None(Student, username = usr)
 
     if stu.password != pwd:
         return HttpResponse("auth error", status = 401);
     return JsonResponse({"pk": stu.id});
+
