@@ -6,9 +6,11 @@ import models as lb
 
 class StudentAdmin(admin.ModelAdmin):
     model = lb.Student
+    list_display = ('username', 'major')
 
 class StaffAdmin(admin.ModelAdmin):
     model = lb.Staff
+    list_display = ('username', 'office')
 
 class ActivityInline(admin.StackedInline):
     model = lb.Activity

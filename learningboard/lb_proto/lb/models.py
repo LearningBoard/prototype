@@ -1,21 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Student(User):
+class Student(models.Model):
 
-    class Meta:    
-        verbose_name = "student"
-
+    username = models.CharField(max_length = 30)
+    password = models.CharField(max_length = 30)
     major = models.CharField(max_length = 255, null=True)
 
-class Staff(User):
+class Staff(models.Model):
 
-    class Meta:
-        verbose_name = "staff"
-        
-    account = models.OneToOneField(User)
+    username = models.CharField(max_length = 30)
+    password = models.CharField(max_length = 30)
     office = models.CharField(max_length = 255, null=True)
     is_staff = True
 
