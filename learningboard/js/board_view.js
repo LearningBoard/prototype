@@ -1,4 +1,9 @@
 $(document).ready(function(){
+<<<<<<< HEAD
+  $('.activity .control .glyphicon-ok').parent().on('click', function(){
+    $(this).css('color', 'green');
+  });
+=======
   $('.action button:eq(0)').on('click', function(){
     if($(this).hasClass('btn-primary')){
       $('.progress_following').text(parseInt($('.progress_following').text()) - 1);
@@ -27,6 +32,7 @@ $(document).ready(function(){
       $(this).css('color', 'red');
     }
   });
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
   $('.activity .comment a').on('click', function(e){
     e.preventDefault();
     $(this).parent().find('.commentBox').toggleClass('hidden');

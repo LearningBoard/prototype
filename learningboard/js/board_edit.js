@@ -1,4 +1,7 @@
 
+<<<<<<< HEAD
+$(document).ready(function(){
+=======
 var cover_img;
 var activity_list = [];
 
@@ -52,6 +55,7 @@ $(document).ready(function(){
     });
   }
 
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
   });
@@ -88,6 +92,32 @@ $(document).ready(function(){
       tag.val('');
     });
   });
+<<<<<<< HEAD
+  $('button.addBoardBtn').on('click', function(e)
+  {
+    e.preventDefault();
+    var dataObject = $('form.addBoardForm').serializeObject();
+    $.post(serv_addr+'lb/add/', dataObject, function(data)
+    {
+      console.log(data);
+    })
+  })
+  $('button.addActivityBtn').on('click', function(e){
+    e.preventDefault();
+    var data = $(this).parent().serializeArray();
+    var dataObject = {};
+    for(var i = 0; i < data.length; i++){
+      dataObject[data[i].name] = data[i].value;
+    }
+    var htmlPeddingToInsert = '';
+
+    var o = $('form.addActivityForm').serializeObject();
+    console.log(o);
+    $.post(serv_addr+'act/add/', o, function(data)
+      {
+        alert(data);
+      }); 
+=======
   $('a.addBoardBtn').on('click', function(e)
   {
     e.preventDefault();
@@ -138,6 +168,7 @@ $(document).ready(function(){
         console.log(data);
         activity_list.push(data.pk);
       });
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
 
     switch(dataObject['type']){
       case 'video':
@@ -151,8 +182,13 @@ $(document).ready(function(){
               </div>
             </div>
             <div class="col-md-offset-1 col-md-7">
+<<<<<<< HEAD
+              <p class="lead">${dataObject['video_title']}</p>
+              <p>${dataObject['video_description']}</p>
+=======
               <p class="lead">${dataObject['title']}</p>
               <p>${dataObject['description']}</p>
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
             </div>
           </div>
           <div class="control">
@@ -170,8 +206,13 @@ $(document).ready(function(){
           <h4>01</h4>
           <div class="row">
             <div class="col-md-12">
+<<<<<<< HEAD
+              <p class="lead">${dataObject['text_title']}</p>
+              <p>${dataObject['text_text']}</p>
+=======
               <p class="lead">${dataObject['title']}</p>
               <p>${dataObject['description']}</p>
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
             </div>
           </div>
           <div class="control">
@@ -188,9 +229,14 @@ $(document).ready(function(){
     $('.activityList').append(htmlPeddingToInsert);
     $(this).parent()[0].reset();
   });
+<<<<<<< HEAD
+  $(document).on('click', '.activity span.glyphicon-pencil', function(e){
+    var $this = $(this).parents('div.activity');
+=======
   $(document).on('click', '.activity span.glyphicon-floppy-remove', function(e){
     var $this = $(this).parents('div.activity');
     $this.css('background', 'url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==)');
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
     // ajax unpublish activity id
   });
   $(document).on('click', '.activity span.glyphicon-pencil', function(e){
