@@ -1,18 +1,27 @@
 
+var cover_img;
+
 $.getScript("js/lib.js");
 $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
   $(document).ready(function(){
-    $(".uploadImage").fileinput({
+    $('.uploadImage').fileinput({
       overwriteInitial: true,
       showClose: false,
       showCaption: false,
       showBrowse: false,
-      showRemove: false,
       browseOnZoneClick: true,
+      removeLabel: 'Remove cover image',
+      removeClass: 'btn btn-default btn-block btn-xs',
       defaultPreviewContent: `<img src="https://placehold.it/300x200" alt="Your Avatar" class="img-responsive">
       <h6 class="text-muted text-center">Click to select cover image</h6>`,
-      layoutTemplates: {main2: '{preview} {remove} {browse}'},
+      layoutTemplates: {main2: '{preview} {remove}'},
       allowedFileExtensions: ['jpg', 'png', 'gif']
+    });
+    $('.uploadImage').on('fileloaded', function(e, file, previewId, index, reader){
+      cover_img = reader.result;
+    });
+    $('.uploadImage').on('filecleared', function(e){
+      cover_img = undefined;
     });
   });
 });
@@ -54,10 +63,13 @@ $(document).ready(function(){
       tag.val('');
     });
   });
-  $('button.addBoardBtn').on('click', function(e)
+  $('a.addBoardBtn').on('click', function(e)
   {
     e.preventDefault();
     var dataObject = $('form.addBoardForm').serializeObject();
+    if(cover_img){
+      dataObject.cover_img = cover_img;
+    }
     $.post(serv_addr+'lb/add/', dataObject, function(data)
     {
       console.log(data);
