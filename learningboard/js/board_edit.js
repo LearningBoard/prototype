@@ -1,5 +1,6 @@
 
 var cover_img;
+var activity_list = [];
 
 $.getScript("js/lib.js");
 $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
@@ -94,6 +95,9 @@ $(document).ready(function(){
     if(cover_img){
       dataObject.cover_img = cover_img;
     }
+    if(activity_list){
+      dataObject.activity_list = activity_list;
+    }
     if($('form.addBoardForm input[name=pk]').val()){
       $.post(serv_addr+'lb/edit/', dataObject, function(data)
       {
@@ -132,6 +136,7 @@ $(document).ready(function(){
     $.post(serv_addr+'activity/add/', dataObject, function(data)
       {
         console.log(data);
+        activity_list.push(data.pk);
       });
 
     switch(dataObject['type']){

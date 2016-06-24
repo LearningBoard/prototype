@@ -50,6 +50,8 @@ def lb_add(request):
         title = request.POST['title'],
         description = request.POST['description']
     )
+    if request.POST.getlist('activity_list[]', None) is not None:
+        Activity.objects.filter(pk__in = request.POST.getlist('activity_list[]')).update(lb = board.id)
     return JsonResponse({"pk": board.id});
 
 @csrf_exempt

@@ -23,7 +23,7 @@ class LearningBoard(models.Model):
     UNPUB = "UP"
     status = models.CharField(
         choices=(
-            (PUB, 'published'), 
+            (PUB, 'published'),
             (UNPUB, 'unpublished')
         ), max_length = 127, default=UNPUB
     )
@@ -40,4 +40,4 @@ class Activity(models.Model):
         verbose_name_plural = "activities"
 
     name = models.CharField(max_length = 255)
-    lb = models.ForeignKey(LearningBoard)
+    lb = models.ForeignKey(LearningBoard, null=True, blank=True)
