@@ -36,7 +36,7 @@
               <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
               <br />Save Board
             </a></li>
-            <li><a href="#">
+            <li><a href="#" class="deleteBoardBtn">
               <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
               <br />Delete Board
             </a></li>
@@ -57,6 +57,7 @@
       <div class="row">
         <div class="col-md-3">
           <form class="addBoardForm">
+            <input type="hidden" name="pk" value="">
             <div class="kv-avatar center-block">
               <input type="file" class="file-loading uploadImage">
             </div>
@@ -140,7 +141,7 @@
                         <input type="hidden" name="type" value="video">
                         <div class="form-group">
                           <label for="video_title">Title</label>
-                          <input type="text" class="form-control" id="video_title" name="video_title" placeholder="Activity title">
+                          <input type="text" class="form-control" id="video_title" name="title" placeholder="Activity title">
                         </div>
                         <div class="form-group">
                           <label for="video_link">Video Link</label>
@@ -148,21 +149,21 @@
                         </div>
                         <div class="form-group">
                           <label for="video_description">Description</label>
-                          <textarea class="form-control" id="video_description" name="video_description" rows="3" placeholder="Description"></textarea>
+                          <textarea class="form-control" id="video_description" name="description" rows="3" placeholder="Description"></textarea>
                         </div>
                         <button type="button" class="btn btn-default addActivityBtn">Submit</button>
                       </form>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="text">
-                      <form>
+                      <form class="addActivityForm">
                         <input type="hidden" name="type" value="text">
                         <div class="form-group">
                           <label for="text_title">Title</label>
-                          <input type="text" class="form-control" id="text_title" name="text_title" placeholder="Activity title">
+                          <input type="text" class="form-control" id="text_title" name="title" placeholder="Activity title">
                         </div>
                         <div class="form-group">
                           <label for="text_text">Text</label>
-                          <textarea class="form-control" id="text_text" name="text_text" rows="8" placeholder="Text"></textarea>
+                          <textarea class="form-control" id="text_text" name="description" rows="8" placeholder="Text"></textarea>
                         </div>
                         <button type="button" class="btn btn-default addActivityBtn">Submit</button>
                       </form>

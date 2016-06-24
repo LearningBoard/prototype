@@ -27,6 +27,30 @@ $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min
 });
 
 $(document).ready(function(){
+  // reset data for new boardTitle
+  if(location.search.includes('?new')){
+    $('form.addBoardForm input[name=title], form.addBoardForm textarea[name=description]').val('').trigger('keydown');
+    $('.tagList ul, .activityList').text('');
+    $('.navbar-nav li:not(:first) a').css({
+      color: '#CCC',
+      cursor: 'not-allowed'
+    });
+  }
+
+  // assign pk to hidden field when editing the board
+  if(/\?\d+/.test(location.search)){
+    var pk = location.search.replace('?', '');
+    $('form.addBoardForm input[name=pk]').val(pk);
+    $.get(serv_addr+'lb/get/'+pk+'/', function(data){
+      $('form.addBoardForm input[name=title]').val(data.title).trigger('keydown');
+      $('form.addBoardForm textarea[name=description]').val(data.description);
+      $('.navbar-nav li:not(:first) a').css({});
+    }).fail(function(){
+      alert('Learning Board not found');
+      location.href = 'boards.html';
+    });
+  }
+
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
   });
@@ -70,25 +94,44 @@ $(document).ready(function(){
     if(cover_img){
       dataObject.cover_img = cover_img;
     }
-    $.post(serv_addr+'lb/add/', dataObject, function(data)
-    {
-      console.log(data);
-    })
+    if($('form.addBoardForm input[name=pk]').val()){
+      $.post(serv_addr+'lb/edit/', dataObject, function(data)
+      {
+        console.log(data);
+        alert('Board saved');
+      })
+    }else{
+      $.post(serv_addr+'lb/add/', dataObject, function(data)
+      {
+        console.log(data);
+        location.href = 'board_edit.html?' + data.pk;
+      })
+    }
+  })
+  $('a.deleteBoardBtn').on('click', function(e)
+  {
+    e.preventDefault();
+    var r = confirm('Are you sure to delete the board?');
+    if(r){
+      $.post(serv_addr+'lb/delete/'+$('form.addBoardForm input[name=pk]').val()+'/', function(data)
+      {
+        alert('Board deleted');
+        location.href = 'boards.html';
+      })
+    }
   })
   $('button.addActivityBtn').on('click', function(e){
     e.preventDefault();
-    var data = $(this).parent().serializeArray();
-    var dataObject = {};
-    for(var i = 0; i < data.length; i++){
-      dataObject[data[i].name] = data[i].value;
-    }
     var htmlPeddingToInsert = '';
 
-    var o = $('form.addActivityForm').serializeObject();
-    console.log(o);
-    $.post(serv_addr+'act/add/', o, function(data)
+    var dataObject = $(this).parents('form.addActivityForm').serializeObject();
+    if($('form.addBoardForm input[name=pk]').val()){
+      dataObject.pk = $('form.addBoardForm input[name=pk]').val();
+    }
+    console.log(dataObject);
+    $.post(serv_addr+'activity/add/', dataObject, function(data)
       {
-        alert(data);
+        console.log(data);
       });
 
     switch(dataObject['type']){
@@ -103,8 +146,8 @@ $(document).ready(function(){
               </div>
             </div>
             <div class="col-md-offset-1 col-md-7">
-              <p class="lead">${dataObject['video_title']}</p>
-              <p>${dataObject['video_description']}</p>
+              <p class="lead">${dataObject['title']}</p>
+              <p>${dataObject['description']}</p>
             </div>
           </div>
           <div class="control">
@@ -122,8 +165,8 @@ $(document).ready(function(){
           <h4>01</h4>
           <div class="row">
             <div class="col-md-12">
-              <p class="lead">${dataObject['text_title']}</p>
-              <p>${dataObject['text_text']}</p>
+              <p class="lead">${dataObject['title']}</p>
+              <p>${dataObject['description']}</p>
             </div>
           </div>
           <div class="control">
@@ -142,7 +185,7 @@ $(document).ready(function(){
   });
   $(document).on('click', '.activity span.glyphicon-floppy-remove', function(e){
     var $this = $(this).parents('div.activity');
-    $this.css('background-color', '#EEE');
+    $this.css('background', 'url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==)');
     // ajax unpublish activity id
   });
   $(document).on('click', '.activity span.glyphicon-pencil', function(e){

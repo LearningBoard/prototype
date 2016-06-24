@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
+from django.forms.models import model_to_dict
 import tools
 from models import *
 # Create your views here.
@@ -32,18 +33,54 @@ def account_add(request):
       return HttpResponse("register error", status = 401);
 
 @csrf_exempt
+def lb_get(request, pk):
+    print request.GET
+    board = LearningBoard.objects.get(pk = pk)
+    if board is None:
+        return HttpResponse("not found", status = 404)
+    else:
+        # TODO output image field
+        return JsonResponse(model_to_dict(board, fields=[], exclude=['image']));
+
+@csrf_exempt
 def lb_add(request):
     data = dict(request.POST.iterlists())
     print request.POST
-    LearningBoard.objects.create(
+    board = LearningBoard.objects.create(
         title = request.POST['title'],
         description = request.POST['description']
     )
+    return JsonResponse({"pk": board.id});
+
+@csrf_exempt
+def lb_edit(request):
+    print request.POST
+    board = LearningBoard.objects.get(pk = request.POST['pk'])
+    if board is None:
+        return HttpResponse("not found", status = 404)
+    else:
+        board.title = request.POST['title']
+        board.description = request.POST['description']
+        board.save()
+        return JsonResponse({"pk": board.id});
+
+@csrf_exempt
+def lb_delete(request, pk):
+    print request.GET
+    LearningBoard.objects.filter(pk = pk).delete()
     return HttpResponse("done")
 
 @csrf_exempt
 def activity_add(request):
-    return HttpResponse("done")
+    print request.POST
+    if request.POST.get('pk', None) is None:
+        act = Activity.objects.create(name = request.POST['title'])
+    else:
+        act = Activity.objects.create(
+            name = request.POST['title'],
+            lb = LearningBoard.objects.get(pk = request.POST['pk'])
+        )
+    return JsonResponse({"pk": act.id});
 
 @csrf_exempt
 def user_login(request):
