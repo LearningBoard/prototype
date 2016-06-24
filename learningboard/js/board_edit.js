@@ -1,7 +1,4 @@
 
-<<<<<<< HEAD
-$(document).ready(function(){
-=======
 var cover_img;
 var activity_list = [];
 
@@ -55,7 +52,6 @@ $(document).ready(function(){
     });
   }
 
->>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
   });
