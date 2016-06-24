@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/jquery/1.12.4/jquery.min.js"></script>
     <script src="js/lib.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/global.js"></script>
     <script src="js/login.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
@@ -51,9 +52,13 @@
               <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
               <br />What's New
             </a></li>
-            <li class="active"><a href="login.html">
+            <li class="login"><a href="login.html">
               <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
               <br />Login
+            </a></li>
+            <li class="hidden logout"><a href="#">
+              <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+              <br />Logout
             </a></li>
           </ul>
         </div>
@@ -64,7 +69,12 @@
       <div class="page-header">
         <h1>Login</h1>
       </div>
-      <p class="lead">Please login to start learning!</p>
+      <p class="lead login_text">
+        Please login to start learning! Click <a herf="#">here</a> to register if you do not have account.
+      </p>
+      <p class="lead register_text hidden">
+        Register now to join the learning journal! Click <a herf="#">here</a> to login if you already have account.
+      </p>
       <form class="loginForm">
         <div class="form-group">
           <label for="inputUsername">Username</label>
@@ -75,6 +85,7 @@
           <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password" required>
         </div>
         <button class="btn btn-default loginBtn">Login</button>
+        <button class="btn btn-default registerBtn hidden">Register</button>
         <button type="reset" class="btn btn-default">Reset</button>
       </form>
     </div>

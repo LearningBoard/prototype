@@ -20,6 +20,11 @@ textarea {
   margin: 0 0 20px;
 }
 
+.panel-group .panel-heading {
+  background-color: #337AB7;
+  color: #FFF;
+}
+
 body > .container {
   padding: 100px 15px 0;
 }
@@ -62,12 +67,11 @@ body > .container {
 
 .boardInfoBox {
   background-color: #E8E8E7;
-  font-size: 12px;
 }
 
 .boardInfoBox .glyphicon, .boardInfoBox .fa {
   font-size: 20px;
-  padding: 8px;
+  padding: 8px 0;
 }
 
 .boardEditButton {
@@ -84,6 +88,32 @@ body > .container {
 .boardEditButton a {
   color: #FFF;
   text-decoration: none;
+}
+
+.progressBox {
+  padding: 25px 0 0;
+}
+
+.progressBox > div {
+  border-right: 1px solid #CCC;
+  color: #555;
+}
+
+.progressBox > div:hover {
+  color: #111;
+}
+
+.progressBox > div:last-child {
+  border-right: none;
+}
+
+.progressBox > div .glyphicon, .progressBox > div .fa {
+  font-size: 20px;
+  padding: 5px;
+}
+
+.progressBox .progress {
+  margin: 2px 0;
 }
 
 .activityList {
@@ -124,6 +154,7 @@ body > .container {
 }
 
 .activityList > .activity .comment span, .activityList > .activity .comment a {
+  cursor: pointer;
   padding: 0 5px;
 }
 

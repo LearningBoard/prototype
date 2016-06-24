@@ -1,5 +1,60 @@
 
+<<<<<<< HEAD
 $(document).ready(function(){
+=======
+var cover_img;
+
+$.getScript("js/lib.js");
+$.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
+  $(document).ready(function(){
+    $('.uploadImage').fileinput({
+      overwriteInitial: true,
+      showClose: false,
+      showCaption: false,
+      showBrowse: false,
+      browseOnZoneClick: true,
+      removeLabel: 'Remove cover image',
+      removeClass: 'btn btn-default btn-block btn-xs',
+      defaultPreviewContent: `<img src="https://placehold.it/300x200" alt="Your Avatar" class="img-responsive">
+      <h6 class="text-muted text-center">Click to select cover image</h6>`,
+      layoutTemplates: {main2: '{preview} {remove}'},
+      allowedFileExtensions: ['jpg', 'png', 'gif']
+    });
+    $('.uploadImage').on('fileloaded', function(e, file, previewId, index, reader){
+      cover_img = reader.result;
+    });
+    $('.uploadImage').on('filecleared', function(e){
+      cover_img = undefined;
+    });
+  });
+});
+
+$(document).ready(function(){
+  // reset data for new boardTitle
+  if(location.search.includes('?new')){
+    $('form.addBoardForm input[name=title], form.addBoardForm textarea[name=description]').val('').trigger('keydown');
+    $('.tagList ul, .activityList').text('');
+    $('.navbar-nav li:not(:first) a').css({
+      color: '#CCC',
+      cursor: 'not-allowed'
+    });
+  }
+
+  // assign pk to hidden field when editing the board
+  if(/\?\d+/.test(location.search)){
+    var pk = location.search.replace('?', '');
+    $('form.addBoardForm input[name=pk]').val(pk);
+    $.get(serv_addr+'lb/get/'+pk+'/', function(data){
+      $('form.addBoardForm input[name=title]').val(data.title).trigger('keydown');
+      $('form.addBoardForm textarea[name=description]').val(data.description);
+      $('.navbar-nav li:not(:first) a').css({});
+    }).fail(function(){
+      alert('Learning Board not found');
+      location.href = 'boards.html';
+    });
+  }
+
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
   });
@@ -36,6 +91,7 @@ $(document).ready(function(){
       tag.val('');
     });
   });
+<<<<<<< HEAD
   $('button.addBoardBtn').on('click', function(e)
   {
     e.preventDefault();
@@ -60,6 +116,54 @@ $(document).ready(function(){
       {
         alert(data);
       }); 
+=======
+  $('a.addBoardBtn').on('click', function(e)
+  {
+    e.preventDefault();
+    var dataObject = $('form.addBoardForm').serializeObject();
+    if(cover_img){
+      dataObject.cover_img = cover_img;
+    }
+    if($('form.addBoardForm input[name=pk]').val()){
+      $.post(serv_addr+'lb/edit/', dataObject, function(data)
+      {
+        console.log(data);
+        alert('Board saved');
+      })
+    }else{
+      $.post(serv_addr+'lb/add/', dataObject, function(data)
+      {
+        console.log(data);
+        location.href = 'board_edit.html?' + data.pk;
+      })
+    }
+  })
+  $('a.deleteBoardBtn').on('click', function(e)
+  {
+    e.preventDefault();
+    var r = confirm('Are you sure to delete the board?');
+    if(r){
+      $.post(serv_addr+'lb/delete/'+$('form.addBoardForm input[name=pk]').val()+'/', function(data)
+      {
+        alert('Board deleted');
+        location.href = 'boards.html';
+      })
+    }
+  })
+  $('button.addActivityBtn').on('click', function(e){
+    e.preventDefault();
+    var htmlPeddingToInsert = '';
+
+    var dataObject = $(this).parents('form.addActivityForm').serializeObject();
+    if($('form.addBoardForm input[name=pk]').val()){
+      dataObject.pk = $('form.addBoardForm input[name=pk]').val();
+    }
+    console.log(dataObject);
+    $.post(serv_addr+'activity/add/', dataObject, function(data)
+      {
+        console.log(data);
+      });
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
 
     switch(dataObject['type']){
       case 'video':
@@ -73,8 +177,13 @@ $(document).ready(function(){
               </div>
             </div>
             <div class="col-md-offset-1 col-md-7">
+<<<<<<< HEAD
               <p class="lead">${dataObject['video_title']}</p>
               <p>${dataObject['video_description']}</p>
+=======
+              <p class="lead">${dataObject['title']}</p>
+              <p>${dataObject['description']}</p>
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
             </div>
           </div>
           <div class="control">
@@ -92,8 +201,13 @@ $(document).ready(function(){
           <h4>01</h4>
           <div class="row">
             <div class="col-md-12">
+<<<<<<< HEAD
               <p class="lead">${dataObject['text_title']}</p>
               <p>${dataObject['text_text']}</p>
+=======
+              <p class="lead">${dataObject['title']}</p>
+              <p>${dataObject['description']}</p>
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
             </div>
           </div>
           <div class="control">
@@ -110,8 +224,14 @@ $(document).ready(function(){
     $('.activityList').append(htmlPeddingToInsert);
     $(this).parent()[0].reset();
   });
+<<<<<<< HEAD
   $(document).on('click', '.activity span.glyphicon-pencil', function(e){
     var $this = $(this).parents('div.activity');
+=======
+  $(document).on('click', '.activity span.glyphicon-floppy-remove', function(e){
+    var $this = $(this).parents('div.activity');
+    $this.css('background', 'url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==)');
+>>>>>>> 7edc789199db602934ebd1994b1a0dfaa2d29893
     // ajax unpublish activity id
   });
   $(document).on('click', '.activity span.glyphicon-pencil', function(e){

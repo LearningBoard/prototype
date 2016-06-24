@@ -14,6 +14,7 @@
     <script src="js/board_edit.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/css/fileinput.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
   </head>
 
@@ -31,11 +32,11 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right text-center">
-            <li><a href="#">
+            <li><a href="#" class="addBoardBtn">
               <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
               <br />Save Board
             </a></li>
-            <li><a href="#">
+            <li><a href="#" class="deleteBoardBtn">
               <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
               <br />Delete Board
             </a></li>
@@ -55,7 +56,12 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3">
-          <form class="addBoardForm"> <p><img src="https://placehold.it/300x200" alt="Upload image here" class="img-responsive"></p> <div class="form-group">
+          <form class="addBoardForm">
+            <input type="hidden" name="pk" value="">
+            <div class="kv-avatar center-block">
+              <input type="file" class="file-loading uploadImage">
+            </div>
+            <div class="form-group">
               <input type="text" class="form-control" id="boardTitle" placeholder="Board Title" maxlength="150" name="title" required>
               <p class="text-muted text-right"><i>Characters left: <span id="boardTitleCount">150</span></i></p>
             </div>
@@ -136,7 +142,7 @@
                         <input type="hidden" name="type" value="video">
                         <div class="form-group">
                           <label for="video_title">Title</label>
-                          <input type="text" class="form-control" id="video_title" name="video_title" placeholder="Activity title">
+                          <input type="text" class="form-control" id="video_title" name="title" placeholder="Activity title">
                         </div>
                         <div class="form-group">
                           <label for="video_link">Video Link</label>
@@ -144,23 +150,23 @@
                         </div>
                         <div class="form-group">
                           <label for="video_description">Description</label>
-                          <textarea class="form-control" id="video_description" name="video_description" rows="3" placeholder="Description"></textarea>
+                          <textarea class="form-control" id="video_description" name="description" rows="3" placeholder="Description"></textarea>
                         </div>
-                        <button type="button" class="btn btn-default addActivityBtn" >Submit</button>
+                        <button type="button" class="btn btn-default addActivityBtn">Submit</button>
                       </form>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="text">
-                      <form>
+                      <form class="addActivityForm">
                         <input type="hidden" name="type" value="text">
                         <div class="form-group">
                           <label for="text_title">Title</label>
-                          <input type="text" class="form-control" id="text_title" name="text_title" placeholder="Activity title">
+                          <input type="text" class="form-control" id="text_title" name="title" placeholder="Activity title">
                         </div>
                         <div class="form-group">
                           <label for="text_text">Text</label>
-                          <textarea class="form-control" id="text_text" name="text_text" rows="8" placeholder="Text"></textarea>
+                          <textarea class="form-control" id="text_text" name="description" rows="8" placeholder="Text"></textarea>
                         </div>
-                        <button type="button" class="btn btn-default addBoardBtn">Submit</button>
+                        <button type="button" class="btn btn-default addActivityBtn">Submit</button>
                       </form>
                     </div>
                   </div>
@@ -205,7 +211,7 @@
             <h4 class="modal-title">Add Tag</h4>
           </div>
           <div class="modal-body">
-            <input type="text" name="tag" placeholder="Tag">
+            <input type="text" class="form-control" name="tag" placeholder="Tag">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -21,6 +21,9 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accts/add/$', views.account_add),
     url(r'^accts/login/$', views.user_login),
+    url(r'^lb/get/(?P<pk>\d+)/$', views.lb_get),
     url(r'^lb/add/$', views.lb_add),
+    url(r'^lb/edit/$', views.lb_edit),
+    url(r'^lb/delete/(?P<pk>\d+)/$', views.lb_delete),
     url(r'^activity/add/$', views.activity_add),
 ]
