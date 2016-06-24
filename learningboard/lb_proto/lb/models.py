@@ -39,5 +39,8 @@ class Activity(models.Model):
     class Meta:
         verbose_name_plural = "activities"
 
-    name = models.CharField(max_length = 255)
+    title = models.CharField(max_length = 255)
+    description = models.TextField(null = True, blank = True)
+    type = models.CharField(max_length = 255)
+    data = models.TextField(null = True, blank = True)
     lb = models.ForeignKey(LearningBoard, null=True, blank=True)

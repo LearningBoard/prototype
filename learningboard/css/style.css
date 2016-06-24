@@ -129,6 +129,10 @@ body > .container {
   border: none;
 }
 
+.activityList > .noActivity {
+  margin-top: 25px;
+}
+
 .activityList > .activity {
   position: relative;
   padding: 10px;

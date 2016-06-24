@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from django.forms.models import model_to_dict
-import tools
+import tools, json
 from models import *
 # Create your views here.
 
@@ -40,7 +40,8 @@ def lb_get(request, pk):
         return HttpResponse("not found", status = 404)
     else:
         # TODO output image field
-        return JsonResponse(model_to_dict(board, fields=[], exclude=['image']));
+        activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = pk) ]
+        return JsonResponse({'board': model_to_dict(board, fields=[], exclude=['image']), 'activity': activity});
 
 @csrf_exempt
 def lb_add(request):
@@ -55,7 +56,7 @@ def lb_add(request):
     return JsonResponse({"pk": board.id});
 
 @csrf_exempt
-def lb_edit(request):
+def lb_edit(request, pk):
     print request.POST
     board = LearningBoard.objects.get(pk = request.POST['pk'])
     if board is None:
@@ -75,14 +76,28 @@ def lb_delete(request, pk):
 @csrf_exempt
 def activity_add(request):
     print request.POST
+    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type']})
     if request.POST.get('pk', None) is None:
-        act = Activity.objects.create(name = request.POST['title'])
+        act = Activity.objects.create(
+            title = request.POST['title'],
+            description = request.POST['description'],
+            type = request.POST['type'],
+            data = data
+        )
     else:
         act = Activity.objects.create(
-            name = request.POST['title'],
+            title = request.POST['title'],
+            description = request.POST['description'],
+            type = request.POST['type'],
+            data = data,
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
     return JsonResponse({"pk": act.id});
+
+@csrf_exempt
+def activity_delete(request, pk):
+    Activity.objects.filter(pk = pk).delete()
+    return HttpResponse("done")
 
 @csrf_exempt
 def user_login(request):
