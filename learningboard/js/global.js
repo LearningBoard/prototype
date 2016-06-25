@@ -38,7 +38,7 @@ $(document).ready(function(){
               <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
               <br />Browse
             </a></li>
-            <li class="active"><a href="boards.html">
+            <li class="${location.href.includes('boards.html') ? 'active' : ''}"><a href="boards.html">
               <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
               <br />My Boards
             </a></li>
@@ -46,7 +46,7 @@ $(document).ready(function(){
               <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
               <br />What's New
             </a></li>
-            <li class="login"><a href="login.html">
+            <li class="login ${location.href.includes('login.html') ? 'active' : ''}"><a href="login.html">
               <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
               <br />Login
             </a></li>
