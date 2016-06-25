@@ -22,6 +22,15 @@ def method_required(required_method):
     return _decorator
 
 @csrf_exempt
+def category_getAll(request):
+    category = Category.objects.all()
+    if len(category) < 1:
+        return JsonResponse({})
+    else:
+        category = [ model_to_dict(obj) for obj in category ]
+        return JsonResponse({'category': category});
+
+@csrf_exempt
 def lb_get(request, board_id):
     print request.GET
     board = LearningBoard.objects.get(pk = board_id)
@@ -68,7 +77,9 @@ def lb_add(request):
     board = LearningBoard.objects.create(
         author_id = request.POST["author_id"],
         title = request.POST['title'],
-        description = request.POST['description']
+        description = request.POST['description'],
+        category = Category.objects.get(pk = request.POST['category']),
+        level = request.POST['contentLevel']
     )
     # Assign board id to tag
     if request.POST.getlist('tag_list[]', None) is not None:
@@ -88,6 +99,7 @@ def lb_edit(request, board_id):
     else:
         board.title = request.POST['title']
         board.description = request.POST['description']
+        board.category = Category.objects.get(pk = request.POST['category'])
         board.level = request.POST['contentLevel']
         if request.POST.getlist('tag_list[]', None) is not None:
             board.tags.exclude(pk__in = request.POST.getlist('tag_list[]')).delete()
