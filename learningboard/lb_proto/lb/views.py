@@ -75,11 +75,17 @@ def lb_delete(request, pk):
 @csrf_exempt
 def activity_add(request):
     print request.POST
-    if request.POST.get('pk', None) is None:
-        act = Activity.objects.create(name = request.POST['title'])
+    if request.POST.get('pk', None) is None: # board_pk
+        act = Activity.objects.create(
+            name = request.POST['title'],
+            video_link = request.POST['video_link'],
+            desc = request.POST['description']
+        )
     else:
         act = Activity.objects.create(
             name = request.POST['title'],
+            video_link = request.POST['video_link'],
+            desc = request.POST['description'],
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
     return JsonResponse({"pk": act.id});
@@ -97,3 +103,15 @@ def user_login(request):
     if stu.password != pwd:
         return HttpResponse("auth error", status = 401);
     return JsonResponse({"pk": stu.id});
+
+@csrf_exempt
+@method_required("get")
+def load_activity(request):
+    pk_board = request.GET.get('pk_board')
+    acts = list(Activity.objects.all(lb__pk = pk_board))
+    for i in len(acts):
+        acts[i] = model_to_dict[acts[i]]
+    return JsonResponse({"activity": acts})
+
+
+

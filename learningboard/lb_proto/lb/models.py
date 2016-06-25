@@ -39,5 +39,15 @@ class Activity(models.Model):
     class Meta:
         verbose_name_plural = "activities"
 
+    def __str__(self):
+        return self.name
+
     name = models.CharField(max_length = 255)
+    url = models.URLField(max_length = 255, null=True, blank=True)
+    video_link = models.URLField(max_length = 255, null=True, blank=True)
+    desc = models.TextField(null=True, blank=True)
     lb = models.ForeignKey(LearningBoard, null=True, blank=True)
+    author = models.ForeignKey(Staff, null=True)
+    last_modified = models.DateTimeField(auto_now = True)
+    post_time = models.DateTimeField(auto_now_add = True)
+
