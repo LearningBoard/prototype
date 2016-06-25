@@ -31,6 +31,13 @@ $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min
 });
 
 $(document).ready(function(){
+  // load category data
+  $.get(serv_addr+'category/getAll/', function(data){
+    for(var i = 0; i < data.category.length; i++){
+      $('select[name=category]').append(`<option value="${data.category[i].id}">${data.category[i].name}</option>`)
+    }
+  });
+
   // reset data for new board
   if(location.search.includes('?new')){
     $('form.addBoardForm input[name=title], form.addBoardForm textarea[name=description]').val('').trigger('keydown');

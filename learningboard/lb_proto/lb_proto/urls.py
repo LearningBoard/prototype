@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accts/register/$', views.user_register),
     url(r'^accts/login/$', views.user_login),
+    url(r'^category/getAll/$', views.category_getAll),
     url(r'^lb/get/(?P<board_id>\d+)/$', views.lb_get),
     url(r'^lb/add/$', views.lb_add),
     url(r'^lb/edit/(?P<board_id>\d+)/$', views.lb_edit),

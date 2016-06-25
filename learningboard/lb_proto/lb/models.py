@@ -22,6 +22,9 @@ class Tag(models.Model):
     def __str__(self):
         return self.tag
 
+class Category(models.Model):
+    name = models.CharField(max_length = 255)
+
 class LearningBoard(models.Model):
     image = models.ImageField(null=True, blank=True)
     title = models.CharField(max_length = 127)
@@ -34,6 +37,7 @@ class LearningBoard(models.Model):
             (UNPUB, 'unpublished')
         ), max_length = 127, default=UNPUB
     )
+    category = models.ForeignKey(Category, null=True)
     level = models.PositiveSmallIntegerField(
         choices=(
             (0, 'Beginner'),
@@ -82,4 +86,3 @@ class Follow(models.Model):
 class Like(models.Model):
     user = models.ForeignKey(Student, related_name="likes")
     lb = models.ForeignKey(LearningBoard, related_name="liked_by")
-
