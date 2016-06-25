@@ -102,7 +102,7 @@ def activity_get(request, activity_id):
 @csrf_exempt
 def activity_add(request):
     print request.POST
-    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type']})
+    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id']})
     # pk = board_id
     if request.POST.get('pk', None) is None:
         act = Activity.objects.create(
@@ -120,6 +120,20 @@ def activity_add(request):
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
     return JsonResponse({"pk": act.id});
+
+@csrf_exempt
+def activity_edit(request, activity_id):
+    print request.POST
+    act = Activity.objects.get(pk = activity_id)
+    if act is None:
+        return HttpResponse("not found", status = 404)
+    else:
+        data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id']})
+        act.title = request.POST['title']
+        act.description = request.POST['description']
+        act.data = data
+        act.save()
+        return JsonResponse({"pk": act.id});
 
 @csrf_exempt
 def activity_delete(request, activity_id):
