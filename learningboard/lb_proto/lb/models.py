@@ -27,6 +27,13 @@ class LearningBoard(models.Model):
             (UNPUB, 'unpublished')
         ), max_length = 127, default=UNPUB
     )
+    level = models.PositiveSmallIntegerField(
+        choices=(
+            (0, 'Beginner'),
+            (1, 'Intermediate'),
+            (2, 'Advanced')
+        ), default=0
+    )
     completed = models.BooleanField(default = False)
     following = models.BooleanField(default = False)
 
@@ -42,12 +49,20 @@ class Activity(models.Model):
     def __str__(self):
         return self.name
 
-    name = models.CharField(max_length = 255)
-    url = models.URLField(max_length = 255, null=True, blank=True)
-    video_link = models.URLField(max_length = 255, null=True, blank=True)
-    desc = models.TextField(null=True, blank=True)
+
+    title = models.CharField(max_length = 255)
+    description = models.TextField(null = True, blank = True)
+    type = models.CharField(max_length = 255)
+    data = models.TextField(null = True, blank = True)
     lb = models.ForeignKey(LearningBoard, null=True, blank=True)
+    PUB = "PB"
+    UNPUB = "UP"
+    status = models.CharField(
+        choices=(
+            (PUB, 'published'),
+            (UNPUB, 'unpublished')
+        ), max_length = 127, default=PUB
+    )
     author = models.ForeignKey(Staff, null=True)
     last_modified = models.DateTimeField(auto_now = True)
     post_time = models.DateTimeField(auto_now_add = True)
-

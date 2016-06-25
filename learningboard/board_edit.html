@@ -40,9 +40,13 @@
               <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
               <br />Delete Board
             </a></li>
-            <li><a href="#">
+            <li><a href="#" class="publishBoardBtn">
               <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
               <br />Publish Board
+            </a></li>
+            <li class="hidden"><a href="#" class="unpublishBoardBtn">
+              <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
+              <br />Unpublish Board
             </a></li>
             <li><a href="#">
               <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>
@@ -57,7 +61,6 @@
       <div class="row">
         <div class="col-md-3">
           <form class="addBoardForm">
-            <input type="hidden" name="pk" value="">
             <div class="kv-avatar center-block">
               <input type="file" class="file-loading uploadImage">
             </div>
@@ -116,7 +119,6 @@
                 <li>very very very very very very very long tag <span>x</span></li>
               </ul>
             </div>
-            <button type="button" class="btn btn-default addBoardBtn" >Submit</button>
           </form>
         </div>
         <div class="col-md-9">
@@ -132,7 +134,7 @@
               </div>
               <div id="collapseAddActivity" class="panel-collapse collapse" role="tabpanel" aria-labelledby="addActivityHeading">
                 <div class="panel-body">
-                  <ul class="nav nav-tabs" role="addActivityTab">
+                  <ul id="activityTab" class="nav nav-tabs" role="addActivityTab">
                     <li role="presentation" class="active"><a href="#video" aria-controls="video" role="tab" data-toggle="tab">Video</a></li>
                     <li role="presentation"><a href="#text" aria-controls="text" role="tab" data-toggle="tab">Text</a></li>
                   </ul>
@@ -175,29 +177,7 @@
             </div>
           </div>
           <div class="activityList">
-            <div class="activity">
-              <h4>01</h4>
-              <div class="row">
-                <div class="col-md-4">
-                  <img src="https://placehold.it/300x200" alt="" class="img-responsive">
-                </div>
-                <div class="col-md-offset-1 col-md-7">
-                  <p class="lead">Introduction - Callbacks, Non-Blocking, Node.JS, and NPM (3 mins)</p>
-                  <p>Join us in a journey through data manipulation, callbacks, and non-blocking computation. We will then leverage the work on callbacks to move into Node.js and non-blocking computation. We will finish with npm, the package manager for Node.js, and the largest ecosystem of open source libraries in the world. <a href="#">Exercise Instructions</a></p>
-                </div>
-                <div class="col-md-12">
-                  <p>https://www.youtube.com/watch?v=blR0qohzG4Y</p>
-                  <p>Dr. Abel Sanchez</p>
-                </div>
-              </div>
-              <div class="control">
-                <ul>
-                  <li><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
-                  <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
-                  <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
-                </ul>
-              </div>
-            </div>
+            <p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>
           </div>
         </div>
       </div>
