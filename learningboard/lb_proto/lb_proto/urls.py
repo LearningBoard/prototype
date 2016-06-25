@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^lb/add/$', views.lb_add),
     url(r'^lb/edit/(?P<pk>\d+)/$', views.lb_edit),
     url(r'^lb/delete/(?P<pk>\d+)/$', views.lb_delete),
+    url(r'^lb/publish/(?P<pk>\d+)/$', views.lb_publish),
+    url(r'^lb/unpublish/(?P<pk>\d+)/$', views.lb_unpublish),
     url(r'^activity/add/$', views.activity_add),
     url(r'^activity/delete/(?P<pk>\d+)/$', views.activity_delete),
 ]

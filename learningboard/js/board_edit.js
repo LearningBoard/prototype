@@ -43,6 +43,10 @@ $(document).ready(function(){
   if(/\?\d+/.test(location.search)){
     pk = location.search.replace('?', '');
     $.get(serv_addr+'lb/get/'+pk+'/', function(data){
+      if(data.board.status == 'PB'){
+        $('.publishBoardBtn').parent().addClass('hidden');
+        $('.unpublishBoardBtn').parent().removeClass('hidden');
+      }
       $('form.addBoardForm input[name=title]').val(data.board.title).trigger('keydown');
       $('form.addBoardForm textarea[name=description]').val(data.board.description);
       if(data.activity && data.activity.length > 0){
@@ -130,6 +134,28 @@ $(document).ready(function(){
         location.href = 'boards.html';
       })
     }
+  })
+  $('a.publishBoardBtn').on('click', function(e)
+  {
+    e.preventDefault();
+    if(!pk) return false;
+    $.post(serv_addr+'lb/publish/'+pk+'/', function(data)
+    {
+      $('.publishBoardBtn').parent().addClass('hidden');
+      $('.unpublishBoardBtn').parent().removeClass('hidden');
+      alert('Board published');
+    })
+  })
+  $('a.unpublishBoardBtn').on('click', function(e)
+  {
+    e.preventDefault();
+    if(!pk) return false;
+    $.post(serv_addr+'lb/unpublish/'+pk+'/', function(data)
+    {
+      $('.publishBoardBtn').parent().removeClass('hidden');
+      $('.unpublishBoardBtn').parent().addClass('hidden');
+      alert('Board unpublished');
+    })
   })
   $('button.addActivityBtn').on('click', function(e){
     e.preventDefault();

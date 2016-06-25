@@ -74,6 +74,20 @@ def lb_delete(request, pk):
     return HttpResponse("done")
 
 @csrf_exempt
+def lb_publish(request, pk):
+    board = LearningBoard.objects.get(pk = pk)
+    board.status = "PB"
+    board.save()
+    return HttpResponse("done")
+
+@csrf_exempt
+def lb_unpublish(request, pk):
+    board = LearningBoard.objects.get(pk = pk)
+    board.status = "UP"
+    board.save()
+    return HttpResponse("done")
+
+@csrf_exempt
 def activity_add(request):
     print request.POST
     data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type']})
