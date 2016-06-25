@@ -33,4 +33,5 @@ urlpatterns = [
     url(r'^activity/delete/(?P<activity_id>\d+)/$', views.activity_delete),
     url(r'^activity/publish/(?P<activity_id>\d+)/$', views.activity_publish),
     url(r'^activity/unpublish/(?P<activity_id>\d+)/$', views.activity_unpublish),
+    url(r'^tag/add/$', views.tag_add),
 ]

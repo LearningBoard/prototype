@@ -1,6 +1,7 @@
 
 var pk;
 var cover_img;
+var tag_list = [];
 var activity_list = [];
 
 $.getScript("js/lib.js");
@@ -48,6 +49,12 @@ $(document).ready(function(){
         $('.publishBoardBtn').parent().addClass('hidden');
         $('.unpublishBoardBtn').parent().removeClass('hidden');
       }
+      if(data.tag){
+        data.tag.map(function(item){
+          tag_list.push(item.id);
+          $('.tagList ul').append(`<li data-id="${item.id}">${item.tag} <span>x</span></li>`);
+        });
+      }
       $('form.addBoardForm input[name=title]').val(data.board.title).trigger('keydown');
       $('form.addBoardForm textarea[name=description]').val(data.board.description);
       $('form.addBoardForm input[name=contentLevel][value='+data.board.level+']').prop('checked', true);
@@ -72,19 +79,27 @@ $(document).ready(function(){
   // tag remove
   $(document).on('click', '.tagList ul li span', function(e){
     var $this = $(this).parent();
-    $this.fadeOut('slow', function(){
+    $this.fadeOut('fast', function(){
       $this.remove();
+      tag_list.splice(tag_list.indexOf($this.data('id')), 1);
     });
   });
 
   // tag add modal
-  $('#addTagModal').on('show.bs.modal', function(e){
+  $('#addTagModal').on('shown.bs.modal', function(e){
     var modal = $(this);
-    modal.find('.modal-footer button:eq(1)').on('click', function(e){
+    modal.find('.modal-footer button:eq(1)').off('click').on('click', function(e){
+      e.preventDefault();
       var tag = modal.find('.modal-body input[name=tag]');
-      $('.tagList ul').append(`<li>${tag.val()} <span>x</span></li>`);
-      $('#addTagModal').modal('hide');
-      tag.val('');
+      $.post(serv_addr+'tag/add/', {tag: tag.val()}, function(data){
+        console.log(data);
+        if(tag_list.indexOf(data.pk) === -1){
+          tag_list.push(data.pk);
+          $('.tagList ul').append(`<li data-id="${data.pk}">${tag.val()} <span>x</span></li>`);
+        }
+        $('#addTagModal').modal('hide');
+        tag.val('');
+      });
     });
   });
 
@@ -95,6 +110,9 @@ $(document).ready(function(){
     var dataObject = $('form.addBoardForm').serializeObject();
     if(cover_img){
       dataObject.cover_img = cover_img;
+    }
+    if(tag_list){
+      dataObject.tag_list = tag_list;
     }
     if(activity_list){
       dataObject.activity_list = activity_list;

@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from django.forms.models import model_to_dict
+from django.utils.text import slugify
 import tools, json
 from models import *
 # Create your views here.
@@ -28,8 +29,9 @@ def lb_get(request, board_id):
         return HttpResponse("not found", status = 404)
     else:
         # TODO output image field
+        tag =  [ model_to_dict(obj) for obj in board.tags.all() ]
         activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id) ]
-        return JsonResponse({'board': model_to_dict(board, fields=[], exclude=['image']), 'activity': activity});
+        return JsonResponse({'board': model_to_dict(board, fields=[], exclude=['image']), 'activity': activity, 'tag': tag});
 
 @csrf_exempt
 def lb_add(request):
@@ -39,6 +41,10 @@ def lb_add(request):
         title = request.POST['title'],
         description = request.POST['description']
     )
+    # Assign board id to tag
+    if request.POST.getlist('tag_list[]', None) is not None:
+        board.tags.add(*Tag.objects.filter(pk__in = request.POST.getlist('tag_list[]')))
+        board.save()
     # Assign board id to previous saved activity
     if request.POST.getlist('activity_list[]', None) is not None:
         Activity.objects.filter(pk__in = request.POST.getlist('activity_list[]')).update(lb = board.id)
@@ -54,6 +60,10 @@ def lb_edit(request, board_id):
         board.title = request.POST['title']
         board.description = request.POST['description']
         board.level = request.POST['contentLevel']
+        if request.POST.getlist('tag_list[]', None) is not None:
+            board.tags.exclude(pk__in = request.POST.getlist('tag_list[]')).delete()
+            for tag in Tag.objects.filter(pk__in = request.POST.getlist('tag_list[]')):
+                board.tags.add(tag.id);
         board.save()
         return JsonResponse({"pk": board.id});
 
@@ -143,6 +153,17 @@ def activity_unpublish(request, activity_id):
     return HttpResponse("done")
 
 @csrf_exempt
+def tag_add(request):
+    tag = tools.get_or_None(Tag, tag = request.POST['tag'])
+    if tag is not None:
+      return JsonResponse({"pk": tag.id});
+    tag = Tag.objects.create(
+        tag = request.POST['tag'],
+        slug = slugify(request.POST['tag'])
+    )
+    return JsonResponse({"pk": tag.id});
+
+@csrf_exempt
 @method_required('post')
 def user_register(request):
     usr = request.POST.get('username', None)
@@ -178,6 +199,3 @@ def load_activity(request):
     for i in len(acts):
         acts[i] = model_to_dict[acts[i]]
     return JsonResponse({"activity": acts})
-
-
-

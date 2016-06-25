@@ -17,6 +17,7 @@ class ActivityInline(admin.StackedInline):
 
 admin.site.register(lb.Student, StudentAdmin)
 admin.site.register(lb.Staff, StaffAdmin)
+admin.site.register(lb.Tag)
 admin.site.register(lb.LearningBoard)
 admin.site.register(lb.Endorsement)
 admin.site.register(lb.Activity)
