@@ -10,10 +10,10 @@ class Student(models.Model):
 
 class Staff(models.Model):
 
-    username = models.CharField(max_length = 30)
+    username = models.CharField(max_length = 30, unique = True)
     password = models.CharField(max_length = 30)
     office = models.CharField(max_length = 255, null=True)
-    is_staff = True
+    # is_staff = True
 
 class LearningBoard(models.Model):
     image = models.ImageField(null=True, blank=True)
@@ -63,6 +63,15 @@ class Activity(models.Model):
             (UNPUB, 'unpublished')
         ), max_length = 127, default=PUB
     )
-    author = models.ForeignKey(Staff, null=True)
+    author = models.ForeignKey(Staff, null=True, related_name="activities")
     last_modified = models.DateTimeField(auto_now = True)
     post_time = models.DateTimeField(auto_now_add = True)
+
+class Follow(models.Model):
+    user = models.ForeignKey(Student, related_name="follows")
+    lb = models.ForeignKey(LearningBoard, related_name="followed_by")
+
+class Like(models.Model):
+    user = models.ForeignKey(Student, related_name="likes")
+    lb = models.ForeignKey(LearningBoard, related_name="liked_by")
+

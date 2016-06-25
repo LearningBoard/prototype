@@ -88,6 +88,15 @@ def activity_get(request, activity_id):
         return JsonResponse(model_to_dict(act, fields=[], exclude=[]))
 
 @csrf_exempt
+@method_required("get")
+def lb_load_activity(request):
+    pk_board = request.GET.get('pk_board')
+    acts = list(Activity.objects.all(lb__pk = pk_board))
+    for i in len(acts):
+        acts[i] = model_to_dict[acts[i]]
+    return JsonResponse({"activity": acts})
+
+@csrf_exempt
 def activity_add(request):
     print request.POST
     data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id']})
@@ -143,13 +152,33 @@ def activity_unpublish(request, activity_id):
     return HttpResponse("done")
 
 @csrf_exempt
+@method_required("post")
+def activity_follow(request):
+    lb_id = request.POST.get('activity_id')
+    u_id = request.POST.get('user_id')
+    if Follow.objects.filter(lb_id = lb_id, stu_id = u_id).exists():
+        Follow.objects.create(lb_id = lb_id, stu_id = u_id)
+        return JsonResponse({"ok": True})
+    return JsonResponse({"ok": False})
+
+@csrf_exempt
+@method_required("post")
+def activity_unfollow(request):
+    lb_id = request.POST.get('activity_id')
+    u_id = request.POST.get('user_id')
+    if Follow.objects.filter(lb_id = lb_id, stu_id = u_id).exists():
+        Follow.objects.delete(lb_id = lb_id, stu_id = u_id)
+        return JsonResponse({"ok": True})
+    return JsonResponse({"ok": False})
+
+@csrf_exempt
 @method_required('post')
 def user_register(request):
     usr = request.POST.get('username', None)
     pwd = request.POST.get('password', None)
     if usr != None and pwd != None:
-        if Student.objects.filter(username = usr).exists():
-            return JsonResponse({"ok": True, "pk": -1})
+        if Student.objects.filter(username = usr).exists() or Staff.objects.filter(username = usr).exists():
+            return JsonResponse({"ok": False, "info": "user already exists"})
         else:
             stu = Student.objects.create(username = usr, password = pwd)
             return JsonResponse({"ok": True, "pk": stu.id, "is_staff": False})
@@ -162,22 +191,14 @@ def user_login(request):
     usr = request.GET['username']
     pwd = request.GET['password']
 
-    stu = tools.get_or_None(Student, username = usr)
+    stu = tools.get_or_None(Student, username = usr, password = pwd)
     if stu is None:
-        return HttpResponse("auth error", status = 401);
+        staf = tools.get_or_None(Staff, username = usr, password = pwd)
+        if staf is None:
+            return JsonResponse({"ok": False, "info": "password not correct"})
+        return JsonResponse({"pk": staf.id, "is_staff": True})
 
-    if stu.password != pwd:
-        return HttpResponse("auth error", status = 401);
-    return JsonResponse({"pk": stu.id});
-
-@csrf_exempt
-@method_required("get")
-def load_activity(request):
-    pk_board = request.GET.get('pk_board')
-    acts = list(Activity.objects.all(lb__pk = pk_board))
-    for i in len(acts):
-        acts[i] = model_to_dict[acts[i]]
-    return JsonResponse({"activity": acts})
+    return JsonResponse({"pk": stu.id, "is_staff": False});
 
 
 
