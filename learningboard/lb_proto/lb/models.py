@@ -27,6 +27,13 @@ class LearningBoard(models.Model):
             (UNPUB, 'unpublished')
         ), max_length = 127, default=UNPUB
     )
+    level = models.PositiveSmallIntegerField(
+        choices=(
+            (0, 'Beginner'),
+            (1, 'Intermediate'),
+            (2, 'Advanced')
+        ), default=0
+    )
     completed = models.BooleanField(default = False)
     following = models.BooleanField(default = False)
 

@@ -33,14 +33,14 @@ def account_add(request):
       return HttpResponse("register error", status = 401);
 
 @csrf_exempt
-def lb_get(request, pk):
+def lb_get(request, board_id):
     print request.GET
-    board = LearningBoard.objects.get(pk = pk)
+    board = LearningBoard.objects.get(pk = board_id)
     if board is None:
         return HttpResponse("not found", status = 404)
     else:
         # TODO output image field
-        activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = pk) ]
+        activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id) ]
         return JsonResponse({'board': model_to_dict(board, fields=[], exclude=['image']), 'activity': activity});
 
 @csrf_exempt
@@ -51,38 +51,42 @@ def lb_add(request):
         title = request.POST['title'],
         description = request.POST['description']
     )
+    # Assign board id to previous saved activity
     if request.POST.getlist('activity_list[]', None) is not None:
         Activity.objects.filter(pk__in = request.POST.getlist('activity_list[]')).update(lb = board.id)
     return JsonResponse({"pk": board.id});
 
 @csrf_exempt
-def lb_edit(request, pk):
+def lb_edit(request, board_id):
     print request.POST
-    board = LearningBoard.objects.get(pk = request.POST['pk'])
+    board = LearningBoard.objects.get(pk = board_id)
     if board is None:
         return HttpResponse("not found", status = 404)
     else:
         board.title = request.POST['title']
         board.description = request.POST['description']
+        board.level = request.POST['contentLevel']
         board.save()
         return JsonResponse({"pk": board.id});
 
 @csrf_exempt
-def lb_delete(request, pk):
+def lb_delete(request, board_id):
+    # pk = board id
     print request.GET
-    LearningBoard.objects.filter(pk = pk).delete()
+    LearningBoard.objects.filter(pk = board_id).delete()
     return HttpResponse("done")
 
 @csrf_exempt
-def lb_publish(request, pk):
-    board = LearningBoard.objects.get(pk = pk)
+def lb_publish(request, board_id):
+    # pk = board id
+    board = LearningBoard.objects.get(pk = board_id)
     board.status = "PB"
     board.save()
     return HttpResponse("done")
 
 @csrf_exempt
-def lb_unpublish(request, pk):
-    board = LearningBoard.objects.get(pk = pk)
+def lb_unpublish(request, board_id):
+    board = LearningBoard.objects.get(pk = board_id)
     board.status = "UP"
     board.save()
     return HttpResponse("done")
@@ -91,6 +95,7 @@ def lb_unpublish(request, pk):
 def activity_add(request):
     print request.POST
     data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type']})
+    # pk = board_id
     if request.POST.get('pk', None) is None:
         act = Activity.objects.create(
             title = request.POST['title'],
@@ -109,8 +114,8 @@ def activity_add(request):
     return JsonResponse({"pk": act.id});
 
 @csrf_exempt
-def activity_delete(request, pk):
-    Activity.objects.filter(pk = pk).delete()
+def activity_delete(request, activity_id):
+    Activity.objects.filter(pk = activity_id).delete()
     return HttpResponse("done")
 
 @csrf_exempt

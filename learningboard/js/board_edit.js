@@ -29,7 +29,7 @@ $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min
 });
 
 $(document).ready(function(){
-  // reset data for new boardTitle
+  // reset data for new board
   if(location.search.includes('?new')){
     $('form.addBoardForm input[name=title], form.addBoardForm textarea[name=description]').val('').trigger('keydown');
     $('.tagList ul').text('');
@@ -39,7 +39,7 @@ $(document).ready(function(){
     });
   }
 
-  // assign pk to hidden field when editing the board
+  // assign value to field when editing the board
   if(/\?\d+/.test(location.search)){
     pk = location.search.replace('?', '');
     $.get(serv_addr+'lb/get/'+pk+'/', function(data){
@@ -49,6 +49,7 @@ $(document).ready(function(){
       }
       $('form.addBoardForm input[name=title]').val(data.board.title).trigger('keydown');
       $('form.addBoardForm textarea[name=description]').val(data.board.description);
+      $('form.addBoardForm input[name=contentLevel][value='+data.board.level+']').prop('checked', true);
       if(data.activity && data.activity.length > 0){
         $('.activityList .noActivity').hide();
         for(var i = 0; i < data.activity.length; i++){
@@ -109,7 +110,7 @@ $(document).ready(function(){
       dataObject.activity_list = activity_list;
     }
     if(pk){
-      $.post(serv_addr+'lb/edit/'+pk, dataObject, function(data)
+      $.post(serv_addr+'lb/edit/'+pk+'/', dataObject, function(data)
       {
         console.log(data);
         alert('Board saved');
