@@ -27,26 +27,32 @@ $(document).ready(function(){
           <a class="navbar-brand" href="index.html">Learning Boards</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
+          <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              <input type="text" class="form-control" placeholder="What do you want to learn today?" required>
+            </div>
+          </form>
           <ul class="nav navbar-nav navbar-right text-center">
-            <li><a href="#" class="addBoardBtn">
-              <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-              <br />Save Board
+            <li><a href="#browse">
+              <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+              <br />Browse
             </a></li>
-            <li><a href="#" class="deleteBoardBtn">
-              <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-              <br />Delete Board
+            <li class="active"><a href="boards.html">
+              <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+              <br />My Boards
             </a></li>
-            <li><a href="#" class="publishBoardBtn">
-              <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
-              <br />Publish Board
+            <li><a href="#Whatsnew">
+              <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
+              <br />What's New
             </a></li>
-            <li class="hidden"><a href="#" class="unpublishBoardBtn">
-              <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
-              <br />Unpublish Board
+            <li class="login"><a href="login.html">
+              <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+              <br />Login
             </a></li>
-            <li><a href="#">
-              <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>
-              <br />Preview Board
+            <li class="hidden logout"><a href="#">
+              <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+              <br />Logout
             </a></li>
           </ul>
         </div>
