@@ -175,7 +175,7 @@ body > .container {
   position: relative;
   display: inline-block;
   background-color: #EEE;
-  margin: 3px 0;
+  margin: 2px;
   padding: 5px 10px;
   border-radius: 5px;
 }

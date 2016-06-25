@@ -15,6 +15,13 @@ class Staff(models.Model):
     office = models.CharField(max_length = 255, null=True)
     # is_staff = True
 
+class Tag(models.Model):
+    tag = models.CharField(max_length = 255)
+    slug = models.SlugField(max_length = 255)
+
+    def __str__(self):
+        return self.tag
+
 class LearningBoard(models.Model):
     image = models.ImageField(null=True, blank=True)
     title = models.CharField(max_length = 127)
@@ -34,6 +41,7 @@ class LearningBoard(models.Model):
             (2, 'Advanced')
         ), default=0
     )
+    tags = models.ManyToManyField(Tag)
     completed = models.BooleanField(default = False)
     following = models.BooleanField(default = False)
 
@@ -47,7 +55,7 @@ class Activity(models.Model):
         verbose_name_plural = "activities"
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
     title = models.CharField(max_length = 255)

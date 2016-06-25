@@ -33,6 +33,12 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Follow',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+            ],
+        ),
+        migrations.CreateModel(
             name='LearningBoard',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -46,10 +52,17 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Like',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('lb', models.ForeignKey(related_name='liked_by', to='lb.LearningBoard')),
+            ],
+        ),
+        migrations.CreateModel(
             name='Staff',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('username', models.CharField(max_length=30)),
+                ('username', models.CharField(unique=True, max_length=30)),
                 ('password', models.CharField(max_length=30)),
                 ('office', models.CharField(max_length=255, null=True)),
             ],
@@ -58,10 +71,38 @@ class Migration(migrations.Migration):
             name='Student',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('username', models.CharField(max_length=30)),
+                ('username', models.CharField(unique=True, max_length=30)),
                 ('password', models.CharField(max_length=30)),
                 ('major', models.CharField(max_length=255, null=True)),
             ],
+        ),
+        migrations.CreateModel(
+            name='Tag',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('tag', models.CharField(max_length=255)),
+                ('slug', models.SlugField(max_length=255)),
+            ],
+        ),
+        migrations.AddField(
+            model_name='like',
+            name='user',
+            field=models.ForeignKey(related_name='likes', to='lb.Student'),
+        ),
+        migrations.AddField(
+            model_name='learningboard',
+            name='tags',
+            field=models.ManyToManyField(to='lb.Tag'),
+        ),
+        migrations.AddField(
+            model_name='follow',
+            name='lb',
+            field=models.ForeignKey(related_name='followed_by', to='lb.LearningBoard'),
+        ),
+        migrations.AddField(
+            model_name='follow',
+            name='user',
+            field=models.ForeignKey(related_name='follows', to='lb.Student'),
         ),
         migrations.AddField(
             model_name='endorsement',
@@ -76,7 +117,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='activity',
             name='author',
-            field=models.ForeignKey(to='lb.Staff', null=True),
+            field=models.ForeignKey(related_name='activities', to='lb.Staff', null=True),
         ),
         migrations.AddField(
             model_name='activity',
