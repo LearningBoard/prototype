@@ -165,15 +165,26 @@ $(document).ready(function(){
       dataObject.pk = pk;
     }
     console.log(dataObject);
-    $.post(serv_addr+'activity/add/', dataObject, function(data)
-    {
-      console.log(data);
-      activity_list.push(data.pk);
+    if(dataObject.activity_id){ // edit existing activity
+      $.post(serv_addr+'activity/edit/'+dataObject.activity_id+'/', dataObject, function(data)
+      {
+        $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
+        var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
+        prevDom.replaceWith(renderActivity(data.pk, dataObject));
+        $this.parent()[0].reset();
+        $this.parent().find('input[name=activity_id]').val('');
+      });
+    }else{ // add new activity
+      $.post(serv_addr+'activity/add/', dataObject, function(data)
+      {
+        console.log(data);
+        activity_list.push(data.pk);
 
-      $('.activityList .noActivity').hide();
-      $('.activityList').append(renderActivity(data.pk, dataObject));
-      $this.parent()[0].reset();
-    });
+        $('.activityList .noActivity').hide();
+        $('.activityList').append(renderActivity(data.pk, dataObject));
+        $this.parent()[0].reset();
+      });
+    }
   });
 
   // unpublish activity
@@ -208,17 +219,15 @@ $(document).ready(function(){
     var id = $(this).parents('div.control').data('id');
     $.get(serv_addr+'activity/get/'+id+'/', function(data)
     {
-      //data = $.extend(data, JSON.parse(data.data));
       $('#collapseAddActivity').collapse('show');
-      var targetTab = $('#activityTab a[href="#'+data.type+'"]');
-      targetTab.tab('show');
-      targetTab.find('input[name=title]').val(data.title);
-      targetTab.find('textarea[name=description]').val(data.description);
+      $('#activityTab a[href="#'+data.type+'"]').tab('show');
+      var targetForm = $('#collapseAddActivity #' + data.type);
+      targetForm.find('.addActivityForm input[name=activity_id]').val(data.id);
+      targetForm.find('input[name=title]').val(data.title);
+      targetForm.find('textarea[name=description]').val(data.description);
       data = JSON.parse(data.data);
-      if(data.length > 0){
-        for(var i = 0; i < data.length; i++){
-          
-        }
+      for(var key in data){
+        targetForm.find('[name='+key+']').val(data[key]);
       }
     });
   });
