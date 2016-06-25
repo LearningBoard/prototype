@@ -119,6 +119,20 @@ def activity_delete(request, activity_id):
     return HttpResponse("done")
 
 @csrf_exempt
+def activity_publish(request, activity_id):
+    act = Activity.objects.get(pk = activity_id)
+    act.status = "PB"
+    act.save()
+    return HttpResponse("done")
+
+@csrf_exempt
+def activity_unpublish(request, activity_id):
+    act = Activity.objects.get(pk = activity_id)
+    act.status = "UP"
+    act.save()
+    return HttpResponse("done")
+
+@csrf_exempt
 def user_login(request):
     print request.GET
     usr = request.GET['username']

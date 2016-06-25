@@ -51,3 +51,11 @@ class Activity(models.Model):
     type = models.CharField(max_length = 255)
     data = models.TextField(null = True, blank = True)
     lb = models.ForeignKey(LearningBoard, null=True, blank=True)
+    PUB = "PB"
+    UNPUB = "UP"
+    status = models.CharField(
+        choices=(
+            (PUB, 'published'),
+            (UNPUB, 'unpublished')
+        ), max_length = 127, default=PUB
+    )

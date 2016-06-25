@@ -179,8 +179,25 @@ $(document).ready(function(){
   });
   $(document).on('click', '.activity span.glyphicon-floppy-remove', function(e){
     var $this = $(this).parents('div.activity');
-    $this.css('background', 'url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==)');
-    // ajax unpublish activity id
+    var $thisBtn = $(this);
+    var id = $(this).parents('div.control').data('id');
+    $.post(serv_addr+'activity/unpublish/'+id+'/', function(data)
+    {
+      $this.css('background', 'url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==)');
+      $thisBtn.parent().addClass('hidden');
+      $thisBtn.parent().next().removeClass('hidden');
+    });
+  });
+  $(document).on('click', '.activity span.glyphicon-floppy-saved', function(e){
+    var $this = $(this).parents('div.activity');
+    var $thisBtn = $(this);
+    var id = $(this).parents('div.control').data('id');
+    $.post(serv_addr+'activity/publish/'+id+'/', function(data)
+    {
+      $this.css('background', '');
+      $thisBtn.parent().addClass('hidden');
+      $thisBtn.parent().prev().removeClass('hidden');
+    });
   });
   $(document).on('click', '.activity span.glyphicon-pencil', function(e){
     var $this = $(this).parents('div.activity');
@@ -231,6 +248,7 @@ function renderActivity(pk, dataObject){
         <div class="control" data-id="${pk}">
           <ul>
             <li><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
+            <li class="hidden"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
             <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
             <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
           </ul>
@@ -250,6 +268,7 @@ function renderActivity(pk, dataObject){
         <div class="control" data-id="${pk}">
           <ul>
             <li><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
+            <li class="hidden"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
             <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
             <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
           </ul>
