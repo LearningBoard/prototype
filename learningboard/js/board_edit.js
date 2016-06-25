@@ -124,6 +124,7 @@ $(document).ready(function(){
         alert('Board saved');
       })
     }else{
+      dataObject['author_id'] = localStorage['user_id']
       $.post(serv_addr+'lb/add/', dataObject, function(data)
       {
         console.log(data);

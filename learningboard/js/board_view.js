@@ -1,6 +1,11 @@
 $(document).ready(function(){
+  if (localStorage['is_staff'] !== "true")
+  {
+    $("#endorseBtn").addClass("hidden");
+  }
   $('.action button:eq(0)').on('click', function(){
     if($(this).hasClass('btn-primary')){
+      //$.post(serv_addr+'activity/unfollow/', {user_id: localStorage['user_id'], lb_id: location.})
       $('.progress_following').text(parseInt($('.progress_following').text()) - 1);
       $(this).removeClass('btn-primary');
     }else{

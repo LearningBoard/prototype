@@ -38,7 +38,7 @@ $(document).ready(function()
     console.log(o);
     $.post(serv_addr+'accts/register/', o, function(data)
     {
-      if (data.pk >= 0)
+      if (data.ok)
       {
         localStorage['user_id'] = data.pk;
         localStorage['is_staff'] = data.is_staff? data.is_staff: false;
