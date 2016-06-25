@@ -19,7 +19,7 @@ from lb import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accts/add/$', views.account_add),
+    url(r'^accts/register/$', views.user_register),
     url(r'^accts/login/$', views.user_login),
     url(r'^lb/get/(?P<board_id>\d+)/$', views.lb_get),
     url(r'^lb/add/$', views.lb_add),

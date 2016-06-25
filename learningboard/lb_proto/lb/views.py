@@ -21,18 +21,6 @@ def method_required(required_method):
     return _decorator
 
 @csrf_exempt
-def account_add(request):
-    print request.POST
-    stu = Student.objects.create(
-        username = request.POST['username'],
-        password = request.POST['password']
-    )
-    if stu.id is not None:
-      return JsonResponse({"pk": stu.id});
-    else:
-      return HttpResponse("register error", status = 401);
-
-@csrf_exempt
 def lb_get(request, board_id):
     print request.GET
     board = LearningBoard.objects.get(pk = board_id)
@@ -139,6 +127,20 @@ def activity_unpublish(request, activity_id):
     act.status = "UP"
     act.save()
     return HttpResponse("done")
+
+@csrf_exempt
+@method_required('post')
+def user_register(request):
+    usr = request.POST.get('username', None)
+    pwd = request.POST.get('password', None)
+    if usr != None and pwd != None:
+        if Student.objects.filter(username = usr).exists():
+            return JsonResponse({"ok": True, "pk": -1})
+        else:
+            stu = Student.objects.create(username = usr, password = pwd)
+            return JsonResponse({"ok": True, "pk": stu.id, "is_staff": False})
+    else:
+        return JsonResponse({"ok": False})
 
 @csrf_exempt
 def user_login(request):
