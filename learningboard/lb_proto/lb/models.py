@@ -23,6 +23,7 @@ class Tag(models.Model):
         return self.tag
 
 class LearningBoard(models.Model):
+    author = models.ForeignKey(Staff)
     image = models.ImageField(null=True, blank=True)
     title = models.CharField(max_length = 127)
     description = models.CharField(max_length = 1023, null=True, blank=True)
@@ -62,7 +63,7 @@ class Activity(models.Model):
     description = models.TextField(null = True, blank = True)
     type = models.CharField(max_length = 255)
     data = models.TextField(null = True, blank = True)
-    lb = models.ForeignKey(LearningBoard, null=True, blank=True)
+    lb = models.ForeignKey(LearningBoard, related_name="activities", null=True, blank=True)
     PUB = "PB"
     UNPUB = "UP"
     status = models.CharField(
@@ -83,3 +84,6 @@ class Like(models.Model):
     user = models.ForeignKey(Student, related_name="likes")
     lb = models.ForeignKey(LearningBoard, related_name="liked_by")
 
+class Completion(models.Model):
+    user = models.ForeignKey(Student, related_name="completes")
+    lb = models.ForeignKey(LearningBoard, related_name="completed_by")

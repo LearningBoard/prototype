@@ -33,11 +33,40 @@ def lb_get(request, board_id):
         activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id) ]
         return JsonResponse({'board': model_to_dict(board, fields=[], exclude=['image']), 'activity': activity, 'tag': tag});
 
+def lb_load(request):
+    board_list = list(LearningBoard.objects.all().select_related('author'))
+    leng = len(board_list)
+    for i in range(leng):
+        ele = model_to_dict(board_list[i])
+        if ele['image']:
+            ele['image'] = ele['image'].url
+        else:
+            ele['image'] = None
+        ele['following_num'] = ele.followed_by.count()
+        ele['endorsed_num'] = ele.endorsed_by.count()
+        ele['completed_num'] = ele.completed_by.count()
+        ele['activities_num'] = ele.activities.count()
+        ele['author'] = ele.author.username
+        ele['author_id'] = ele.author.id
+        board_list[i] = ele
+
+    return JsonResponse({"board_list": board_list})
+
+@csrf_exempt
+@method_required("get")
+def lb_activity_load(request):
+    pk_board = request.GET.get('pk_board')
+    acts = list(Activity.objects.all(lb__pk = pk_board))
+    for i in range(len(acts)):
+        acts[i] = model_to_dict[acts[i]]
+    return JsonResponse({"activity": acts})
+
 @csrf_exempt
 def lb_add(request):
     data = dict(request.POST.iterlists())
     print request.POST
     board = LearningBoard.objects.create(
+        author_id = request.POST["author_id"],
         title = request.POST['title'],
         description = request.POST['description']
     )
@@ -96,15 +125,6 @@ def activity_get(request, activity_id):
         return HttpResponse("not found", status = 404)
     else:
         return JsonResponse(model_to_dict(act, fields=[], exclude=[]))
-
-@csrf_exempt
-@method_required("get")
-def lb_load_activity(request):
-    pk_board = request.GET.get('pk_board')
-    acts = list(Activity.objects.all(lb__pk = pk_board))
-    for i in len(acts):
-        acts[i] = model_to_dict[acts[i]]
-    return JsonResponse({"activity": acts})
 
 @csrf_exempt
 def activity_add(request):
@@ -180,6 +200,7 @@ def activity_unfollow(request):
         Follow.objects.delete(lb_id = lb_id, stu_id = u_id)
         return JsonResponse({"ok": True})
     return JsonResponse({"ok": False})
+
 def tag_add(request):
     tag = tools.get_or_None(Tag, tag = request.POST['tag'])
     if tag is not None:

@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
 from django.conf.urls import include, url
-from django.contrib import admin
+from django.contrib import admin 
 from lb import views
 
 urlpatterns = [
@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^accts/register/$', views.user_register),
     url(r'^accts/login/$', views.user_login),
     url(r'^lb/get/(?P<board_id>\d+)/$', views.lb_get),
+    url(r'^lb/load/$', views.lb_load),
     url(r'^lb/add/$', views.lb_add),
     url(r'^lb/edit/(?P<board_id>\d+)/$', views.lb_edit),
     url(r'^lb/delete/(?P<board_id>\d+)/$', views.lb_delete),
