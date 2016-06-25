@@ -4,6 +4,7 @@ var cover_img;
 var activity_list = [];
 
 $.getScript("js/lib.js");
+// handler for board cover image
 $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
   $(document).ready(function(){
     $('.uploadImage').fileinput({
@@ -63,33 +64,20 @@ $(document).ready(function(){
     });
   }
 
+  // board title word count
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
   });
-  $('select[name=category]').on('change', function(e){
-    $('#headingTwo a').text(this.value);
-  });
-  $('input[name=contentLevel]').on('change', function(e){
-    var level;
-    switch(parseInt(this.value)){
-      case 0:
-        level = 'Beginner';
-        break;
-      case 1:
-        level = 'Intermediate';
-        break;
-      case 2:
-        level = 'Advanced';
-        break;
-    }
-    $('#headingThree a').text(level);
-  });
+
+  // tag remove
   $(document).on('click', '.tagList ul li span', function(e){
     var $this = $(this).parent();
     $this.fadeOut('slow', function(){
       $this.remove();
     });
   });
+
+  // tag add modal
   $('#addTagModal').on('show.bs.modal', function(e){
     var modal = $(this);
     modal.find('.modal-footer button:eq(1)').on('click', function(e){
@@ -99,6 +87,8 @@ $(document).ready(function(){
       tag.val('');
     });
   });
+
+  // save board
   $('a.addBoardBtn').on('click', function(e)
   {
     e.preventDefault();
@@ -123,6 +113,8 @@ $(document).ready(function(){
       })
     }
   })
+
+  // delete board
   $('a.deleteBoardBtn').on('click', function(e)
   {
     e.preventDefault();
@@ -136,6 +128,8 @@ $(document).ready(function(){
       })
     }
   })
+
+  // publish board
   $('a.publishBoardBtn').on('click', function(e)
   {
     e.preventDefault();
@@ -147,6 +141,8 @@ $(document).ready(function(){
       alert('Board published');
     })
   })
+
+  // unpublish board
   $('a.unpublishBoardBtn').on('click', function(e)
   {
     e.preventDefault();
@@ -158,6 +154,8 @@ $(document).ready(function(){
       alert('Board unpublished');
     })
   })
+
+  // add activity submit button
   $('button.addActivityBtn').on('click', function(e){
     e.preventDefault();
     var $this = $(this);
@@ -177,32 +175,55 @@ $(document).ready(function(){
       $this.parent()[0].reset();
     });
   });
+
+  // unpublish activity
   $(document).on('click', '.activity span.glyphicon-floppy-remove', function(e){
     var $this = $(this).parents('div.activity');
     var $thisBtn = $(this);
     var id = $(this).parents('div.control').data('id');
     $.post(serv_addr+'activity/unpublish/'+id+'/', function(data)
     {
-      $this.css('background', 'url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==)');
+      $this.addClass('unpublish');
       $thisBtn.parent().addClass('hidden');
       $thisBtn.parent().next().removeClass('hidden');
     });
   });
+
+  // publish activity
   $(document).on('click', '.activity span.glyphicon-floppy-saved', function(e){
     var $this = $(this).parents('div.activity');
     var $thisBtn = $(this);
     var id = $(this).parents('div.control').data('id');
     $.post(serv_addr+'activity/publish/'+id+'/', function(data)
     {
-      $this.css('background', '');
+      $this.removeClass('unpublish');
       $thisBtn.parent().addClass('hidden');
       $thisBtn.parent().prev().removeClass('hidden');
     });
   });
+
+  // edit activity
   $(document).on('click', '.activity span.glyphicon-pencil', function(e){
     var $this = $(this).parents('div.activity');
-    // ajax get latest data by id
+    var id = $(this).parents('div.control').data('id');
+    $.get(serv_addr+'activity/get/'+id+'/', function(data)
+    {
+      //data = $.extend(data, JSON.parse(data.data));
+      $('#collapseAddActivity').collapse('show');
+      var targetTab = $('#activityTab a[href="#'+data.type+'"]');
+      targetTab.tab('show');
+      targetTab.find('input[name=title]').val(data.title);
+      targetTab.find('textarea[name=description]').val(data.description);
+      data = JSON.parse(data.data);
+      if(data.length > 0){
+        for(var i = 0; i < data.length; i++){
+          
+        }
+      }
+    });
   });
+
+  // remove activity
   $(document).on('click', '.activity span.glyphicon-remove', function(e){
     var $this = $(this).parents('div.activity');
     var r = confirm('Are you sure to delete this activity?');
@@ -225,6 +246,15 @@ $(document).ready(function(){
 function renderActivity(pk, dataObject){
 	console.log(dataObject);
   var html;
+  var activityControl = `
+  <div class="control" data-id="${pk}">
+    <ul>
+      <li ${dataObject['status'] == 'UP' ? 'class="hidden"' : ''}><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
+      <li ${dataObject['status'] == 'UP' ? '' : 'class="hidden"'}><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
+      <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
+      <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
+    </ul>
+  </div>`;
   switch(dataObject['type']){
     case 'video':
       // handle different links
@@ -232,7 +262,7 @@ function renderActivity(pk, dataObject){
         dataObject['video_link'] = 'https://www.youtube.com/embed/' + dataObject['video_link'].match(/watch\?v=(.*)/)[1];
       }
       html = `
-      <div class="activity">
+      <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
         <h4>01</h4>
         <div class="row">
           <div class="col-md-4">
@@ -245,19 +275,12 @@ function renderActivity(pk, dataObject){
             <p>${dataObject['description']}</p>
           </div>
         </div>
-        <div class="control" data-id="${pk}">
-          <ul>
-            <li><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
-            <li class="hidden"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
-            <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
-            <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
-          </ul>
-        </div>
+        ${activityControl}
       </div>`;
       break;
     case 'text':
       html = `
-      <div class="activity">
+      <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
         <h4>01</h4>
         <div class="row">
           <div class="col-md-12">
@@ -265,14 +288,7 @@ function renderActivity(pk, dataObject){
             <p>${dataObject['description']}</p>
           </div>
         </div>
-        <div class="control" data-id="${pk}">
-          <ul>
-            <li><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
-            <li class="hidden"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
-            <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
-            <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
-          </ul>
-        </div>
+        ${activityControl}
       </div>`;
       break;
     default:

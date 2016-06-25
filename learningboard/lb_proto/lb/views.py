@@ -92,6 +92,14 @@ def lb_unpublish(request, board_id):
     return HttpResponse("done")
 
 @csrf_exempt
+def activity_get(request, activity_id):
+    act = Activity.objects.get(pk = activity_id)
+    if act is None:
+        return HttpResponse("not found", status = 404)
+    else:
+        return JsonResponse(model_to_dict(act, fields=[], exclude=[]))
+
+@csrf_exempt
 def activity_add(request):
     print request.POST
     data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type']})

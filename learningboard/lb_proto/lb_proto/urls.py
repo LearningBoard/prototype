@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^lb/delete/(?P<board_id>\d+)/$', views.lb_delete),
     url(r'^lb/publish/(?P<board_id>\d+)/$', views.lb_publish),
     url(r'^lb/unpublish/(?P<board_id>\d+)/$', views.lb_unpublish),
+    url(r'^activity/get/(?P<activity_id>\d+)/$', views.activity_get),
     url(r'^activity/add/$', views.activity_add),
     url(r'^activity/delete/(?P<activity_id>\d+)/$', views.activity_delete),
     url(r'^activity/publish/(?P<activity_id>\d+)/$', views.activity_publish),

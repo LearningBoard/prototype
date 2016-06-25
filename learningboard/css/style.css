@@ -140,6 +140,10 @@ body > .container {
   border: 2px solid #EEE;
 }
 
+.activityList > .activity.unpublish {
+  background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==);
+}
+
 .activityList > .activity > h2, .activityList > .activity > h4 {
   color: #FF8C00;
 }
