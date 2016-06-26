@@ -3,32 +3,10 @@ var pk;
 var cover_img;
 var tag_list = [];
 var activity_list = [];
+var activity_index = 0;
 
 $.getScript("js/lib.js");
-// handler for board cover image
-$.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
-  $(document).ready(function(){
-    $('.uploadImage').fileinput({
-      overwriteInitial: true,
-      showClose: false,
-      showCaption: false,
-      showBrowse: false,
-      browseOnZoneClick: true,
-      removeLabel: 'Remove cover image',
-      removeClass: 'btn btn-default btn-block btn-xs',
-      defaultPreviewContent: `<img src="https://placehold.it/300x200" alt="Your Avatar" class="img-responsive">
-      <h6 class="text-muted text-center">Click to select cover image</h6>`,
-      layoutTemplates: {main2: '{preview} {remove}'},
-      allowedFileExtensions: ['jpg', 'png', 'gif']
-    });
-    $('.uploadImage').on('fileloaded', function(e, file, previewId, index, reader){
-      cover_img = reader.result;
-    });
-    $('.uploadImage').on('filecleared', function(e){
-      cover_img = undefined;
-    });
-  });
-});
+$.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js');
 
 $(document).ready(function(){
   // load category data
@@ -46,6 +24,7 @@ $(document).ready(function(){
       color: '#CCC',
       cursor: 'not-allowed'
     });
+    initCoverImage('https://placehold.it/300x200');
   }
 
   // assign value to field when editing the board
@@ -68,10 +47,11 @@ $(document).ready(function(){
       if(data.activity && data.activity.length > 0){
         $('.activityList .noActivity').hide();
         for(var i = 0; i < data.activity.length; i++){
-          $('.activityList').append(renderActivity(data.activity[i].id, $.extend(data.activity[i], JSON.parse(data.activity[i].data))));
+          $('.activityList').append(renderActivity(++activity_index, data.activity[i].id, $.extend(data.activity[i], JSON.parse(data.activity[i].data))));
         }
       }
       $('.navbar-nav li:not(:first) a').css({});
+      initCoverImage(data.board.image ? serv_addr + data.board.image.substring(1, data.board.image.length) : 'https://placehold.it/300x200');
     }).fail(function(){
       alert('Learning Board not found');
       location.href = 'boards.html';
@@ -114,6 +94,11 @@ $(document).ready(function(){
   $('a.addBoardBtn').on('click', function(e)
   {
     e.preventDefault();
+    // trigger html5 validation
+    if(!$('form.addBoardForm')[0].checkValidity()){
+      $('form.addBoardForm button[type=submit]').trigger('click');
+      return;
+    }
     var dataObject = $('form.addBoardForm').serializeObject();
     if(cover_img){
       dataObject.cover_img = cover_img;
@@ -196,7 +181,10 @@ $(document).ready(function(){
       {
         $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
         var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
-        prevDom.replaceWith(renderActivity(data.pk, dataObject));
+        prevDom.replaceWith(renderActivity(++activity_index, data.pk, dataObject));
+        $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
+          $(this).text('');
+        });
         $this.parent()[0].reset();
         $this.parent().find('input[name=activity_id]').val('');
       });
@@ -207,7 +195,10 @@ $(document).ready(function(){
         activity_list.push(data.pk);
 
         $('.activityList .noActivity').hide();
-        $('.activityList').append(renderActivity(data.pk, dataObject));
+        $('.activityList').append(renderActivity(++activity_index, data.pk, dataObject));
+        $this.parent().find('.result_msg').text('Activity added!').delay(1000).fadeOut('fast', function(){
+          $(this).text('');
+        });
         $this.parent()[0].reset();
       });
     }
@@ -255,6 +246,7 @@ $(document).ready(function(){
       for(var key in data){
         targetForm.find('[name='+key+']').val(data[key]);
       }
+      $('html, body').animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
     });
   });
 
@@ -278,8 +270,31 @@ $(document).ready(function(){
   });
 });
 
-function renderActivity(pk, dataObject){
-	console.log(dataObject);
+function initCoverImage(url){
+  $('.uploadImage').fileinput({
+    overwriteInitial: true,
+    showClose: false,
+    showCaption: false,
+    showBrowse: false,
+    browseOnZoneClick: true,
+    removeLabel: 'Remove cover image',
+    removeClass: 'btn btn-default btn-block btn-xs',
+    defaultPreviewContent: `<img src="${url}" alt="Your Avatar" class="img-responsive">
+    <h6 class="text-muted text-center">Click to select cover image</h6>`,
+    layoutTemplates: {main2: '{preview} {remove}'},
+    allowedFileExtensions: ['jpg', 'png', 'gif']
+  });
+  $('.uploadImage').off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
+    cover_img = reader.result;
+  });
+  $(document).off('click', '.fileinput-remove-button').on('click', '.fileinput-remove-button', function(e){
+    $('.uploadImage').fileinput('destroy');
+    initCoverImage('https://placehold.it/300x200');
+    cover_img = undefined;
+  });
+}
+
+function renderActivity(index, pk, dataObject){
   var html;
   var activityControl = `
   <div class="control" data-id="${pk}">
@@ -298,7 +313,7 @@ function renderActivity(pk, dataObject){
       }
       html = `
       <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
-        <h4>01</h4>
+        <h4>${index < 10 ? '0' + index : index}</h4>
         <div class="row">
           <div class="col-md-4">
             <div class="embed-responsive embed-responsive-16by9">
@@ -316,7 +331,7 @@ function renderActivity(pk, dataObject){
     case 'text':
       html = `
       <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
-        <h4>01</h4>
+        <h4>${index < 10 ? '0' + index : index}</h4>
         <div class="row">
           <div class="col-md-12">
             <p class="lead">${dataObject['title']}</p>
