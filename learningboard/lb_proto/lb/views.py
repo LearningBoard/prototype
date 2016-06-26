@@ -25,7 +25,7 @@ def method_required(required_method):
 def category_getAll(request):
     category = Category.objects.all()
     if len(category) < 1:
-        return JsonResponse({})
+        return JsonResponse({'category': []})
     else:
         category = [ model_to_dict(obj) for obj in category ]
         return JsonResponse({'category': category});
