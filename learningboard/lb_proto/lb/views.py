@@ -230,6 +230,15 @@ def activity_unfollow(request):
     return JsonResponse({"ok": False})
 
 @csrf_exempt
+def tag_getAll(request):
+    tag = Tag.objects.all()
+    if len(tag) < 1:
+        return JsonResponse({'tags': []})
+    else:
+        tag = [ model_to_dict(obj) for obj in tag ]
+        return JsonResponse({'tags': tag});
+
+@csrf_exempt
 def tag_add(request):
     tag = tools.get_or_None(Tag, tag = request.POST['tag'])
     if tag is not None:

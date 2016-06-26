@@ -7,6 +7,8 @@ var activity_index = 0;
 
 $.getScript("js/lib.js");
 $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js');
+$.getScript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js');
+$.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
 $(document).ready(function(){
   // load category data
@@ -75,18 +77,38 @@ $(document).ready(function(){
   // tag add modal
   $('#addTagModal').on('shown.bs.modal', function(e){
     var modal = $(this);
+    var tag = modal.find('.modal-body select[name=tag]');
+    $.get(serv_addr + 'tag/getAll/', function(data){
+      data = $.map(data.tags, function(item){
+        return {
+          id: item.tag,
+          text: item.tag
+        }
+      });
+      tag.select2({
+        placeholder: 'Enter or search tag',
+        multiple: true,
+        tags: true,
+        data: data,
+        minimumInputLength: 1
+      });
+    });
     modal.find('.modal-footer button:eq(1)').off('click').on('click', function(e){
       e.preventDefault();
-      var tag = modal.find('.modal-body input[name=tag]');
-      $.post(serv_addr+'tag/add/', {tag: tag.val()}, function(data){
-        console.log(data);
-        if(tag_list.indexOf(data.pk) === -1){
-          tag_list.push(data.pk);
-          $('.tagList ul').append(`<li data-id="${data.pk}">${tag.val()} <span>x</span></li>`);
+      var tagArray = tag.val();
+      if(tagArray.length > 0){
+        for(var i = 0; i < tagArray.length; i++){
+          var item = tagArray[i];
+          $.post(serv_addr+'tag/add/', {tag: item}, function(data){
+            if(tag_list.indexOf(data.pk) === -1){
+              tag_list.push(data.pk);
+              $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
+            }
+          });
         }
-        $('#addTagModal').modal('hide');
-        tag.val('');
-      });
+      }
+      $('#addTagModal').modal('hide');
+      tag.select2('val', '');
     });
   });
 

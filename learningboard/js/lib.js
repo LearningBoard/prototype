@@ -1,3 +1,7 @@
+$.getCSS = function(url){
+  $('head').append($('<link rel="stylesheet" type="text/css" />').attr('href', url));
+};
+
 $.fn.serializeObject = function()
 {
     var o = {};

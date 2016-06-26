@@ -39,5 +39,6 @@ urlpatterns = [
     url(r'^activity/unpublish/(?P<activity_id>\d+)/$', views.activity_unpublish),
     url(r'^activity/follow/$', views.activity_follow),
     url(r'^activity/unfollow/$', views.activity_unfollow),
+    url(r'^tag/getAll/$', views.tag_getAll),
     url(r'^tag/add/$', views.tag_add),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
