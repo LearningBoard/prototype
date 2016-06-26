@@ -229,6 +229,7 @@ def activity_unfollow(request):
         return JsonResponse({"ok": True})
     return JsonResponse({"ok": False})
 
+@csrf_exempt
 def tag_add(request):
     tag = tools.get_or_None(Tag, tag = request.POST['tag'])
     if tag is not None:
