@@ -6,7 +6,6 @@ var activity_list = [];
 var activity_index = 0;
 
 $.getScript("js/lib.js");
-$.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js');
 $.getScript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js');
 $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
@@ -199,11 +198,13 @@ $(document).ready(function(){
     }
     console.log(dataObject);
     if(dataObject.activity_id){ // edit existing activity
+      dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.activity_id+']').parents('.activity'));
       $.post(serv_addr+'activity/edit/'+dataObject.activity_id+'/', dataObject, function(data)
       {
         $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
         var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
-        prevDom.replaceWith(renderActivity(++activity_index, data.pk, dataObject));
+        var index = $('.activityList .activity').index(prevDom) + 1;
+        prevDom.replaceWith(renderActivity(index, data.pk, dataObject));
         $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
           $(this).text('');
         });
@@ -211,6 +212,7 @@ $(document).ready(function(){
         $this.parent().find('input[name=activity_id]').val('');
       });
     }else{ // add new activity
+      dataObject.order = $('.activityList .activity').size();
       $.post(serv_addr+'activity/add/', dataObject, function(data)
       {
         console.log(data);
@@ -224,6 +226,20 @@ $(document).ready(function(){
         $this.parent()[0].reset();
       });
     }
+  });
+
+  // sort activity
+  $('.activityList').sortable({
+    opacity: 0.95
+  });
+  $('.activityList').on('sortupdate', function(e, ui){
+    var order = {};
+    $('.activityList .activity').each(function(i){
+      var newIndexForRender = parseInt(i) + 1;
+      $(this).find('h4').text(newIndexForRender < 10 ? '0' + newIndexForRender : newIndexForRender);
+      order[$(this).find('.control').data('id')] = i;
+    });
+    $.post(serv_addr+'activity/orderchange/', order);
   });
 
   // unpublish activity
@@ -293,26 +309,28 @@ $(document).ready(function(){
 });
 
 function initCoverImage(url){
-  $('.uploadImage').fileinput({
-    overwriteInitial: true,
-    showClose: false,
-    showCaption: false,
-    showBrowse: false,
-    browseOnZoneClick: true,
-    removeLabel: 'Remove cover image',
-    removeClass: 'btn btn-default btn-block btn-xs',
-    defaultPreviewContent: `<img src="${url}" alt="Your Avatar" class="img-responsive">
-    <h6 class="text-muted text-center">Click to select cover image</h6>`,
-    layoutTemplates: {main2: '{preview} {remove}'},
-    allowedFileExtensions: ['jpg', 'png', 'gif']
-  });
-  $('.uploadImage').off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
-    cover_img = reader.result;
-  });
-  $(document).off('click', '.fileinput-remove-button').on('click', '.fileinput-remove-button', function(e){
-    $('.uploadImage').fileinput('destroy');
-    initCoverImage('https://placehold.it/300x200');
-    cover_img = undefined;
+  $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
+    $('.uploadImage').fileinput({
+      overwriteInitial: true,
+      showClose: false,
+      showCaption: false,
+      showBrowse: false,
+      browseOnZoneClick: true,
+      removeLabel: 'Remove cover image',
+      removeClass: 'btn btn-default btn-block btn-xs',
+      defaultPreviewContent: `<img src="${url}" alt="Your Avatar" class="img-responsive">
+      <h6 class="text-muted text-center">Click to select cover image</h6>`,
+      layoutTemplates: {main2: '{preview} {remove}'},
+      allowedFileExtensions: ['jpg', 'png', 'gif']
+    });
+    $('.uploadImage').off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
+      cover_img = reader.result;
+    });
+    $(document).off('click', '.fileinput-remove-button').on('click', '.fileinput-remove-button', function(e){
+      $('.uploadImage').fileinput('destroy');
+      initCoverImage('https://placehold.it/300x200');
+      cover_img = undefined;
+    });
   });
 }
 

@@ -44,7 +44,7 @@ def lb_get(request, board_id):
         except:
             board_dict['image'] = None
         tag =  [ model_to_dict(obj) for obj in board.tags.all() ]
-        activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id) ]
+        activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id).order_by('order') ]
         return JsonResponse({'board': board_dict, 'activity': activity, 'tag': tag});
 
 def lb_load(request):
@@ -164,7 +164,8 @@ def activity_add(request):
             title = request.POST['title'],
             description = request.POST['description'],
             type = request.POST['type'],
-            data = data
+            data = data,
+            order = request.POST['order']
         )
     else:
         act = Activity.objects.create(
@@ -172,6 +173,7 @@ def activity_add(request):
             description = request.POST['description'],
             type = request.POST['type'],
             data = data,
+            order = request.POST['order'],
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
     return JsonResponse({"pk": act.id});
@@ -187,6 +189,7 @@ def activity_edit(request, activity_id):
         act.title = request.POST['title']
         act.description = request.POST['description']
         act.data = data
+        act.order = request.POST['order']
         act.save()
         return JsonResponse({"pk": act.id});
 
@@ -207,6 +210,14 @@ def activity_unpublish(request, activity_id):
     act = Activity.objects.get(pk = activity_id)
     act.status = "UP"
     act.save()
+    return HttpResponse("done")
+
+@csrf_exempt
+def activity_orderchange(request):
+    for key, value in request.POST.iteritems():
+        act = Activity.objects.get(pk = key)
+        act.order = value
+        act.save()
     return HttpResponse("done")
 
 @csrf_exempt

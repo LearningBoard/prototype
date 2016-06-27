@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include, url
-from django.contrib import admin 
+from django.contrib import admin
 from lb import views
 
 urlpatterns = [
@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^activity/delete/(?P<activity_id>\d+)/$', views.activity_delete),
     url(r'^activity/publish/(?P<activity_id>\d+)/$', views.activity_publish),
     url(r'^activity/unpublish/(?P<activity_id>\d+)/$', views.activity_unpublish),
+    url(r'^activity/orderchange/$', views.activity_orderchange),
     url(r'^activity/follow/$', views.activity_follow),
     url(r'^activity/unfollow/$', views.activity_unfollow),
     url(r'^tag/getAll/$', views.tag_getAll),
