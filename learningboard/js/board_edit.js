@@ -190,9 +190,23 @@ $(document).ready(function(){
     })
   })
 
+  // add activity collapse
+  $('#collapseAddActivity').on('show.bs.collapse', function(e){
+    $('#addActivityBox .panel-title a').text('- Add/Edit Learning Activity');
+  });
+
+  $('#collapseAddActivity').on('hide.bs.collapse', function(e){
+    $('#addActivityBox .panel-title a').text('+ Add/Edit Learning Activity');
+  });
+
   // add activity submit button
   $('button.addActivityBtn').on('click', function(e){
-    e.preventDefault();
+    // trigger html5 validation
+    if($(this).parents('form.addActivityForm')[0].checkValidity()){
+      e.preventDefault();
+    }else{
+      return;
+    }
     var $this = $(this);
 
     var dataObject = $(this).parents('form.addActivityForm').serializeObject();
@@ -235,7 +249,8 @@ $(document).ready(function(){
 
   // sort activity
   $('.activityList').sortable({
-    opacity: 0.95
+    opacity: 0.95,
+    cursor: 'move'
   });
   $('.activityList').on('sortupdate', function(e, ui){
     var order = {};
@@ -245,6 +260,17 @@ $(document).ready(function(){
       order[$(this).find('.control').data('id')] = i;
     });
     $.post(serv_addr+'activity/orderchange/', order);
+  });
+
+  // lock sort
+  $('.sortLockMode').on('click', function(e){
+    if($(this).hasClass('active')){
+      $(this).removeClass('active').find('span').text('Lock');
+      $('.activityList').sortable('enable');
+    }else{
+      $(this).addClass('active').find('span').text('Unlock');
+      $('.activityList').sortable('disable');
+    }
   });
 
   // unpublish activity
@@ -344,7 +370,7 @@ function initCkeditor(){
   $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
     $('#collapseAddActivity [name=description]').each(function(){
       var editor = CKEDITOR.replace($(this).attr('id'), {
-        language: 'en',
+        language: 'en'
       });
       (function(){
         editor.on('change', function(e){
@@ -369,8 +395,12 @@ function renderActivity(index, pk, dataObject){
   switch(dataObject['type']){
     case 'video':
       // handle different links
-      if(dataObject['video_link'] && dataObject['video_link'].match(/watch\?v=(.*)/) != null){
-        dataObject['video_link'] = 'https://www.youtube.com/embed/' + dataObject['video_link'].match(/watch\?v=(.*)/)[1];
+      if(dataObject['video_link']){
+        if(dataObject['video_link'].match(/watch\?v=(.*)/) != null){
+          dataObject['video_link'] = 'https://www.youtube.com/embed/' + dataObject['video_link'].match(/watch\?v=(.*)/)[1];
+        }else if(dataObject['video_link'].match(/vimeo\.com\/(.*)/) != null){
+          dataObject['video_link'] = 'https://player.vimeo.com/video/' + dataObject['video_link'].match(/vimeo\.com\/(.*)/)[1];
+        }
       }
       html = `
       <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
@@ -402,6 +432,30 @@ function renderActivity(index, pk, dataObject){
         ${activityControl}
       </div>`;
       break;
+    case 'code':
+        // handle different links
+        if(dataObject['code_link']){
+          if(dataObject['code_link'].match(/jsfiddle\.net/) != null){
+            dataObject['code_link'] = dataObject['code_link'] + 'embedded/';
+          }else if(dataObject['code_link'].match(/plnkr\.co/) != null){
+            dataObject['code_link'] = 'https://embed.plnkr.co/' + dataObject['code_link'].replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
+          }
+        }
+        html = `
+        <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
+          <h4>${index < 10 ? '0' + index : index}</h4>
+          <div class="row">
+            <div class="col-md-12">
+              <p class="lead">${dataObject['title']}</p>
+              <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="${dataObject['code_link']}" allowfullscreen></iframe>
+              </div>
+              <div>${dataObject['description']}</div>
+            </div>
+          </div>
+          ${activityControl}
+        </div>`;
+        break;
     default:
       html = `
       <div class="activity">
