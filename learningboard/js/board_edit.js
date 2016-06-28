@@ -1,6 +1,6 @@
 
 var pk;
-var cover_img;
+var cover_img = 'empty';
 var tag_list = [];
 var activity_list = [];
 var activity_index = 0;
@@ -61,6 +61,9 @@ $(document).ready(function(){
 
   // init WYSIWYG
   initCkeditor();
+
+  // init image input
+  initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
 
   // board title word count
   $('#boardTitle').on('keydown', function(e){
@@ -218,7 +221,9 @@ $(document).ready(function(){
       dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.activity_id+']').parents('.activity'));
       $.post(serv_addr+'activity/edit/'+dataObject.activity_id+'/', dataObject, function(data)
       {
+        // clear form data
         CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
+        initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
         $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
         var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
         var index = $('.activityList .activity').index(prevDom) + 1;
@@ -236,7 +241,9 @@ $(document).ready(function(){
         console.log(data);
         activity_list.push(data.pk);
 
+        // clear form data
         CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
+        initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
         $('.activityList .noActivity').hide();
         $('.activityList').append(renderActivity(++activity_index, data.pk, dataObject));
         $this.parent().find('.result_msg').text('Activity added!').delay(1000).fadeOut('fast', function(){
@@ -315,6 +322,9 @@ $(document).ready(function(){
       data = JSON.parse(data.data);
       for(var key in data){
         targetForm.find('[name='+key+']').val(data[key]);
+        if(key == 'text_image'){
+          initImageInput($('#text_image_placeholder'), targetForm.find('.addActivityForm textarea[name=text_image]'), data[key] ? data[key] : 'https://placehold.it/300x200');
+        }
       }
       $('html, body').animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
     });
@@ -342,7 +352,7 @@ $(document).ready(function(){
 
 function initCoverImage(url){
   $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
-    $('.uploadImage').fileinput({
+    var instance = $('.uploadImage').fileinput({
       overwriteInitial: true,
       showClose: false,
       showCaption: false,
@@ -355,14 +365,44 @@ function initCoverImage(url){
       layoutTemplates: {main2: '{preview} {remove}'},
       allowedFileExtensions: ['jpg', 'png', 'gif']
     });
-    $('.uploadImage').off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
-      cover_img = reader.result;
+    (function(){
+      instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
+        cover_img = reader.result;
+      });
+      instance.off('filecleared').on('filecleared', function(e){
+        instance.fileinput('destroy');
+        initCoverImage('https://placehold.it/300x200');
+        cover_img = undefined;
+      });
+    })(instance);
+  });
+}
+
+function initImageInput(inputEle, targetEle, url){
+  $.getScript('https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min.js', function(){
+    inputEle.fileinput('destroy');
+    var instance = inputEle.fileinput({
+      overwriteInitial: true,
+      showClose: false,
+      showCaption: false,
+      showBrowse: false,
+      browseOnZoneClick: true,
+      removeLabel: 'Remove cover image',
+      removeClass: 'btn btn-default btn-block btn-xs',
+      defaultPreviewContent: `<div align="center"><img src="${url}" alt="Your Avatar" width="300" class="img-responsive">
+      <h6 class="text-muted text-center">Click to select cover image</h6></div>`,
+      layoutTemplates: {main2: '{preview} {remove}'},
+      allowedFileExtensions: ['jpg', 'png', 'gif']
     });
-    $(document).off('click', '.fileinput-remove-button').on('click', '.fileinput-remove-button', function(e){
-      $('.uploadImage').fileinput('destroy');
-      initCoverImage('https://placehold.it/300x200');
-      cover_img = undefined;
-    });
+    (function(){
+      instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
+        targetEle.val(reader.result);
+      });
+      instance.off('filecleared').on('filecleared', function(e){
+        initImageInput(inputEle, targetEle, 'https://placehold.it/300x200');
+        targetEle.val('');
+      });
+    })(instance);
   });
 }
 
@@ -406,12 +446,12 @@ function renderActivity(index, pk, dataObject){
       <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
         <h4>${index < 10 ? '0' + index : index}</h4>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="embed-responsive embed-responsive-16by9">
               <iframe class="embed-responsive-item" src="${dataObject['video_link']}" allowfullscreen></iframe>
             </div>
           </div>
-          <div class="col-md-offset-1 col-md-7">
+          <div class="col-md-12" style="float:none;">
             <p class="lead">${dataObject['title']}</p>
             <div>${dataObject['description']}</div>
           </div>
@@ -424,7 +464,8 @@ function renderActivity(index, pk, dataObject){
       <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
         <h4>${index < 10 ? '0' + index : index}</h4>
         <div class="row">
-          <div class="col-md-12">
+          ${dataObject['text_image'] ? `<div class="col-md-6"><img src="${dataObject['text_image']}" class="img-responsive"></div>` : ''}
+          <div class="col-md-12" ${dataObject['text_image'] ? 'style="float:none;"' : ''}>
             <p class="lead">${dataObject['title']}</p>
             <div>${dataObject['description']}</div>
           </div>

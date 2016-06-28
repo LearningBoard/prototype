@@ -116,9 +116,10 @@ def lb_edit(request, board_id):
                 board.tags.add(tag.id);
         board.save()
         if request.POST.get('cover_img', None) is not None:
-            format, img = request.POST.get('cover_img').split(';base64,')
-            ext = format.split('/')[-1]
-            board.image.save('cover.' + ext, ContentFile(base64.decodestring(img)), save=True)
+            if request.POST['cover_img'].startswith('data:'):
+                format, img = request.POST.get('cover_img').split(';base64,')
+                ext = format.split('/')[-1]
+                board.image.save('cover.' + ext, ContentFile(base64.decodestring(img)), save=True)
         else:
             board.image.delete()
             board.save()
@@ -157,7 +158,7 @@ def activity_get(request, activity_id):
 @csrf_exempt
 def activity_add(request):
     print request.POST
-    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id']})
+    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id', 'order']})
     # pk = board_id
     if request.POST.get('pk', None) is None:
         act = Activity.objects.create(
@@ -185,7 +186,7 @@ def activity_edit(request, activity_id):
     if act is None:
         return HttpResponse("not found", status = 404)
     else:
-        data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id']})
+        data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id', 'order']})
         act.title = request.POST['title']
         act.description = request.POST['description']
         act.data = data
