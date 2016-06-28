@@ -130,6 +130,7 @@
                     <li role="presentation" class="active"><a href="#video" aria-controls="video" role="tab" data-toggle="tab">Video</a></li>
                     <li role="presentation"><a href="#text" aria-controls="text" role="tab" data-toggle="tab">Text</a></li>
                     <li role="presentation"><a href="#code" aria-controls="code" role="tab" data-toggle="tab">Code</a></li>
+                    <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File</a></li>
                   </ul>
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="video">
@@ -175,16 +176,36 @@
                         <input type="hidden" name="activity_id" value="">
                         <input type="hidden" name="type" value="code">
                         <div class="form-group">
-                          <label for="video_title">Title</label>
+                          <label for="code_title">Title</label>
                           <input type="text" class="form-control" id="code_title" name="title" placeholder="Activity title" required>
                         </div>
                         <div class="form-group">
-                          <label for="video_link">Code demo Link</label>
+                          <label for="code_link">Code demo Link</label>
                           <input type="url" class="form-control" id="code_link" name="code_link" placeholder="Code demo link (Support JSFiddle, Plunker)" pattern=".*(jsfiddle.net|plnkr.co).*" required>
                         </div>
                         <div class="form-group">
-                          <label for="video_description">Description</label>
+                          <label for="code_description">Description</label>
                           <textarea class="form-control" id="code_description" name="description" rows="3" placeholder="Description"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
+                        <span class="result_msg"></span>
+                      </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="file">
+                      <form class="addActivityForm">
+                        <input type="hidden" name="activity_id" value="">
+                        <input type="hidden" name="type" value="file">
+                        <div class="form-group">
+                          <label for="file_title">Title</label>
+                          <input type="text" class="form-control" id="file_title" name="title" placeholder="Activity title" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="file_link">File Link</label>
+                          <input type="url" class="form-control" id="file_link" name="file_link" placeholder="File link (Support Google Drive folder)" pattern=".*drive.google.com/.*" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="file_description">Description</label>
+                          <textarea class="form-control" id="file_description" name="description" rows="3" placeholder="Description"></textarea>
                         </div>
                         <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
                         <span class="result_msg"></span>

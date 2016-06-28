@@ -474,29 +474,51 @@ function renderActivity(index, pk, dataObject){
       </div>`;
       break;
     case 'code':
-        // handle different links
-        if(dataObject['code_link']){
-          if(dataObject['code_link'].match(/jsfiddle\.net/) != null){
-            dataObject['code_link'] = dataObject['code_link'] + 'embedded/';
-          }else if(dataObject['code_link'].match(/plnkr\.co/) != null){
-            dataObject['code_link'] = 'https://embed.plnkr.co/' + dataObject['code_link'].replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
-          }
+      // handle different links
+      if(dataObject['code_link']){
+        if(dataObject['code_link'].match(/jsfiddle\.net/) != null){
+          dataObject['code_link'] = dataObject['code_link'] + 'embedded/';
+        }else if(dataObject['code_link'].match(/plnkr\.co/) != null){
+          dataObject['code_link'] = 'https://embed.plnkr.co/' + dataObject['code_link'].replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
         }
-        html = `
-        <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
-          <h4>${index < 10 ? '0' + index : index}</h4>
-          <div class="row">
-            <div class="col-md-12">
-              <p class="lead">${dataObject['title']}</p>
-              <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="${dataObject['code_link']}" allowfullscreen></iframe>
-              </div>
-              <div>${dataObject['description']}</div>
+      }
+      html = `
+      <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
+        <h4>${index < 10 ? '0' + index : index}</h4>
+        <div class="row">
+          <div class="col-md-12">
+            <p class="lead">${dataObject['title']}</p>
+            <div class="embed-responsive embed-responsive-16by9">
+              <iframe class="embed-responsive-item" src="${dataObject['code_link']}" allowfullscreen></iframe>
             </div>
+            <div>${dataObject['description']}</div>
           </div>
-          ${activityControl}
-        </div>`;
-        break;
+        </div>
+        ${activityControl}
+      </div>`;
+      break;
+    case 'file':
+      // handle different links
+      if(dataObject['file_link']){
+        if(dataObject['file_link'].match(/drive\.google\.com/) != null){
+          dataObject['file_link'] = 'https://drive.google.com/embeddedfolderview?id=' + dataObject['file_link'].match(/id=(.*)/)[1] + '#list';
+        }
+      }
+      html = `
+      <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
+        <h4>${index < 10 ? '0' + index : index}</h4>
+        <div class="row">
+          <div class="col-md-12">
+            <p class="lead">${dataObject['title']}</p>
+            <div class="embed-responsive embed-responsive-16by9">
+              <iframe class="embed-responsive-item" src="${dataObject['file_link']}" allowfullscreen></iframe>
+            </div>
+            <div>${dataObject['description']}</div>
+          </div>
+        </div>
+        ${activityControl}
+      </div>`;
+      break;
     default:
       html = `
       <div class="activity">
