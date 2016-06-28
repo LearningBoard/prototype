@@ -24,8 +24,8 @@
       <div class="row">
         <div class="col-md-9">
           <p><span class="fa fa-arrow-left" aria-hidden="true"></span> <a href="#">MIT Faculty Boards</a></p>
-          <p class="lead">JavaScript Callbacks and Non-Blocking Computation</p>
-          <p>By <a href="#">Abel Sanchez</a> | Content Level: Beginner</p>
+          <p class="lead board_title"></p>
+          <p>By <a href="#">Abel Sanchez</a> | Content Level: <span class="board_level"></span></p>
           <div class="action">
             <button type="button" class="btn btn-default text-uppercase">Follow</button>
             <button type="button" class="btn btn-default text-uppercase" id="endorseBtn">Endorse</button>
@@ -57,44 +57,16 @@
             </div>
           </div>
           <div class="activityList viewMode">
-            <div class="activity">
-              <h2>01</h2>
-                <p class="lead">Introduction - Callbacks, Non-Blocking, Node.JS, and NPM (3 mins)</p>
-                <p class="text-muted">
-                  Posted date: 09 | May | 2016
-                  <a href="#">Author/Publisher: Dr. Abel Sanchez</a>
-                </p>
-                <div class="embed-responsive embed-responsive-16by9">
-                  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/rDcLMiH_Q4k" allowfullscreen></iframe>
-                </div>
-                <p>Join us in a journey through data manipulation, callbacks, and non-blocking computation. We will then leverage the work on callbacks to move into Node.js and non-blocking computation. We will finish with npm, the package manager for Node.js, and the largest ecosystem of open source libraries in the world. <a href="#">Exercise Instructions</a></p>
-                <div class="comment">
-                  <span class="glyphicon glyphicon-heart"></span> 0
-                  <span class="glyphicon glyphicon-comment"></span> 0 comment
-                  <a href="#">Add comment</a>
-                  <div class="commentBox hidden">
-                    <form>
-                      <input type="text" name="comment">
-                      <button type="button" class="btn btn-default btn-xs">Submit</button>
-                    </form>
-                  </div>
-                  <div class="commentList">
-                    <ul></ul>
-                  </div>
-                </div>
-              <div class="control">
-                <ul class="text-muted">
-                  <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Re Add</li>
-                  <li><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</li>
-                  <li><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Mark as complete</li>
-                </ul>
-              </div>
-            </div>
+            <p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>
           </div>
         </div>
         <div class="col-md-3">
-          <p><b>About This Board</b></p>
-          <p>Join us in a journey through data manipulation, callbacks, and non-blocking compuation. We will start with callbacks, filters, sort, map, and reduce.</p>
+          <h4>About This Board</h4>
+          <div class="board_description"></div>
+          <h4>Tag</h4>
+          <div class="tagList">
+            <ul></ul>
+          </div>
         </div>
       </div>
     </div>
