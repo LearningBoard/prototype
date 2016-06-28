@@ -59,6 +59,9 @@ $(document).ready(function(){
     });
   }
 
+  // init WYSIWYG
+  initCkeditor();
+
   // board title word count
   $('#boardTitle').on('keydown', function(e){
     $('#boardTitleCount').text(150 - $(this).val().length);
@@ -201,6 +204,7 @@ $(document).ready(function(){
       dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.activity_id+']').parents('.activity'));
       $.post(serv_addr+'activity/edit/'+dataObject.activity_id+'/', dataObject, function(data)
       {
+        CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
         $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
         var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
         var index = $('.activityList .activity').index(prevDom) + 1;
@@ -218,6 +222,7 @@ $(document).ready(function(){
         console.log(data);
         activity_list.push(data.pk);
 
+        CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
         $('.activityList .noActivity').hide();
         $('.activityList').append(renderActivity(++activity_index, data.pk, dataObject));
         $this.parent().find('.result_msg').text('Activity added!').delay(1000).fadeOut('fast', function(){
@@ -280,6 +285,7 @@ $(document).ready(function(){
       targetForm.find('.addActivityForm input[name=activity_id]').val(data.id);
       targetForm.find('input[name=title]').val(data.title);
       targetForm.find('textarea[name=description]').val(data.description);
+      CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);
       data = JSON.parse(data.data);
       for(var key in data){
         targetForm.find('[name='+key+']').val(data[key]);
@@ -334,6 +340,21 @@ function initCoverImage(url){
   });
 }
 
+function initCkeditor(){
+  $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
+    $('#collapseAddActivity [name=description]').each(function(){
+      var editor = CKEDITOR.replace($(this).attr('id'), {
+        language: 'en',
+      });
+      (function(){
+        editor.on('change', function(e){
+          $('#' + e.editor.name).val(e.editor.getData());
+        });
+      })(editor);
+    });
+  });
+}
+
 function renderActivity(index, pk, dataObject){
   var html;
   var activityControl = `
@@ -362,7 +383,7 @@ function renderActivity(index, pk, dataObject){
           </div>
           <div class="col-md-offset-1 col-md-7">
             <p class="lead">${dataObject['title']}</p>
-            <p>${dataObject['description']}</p>
+            <div>${dataObject['description']}</div>
           </div>
         </div>
         ${activityControl}
@@ -375,7 +396,7 @@ function renderActivity(index, pk, dataObject){
         <div class="row">
           <div class="col-md-12">
             <p class="lead">${dataObject['title']}</p>
-            <p>${dataObject['description']}</p>
+            <div>${dataObject['description']}</div>
           </div>
         </div>
         ${activityControl}
