@@ -193,6 +193,14 @@ $(document).ready(function(){
     })
   })
 
+  // preview board
+  $('a.previewBoardBtn').on('click', function(e)
+  {
+    e.preventDefault();
+    if(!pk) return false;
+    window.open('board_view.html?' + pk,'_blank');
+  });
+
   // add activity collapse
   $('#collapseAddActivity').on('show.bs.collapse', function(e){
     $('#addActivityBox .panel-title a').text('- Add/Edit Learning Activity');
