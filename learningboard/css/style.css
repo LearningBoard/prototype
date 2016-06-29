@@ -29,6 +29,10 @@ body > .container {
   padding: 100px 15px 0;
 }
 
+body > .body_container {
+  padding: 0 15px 0;
+}
+
 .navbar .glyphicon {
   font-size: 22px;
 }
