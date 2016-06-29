@@ -36,8 +36,8 @@ $(document).ready(function(){
         $('.publishBoardBtn').parent().addClass('hidden');
         $('.unpublishBoardBtn').parent().removeClass('hidden');
       }
-      if(data.tag){
-        data.tag.map(function(item){
+      if(data.board.tags){
+        data.board.tags.map(function(item){
           tag_list.push(item.id);
           $('.tagList ul').append(`<li data-id="${item.id}">${item.tag} <span>x</span></li>`);
         });

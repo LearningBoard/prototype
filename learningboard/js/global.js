@@ -240,10 +240,17 @@ BoardTemplate.prototype.detail = function()
       </div>
       <div class="col-md-3">
         <h4>About This Board</h4>
-        <div class="board_description"></div>
+        <div class="board_description">${this.board.description}</div>
         <h4>Tag</h4>
         <div class="tagList">
-          <ul></ul>
+          <ul>`;
+      if(this.board.tags && this.board.tags.length > 0){
+        for(var i = 0; i < this.board.tags.length; i++){
+          html += `<li>${this.board.tags[i].tag}</li>`;
+        }
+      }
+      html +=
+      `</ul>
         </div>
       </div>
     </div>
