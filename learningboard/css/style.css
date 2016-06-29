@@ -85,7 +85,18 @@ body > .container {
   opacity: 0.65;
 }
 
-.boardEditButton a {
+.boardSendNewsButton {
+  position: absolute;
+  top: 15px;
+  left: 75px;
+  font-weight: bold;
+  padding: 2px 5px;
+  border: 2px solid #EEE;
+  background-color: #00BFFF;
+  opacity: 0.65;
+}
+
+.boardEditButton a, .boardSendNewsButton a {
   color: #FFF;
   text-decoration: none;
 }

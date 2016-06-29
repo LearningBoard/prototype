@@ -264,6 +264,16 @@ def tag_add(request):
     return JsonResponse({"pk": tag.id});
 
 @csrf_exempt
+def news_add(request):
+    news = News.objects.create(
+        title = request.POST['title'],
+        text = request.POST['text'],
+        author = request.POST['author_id'],
+        lb = request.POST['lb_id'];
+    )
+    return JsonResponse({"pk": news.id});
+
+@csrf_exempt
 @method_required('post')
 def user_register(request):
     usr = request.POST.get('username', None)

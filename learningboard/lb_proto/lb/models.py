@@ -81,6 +81,13 @@ class Activity(models.Model):
     last_modified = models.DateTimeField(auto_now = True)
     post_time = models.DateTimeField(auto_now_add = True)
 
+class News(models.Model):
+    title = models.CharField(max_length = 255)
+    text = models.TextField()
+    author = models.ForeignKey(Staff)
+    lb = models.ForeignKey(LearningBoard)
+    post_time = models.DateTimeField(auto_now_add = True)
+
 class Follow(models.Model):
     user = models.ForeignKey(Student, related_name="follows")
     lb = models.ForeignKey(LearningBoard, related_name="followed_by")
