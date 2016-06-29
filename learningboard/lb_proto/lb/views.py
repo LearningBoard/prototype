@@ -94,6 +94,7 @@ def lb_add(request):
         Activity.objects.filter(pk__in = request.POST.getlist('activity_list[]')).update(lb = board.id)
     # Cover image
     if request.POST.get('cover_img', None) is not None:
+      if request.POST['cover_img'].startswith('data:'):
         format, img = request.POST.get('cover_img').split(';base64,')
         ext = format.split('/')[-1]
         board.image.save('cover.' + ext, ContentFile(base64.decodestring(img)), save=True)
