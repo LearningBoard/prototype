@@ -91,15 +91,15 @@ function BoardTemplate(board)
   this.board = board;
   this.display = function()
   {
-    return '<div class="col-md-3">\
+    return '<div class="col-md-3" data-id='+this.board.id+'>\
           <div class="thumbnail">\
             <img src="'+serv_addr+this.board.image_url+'" alt="Cover Image">\
             <div class="caption">\
               <h4 class="title"><a href="board_view.html?'+this.board.id+'">'+this.board.title+'</a></a></h4>\
-              <p class="text-muted">Content Level: '+this.getLevelName(this.board.level)+' </p>\
+              <p class="text-muted text-capitalize">Content Level: '+this.getLevelName(this.board.level)+' </p>\
               <p>'+this.board.description+'</p>\
               <p class="text-muted title">\
-                Status: <span class="text-success">'+this.getStatusName(this.board.status)+'</span><br /> '+this.board.activity_num+' learning '+(this.board.activity_num == 1? "Activity": "Activities") +
+                Status: <span class="text-success text-capitalize">'+this.getStatusName(this.board.status)+'</span><br /> '+this.board.activity_num+' learning '+(this.board.activity_num == 1? "Activity": "Activities") +
               '</p>\
             </div>\
             <div class="boardInfoBox">\
@@ -119,7 +119,7 @@ function BoardTemplate(board)
               </div>\
             </div>\
             <div class="boardEditButton hidden">\
-              <a href="board_edit.html">Edit</a>\
+              <a href="board_edit.html?'+this.board.id+'">Edit</a>\
             </div>\
             <div class="boardSendNewsButton hidden">\
              <a href="#" data-toggle="modal" data-target="#sendNewsModal">Send News</a>\

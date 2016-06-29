@@ -42,7 +42,7 @@ def lb_get(request, board_id):
         try:
             board_dict['image_url'] = board_dict.pop('image').url
         except:
-            board_dict['image_url'] = "/media/img-not-found.png"
+            board_dict['image_url'] = "/media/image-not-found.png"
         tag =  [ model_to_dict(obj) for obj in board.tags.all() ]
         activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id).order_by('order') ]
         return JsonResponse({'board': board_dict, 'activity': activity, 'tag': tag})
@@ -146,14 +146,14 @@ def lb_delete(request, board_id):
 def lb_publish(request, board_id):
     # pk = board id
     board = LearningBoard.objects.get(pk = board_id)
-    board.status = "PB"
+    board.status = 1
     board.save()
     return HttpResponse("done")
 
 @csrf_exempt
 def lb_unpublish(request, board_id):
     board = LearningBoard.objects.get(pk = board_id)
-    board.status = "UP"
+    board.status = 0
     board.save()
     return HttpResponse("done")
 

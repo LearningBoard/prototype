@@ -9,8 +9,9 @@ $(document).ready(function(){
       $(this).parent().find('.boardEditButton, .boardSendNewsButton').toggleClass('hidden');
     });
 
-    $('#sendNewsModal').on('shown.bs.modal', function(){
+    $('#sendNewsModal').on('shown.bs.modal', function(e){
       var modal = $(this);
+      var id = $(e.relatedTarget).parents('[data-id]').data('id');
       $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
         if(!CKEDITOR.instances['sendNewsText']){
           var editor = CKEDITOR.replace('sendNewsText', {
@@ -31,7 +32,7 @@ $(document).ready(function(){
           }
           dataObject = $(this).parents('form').serializeObject();
           dataObject['author_id'] = localStorage['user_id'];
-          dataObject['lb_id'] = 1; // TODO hardcode value
+          dataObject['lb_id'] = id;
           $.post(serv_addr+'/news/add/', dataObject, function(data){
             modal.find('input[name=title]').val('');
             CKEDITOR.instances['sendNewsText'].setData('');
