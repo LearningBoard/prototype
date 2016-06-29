@@ -226,8 +226,11 @@ BoardTemplate.prototype.detail = function()
         </div>
         <div class="activityList viewMode">`;
         if(this.board.activities && this.board.activities.length > 0){
+          var index = 0;
           for(var i = 0; i < this.board.activities.length; i++){
-            html += renderActivity(i+1, this.board.activities[i].id, $.extend(this.board.activities[i], JSON.parse(this.board.activities[i].data)));
+            if(this.board.activities[i].status == 'UP') continue;
+            html += renderActivity(index+1, this.board.activities[i].id, $.extend(this.board.activities[i], JSON.parse(this.board.activities[i].data)));
+            index++;
           }
         }else{
           html += `
