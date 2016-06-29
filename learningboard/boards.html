@@ -110,7 +110,11 @@
               <h4 class="modal-title">Send News to Student</h4>
             </div>
             <div class="modal-body">
-              <textarea id="sendNewsText" class="form-control" rows="8"></textarea>
+              <div class="form-group">
+                <label for="sendNewsTitle">Title</label>
+                <input class="form-control" id="sendNewsTitle" name="title" placeholder="Title" required>
+              </div>
+              <textarea id="sendNewsText" name="text" class="form-control" rows="8"></textarea>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

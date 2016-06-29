@@ -263,12 +263,21 @@ def tag_add(request):
     return JsonResponse({"pk": tag.id});
 
 @csrf_exempt
+def news_getAll(request):
+    news = News.objects.all().order_by('-post_time')
+    if len(news) < 1:
+        return JsonResponse({'news': []})
+    else:
+        news = [ model_to_dict(obj) for obj in news ]
+        return JsonResponse({'news': news});
+
+@csrf_exempt
 def news_add(request):
     news = News.objects.create(
         title = request.POST['title'],
         text = request.POST['text'],
-        author = request.POST['author_id'],
-        lb = request.POST['lb_id'];
+        author = Staff.objects.get(pk = request.POST['author_id']),
+        lb = LearningBoard.objects.get(pk = request.POST['lb_id'])
     )
     return JsonResponse({"pk": news.id});
 

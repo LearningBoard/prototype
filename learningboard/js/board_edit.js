@@ -137,14 +137,14 @@ $(document).ready(function(){
       dataObject.activity_list = activity_list;
     }
     if(pk){
-      $.post(serv_addr+'lb/edit/'+pk+'/', dataObject, function(data)
+      $.post(serv_addr+'/lb/edit/'+pk+'/', dataObject, function(data)
       {
         console.log(data);
         alert('Board saved');
       })
     }else{
-      dataObject['author_id'] = localStorage['user_id']
-      $.post(serv_addr+'lb/add/', dataObject, function(data)
+      dataObject['author_id'] = localStorage['user_id'];
+      $.post(serv_addr+'/lb/add/', dataObject, function(data)
       {
         console.log(data);
         location.href = 'board_edit.html?' + data.pk;
