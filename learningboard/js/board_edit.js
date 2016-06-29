@@ -104,12 +104,14 @@ $(document).ready(function(){
       if(tagArray.length > 0){
         for(var i = 0; i < tagArray.length; i++){
           var item = tagArray[i];
-          $.post(serv_addr+'/tag/add/', {tag: item}, function(data){
-            if(tag_list.indexOf(data.pk) === -1){
-              tag_list.push(data.pk);
-              $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
-            }
-          });
+          (function(item){
+            $.post(serv_addr+'/tag/add/', {tag: item}, function(data){
+              if(tag_list.indexOf(data.pk) === -1){
+                tag_list.push(data.pk);
+                $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
+              }
+            });
+          })(item);
         }
       }
       $('#addTagModal').modal('hide');
@@ -378,7 +380,7 @@ function initCoverImage(url){
       layoutTemplates: {main2: '{preview} {remove}'},
       allowedFileExtensions: ['jpg', 'png', 'gif']
     });
-    (function(){
+    (function(instance){
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
         cover_img = reader.result;
       });
@@ -407,7 +409,7 @@ function initImageInput(inputEle, targetEle, url){
       layoutTemplates: {main2: '{preview} {remove}'},
       allowedFileExtensions: ['jpg', 'png', 'gif']
     });
-    (function(){
+    (function(instance){
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
         targetEle.val(reader.result);
       });
@@ -425,7 +427,7 @@ function initCkeditor(){
       var editor = CKEDITOR.replace($(this).attr('id'), {
         language: 'en'
       });
-      (function(){
+      (function(editor){
         editor.on('change', function(e){
           $('#' + e.editor.name).val(e.editor.getData());
         });
