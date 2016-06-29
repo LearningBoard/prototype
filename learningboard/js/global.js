@@ -104,15 +104,15 @@ function BoardTemplate(board)
             </div>\
             <div class="boardInfoBox">\
               <div class="row text-center text-muted">\
-                <div class="col-md-4">\
+                <div class="col-xs-4">\
                   <span class="fa fa-thumb-tack" aria-hidden="true"></span>\
                   <p>'+ this.board.endorsed_num + ' '+ (this.board.endorsed_num == 1? "has ": "have ") +'endorsed</p>\
                 </div>\
-                <div class="col-md-4">\
+                <div class="col-xs-4">\
                   <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>\
                   <p>'+ this.board.completed_num + ' ' + (this.board.completed_num == 1? "has ": "have ")+'completed</p>\
                 </div>\
-                <div class="col-md-4">\
+                <div class="col-xs-4">\
                   <span class="fa fa-users" aria-hidden="true"></span>\
                   <p>'+ this.board.following_num + ' ' + (this.board.following_num == 1? "is ": "are ") + 'following</p>\
                 </div>\
