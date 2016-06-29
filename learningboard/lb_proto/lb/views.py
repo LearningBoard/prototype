@@ -278,8 +278,12 @@ def news_getAll(request):
     if len(news) < 1:
         return JsonResponse({'news': []})
     else:
-        news = [ model_to_dict(obj) for obj in news ]
-        return JsonResponse({'news': news});
+        result = []
+        for obj in news:
+          objDict = model_to_dict(obj, [], ['author'])
+          objDict['lb'] = LearningBoard.objects.get(pk = objDict['id']).serialize()
+          result.append(objDict)
+        return JsonResponse({'news': result});
 
 @csrf_exempt
 def news_add(request):

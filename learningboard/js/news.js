@@ -7,6 +7,11 @@ $(document).ready(function(){
         $('div.row').append(`
           <div class="col-md-12">
             <h3>${data.news[i].title}</h3>
+            <p>
+              Learning Board: <a href="board_view.html?${data.news[i].lb.id}" target="_blank">${data.news[i].lb.title}</a>
+              |
+              Author: ${data.news[i].lb.author}
+            </p>
             <div>${data.news[i].text}</div>
             <hr />
           </div>`);
