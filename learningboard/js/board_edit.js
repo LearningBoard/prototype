@@ -11,7 +11,7 @@ $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.c
 
 $(document).ready(function(){
   // load category data
-  $.get(serv_addr+'category/getAll/', function(data){
+  $.get(serv_addr+'/category/getAll/', function(data){
     for(var i = 0; i < data.category.length; i++){
       $('select[name=category]').append(`<option value="${data.category[i].id}">${data.category[i].name}</option>`)
     }
@@ -31,7 +31,7 @@ $(document).ready(function(){
   // assign value to field when editing the board
   if(/\?\d+/.test(location.search)){
     pk = location.search.replace('?', '');
-    $.get(serv_addr+'lb/get/'+pk+'/', function(data){
+    $.get(serv_addr+'/lb/get/'+pk+'/', function(data){
       if(data.board.status == 'PB'){
         $('.publishBoardBtn').parent().addClass('hidden');
         $('.unpublishBoardBtn').parent().removeClass('hidden');
@@ -52,7 +52,7 @@ $(document).ready(function(){
         }
       }
       $('.navbar-nav li:not(:first) a').css({});
-      initCoverImage(data.board.image ? serv_addr + data.board.image.substring(1, data.board.image.length) : 'https://placehold.it/300x200');
+      initCoverImage(data.board.image_url ? serv_addr + data.board.image_url: data.board.image.length);
     }).fail(function(){
       alert('Learning Board not found');
       location.href = 'boards.html';

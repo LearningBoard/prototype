@@ -31,7 +31,7 @@ $(document).ready(function()
     }
     var o = $("form.loginForm").serializeObject();
     console.log(o);
-    $.get(serv_addr+'accts/login/', o, function(data)
+    $.get(serv_addr+'/accts/login/', o, function(data)
     {
       localStorage['user_id'] = data.pk;
       localStorage['is_staff'] = data.is_staff? data.is_staff: false;
@@ -50,7 +50,7 @@ $(document).ready(function()
     }
     var o = $('form.loginForm').serializeObject();
     console.log(o);
-    $.post(serv_addr+'accts/register/', o, function(data)
+    $.post(serv_addr+'/accts/register/', o, function(data)
     {
       if (data.ok)
       {

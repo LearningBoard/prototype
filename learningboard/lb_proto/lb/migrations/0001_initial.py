@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
                 ('type', models.CharField(max_length=255)),
                 ('data', models.TextField(null=True, blank=True)),
                 ('status', models.CharField(default=b'PB', max_length=127, choices=[(b'PB', b'published'), (b'UP', b'unpublished')])),
+                ('order', models.PositiveIntegerField(default=0)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
                 ('post_time', models.DateTimeField(auto_now_add=True)),
             ],

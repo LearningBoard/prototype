@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms.models import model_to_dict
 
 # Create your models here.
 
@@ -15,6 +16,9 @@ class Staff(models.Model):
     office = models.CharField(max_length = 255, null=True)
     # is_staff = True
 
+    def __str__(self):
+        return self.username
+
 class Tag(models.Model):
     tag = models.CharField(max_length = 255)
     slug = models.SlugField(max_length = 255)
@@ -30,29 +34,44 @@ class LearningBoard(models.Model):
     image = models.ImageField(null=True, blank=True)
     title = models.CharField(max_length = 127)
     description = models.CharField(max_length = 1023, null=True, blank=True)
-    PUB = "PB"
-    UNPUB = "UP"
-    status = models.CharField(
+    status = models.PositiveSmallIntegerField(
         choices=(
-            (PUB, 'published'),
-            (UNPUB, 'unpublished')
-        ), max_length = 127, default=UNPUB
+            (0, "Unpublished"),
+            (1, "Published"),
+        ), default = 0
     )
     category = models.ForeignKey(Category, null=True)
     level = models.PositiveSmallIntegerField(
         choices=(
             (0, 'Beginner'),
             (1, 'Intermediate'),
-            (2, 'Advanced')
+            (2, 'Advanced'),
         ), default=0
     )
     tags = models.ManyToManyField(Tag)
     completed = models.BooleanField(default = False)
     following = models.BooleanField(default = False)
 
+    def __str__(self):
+        return self.title
+
+    def serialize(self):
+        ele = model_to_dict(self)
+        if ele['image']:
+            ele['image_url'] = ele.pop('image').url
+        else:
+            ele['image_url'] = "/media/img-not-found.png"
+        ele['following_num'] = self.followed_by.count()
+        ele['endorsed_num'] = self.endorsed_by.count()
+        ele['completed_num'] = self.completed_by.count()
+        ele['activity_num'] = self.activities.count()
+        ele['author'] = self.author.username
+        ele['author_id'] = self.author.id
+        return ele
+
 class Endorsement(models.Model):
-    endorser = models.ForeignKey(Staff, related_name = "endorsed_by")
-    board = models.ForeignKey(LearningBoard, related_name = "endorsed_lb")
+    endorser = models.ForeignKey(Staff, related_name = "endorsed")
+    board = models.ForeignKey(LearningBoard, related_name = "endorsed_by")
 
 class Activity(models.Model):
 

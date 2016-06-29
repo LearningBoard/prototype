@@ -40,29 +40,28 @@ def lb_get(request, board_id):
     else:
         board_dict = model_to_dict(board, fields=[], exclude=[])
         try:
-            board_dict['image'] = board_dict['image'].url
+            board_dict['image_url'] = board_dict.pop('image').url
         except:
-            board_dict['image'] = None
+            board_dict['image_url'] = "/media/img-not-found.png"
         tag =  [ model_to_dict(obj) for obj in board.tags.all() ]
         activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id).order_by('order') ]
         return JsonResponse({'board': board_dict, 'activity': activity, 'tag': tag});
 
+def lb_user_load(request, user_pk):
+    user = tools.get_or_None(pk = user_pk);
+    if user is None:
+        return HttpResponse({'msg': 'please login first'}, status = 401)
+    else:
+        board_list = list(user.follows.filter().select_related('lb'))
+        for i in board_list:
+            board_list[i] = board_list[i].lb.serialize()
+
+
 def lb_load(request):
-    board_list = list(LearningBoard.objects.all().select_related('author'))
+    board_list = list(LearningBoard.objects.filter().select_related('author'))
     leng = len(board_list)
     for i in range(leng):
-        ele = model_to_dict(board_list[i])
-        if ele['image']:
-            ele['image'] = ele['image'].url
-        else:
-            ele['image'] = None
-        ele['following_num'] = ele.followed_by.count()
-        ele['endorsed_num'] = ele.endorsed_by.count()
-        ele['completed_num'] = ele.completed_by.count()
-        ele['activities_num'] = ele.activities.count()
-        ele['author'] = ele.author.username
-        ele['author_id'] = ele.author.id
-        board_list[i] = ele
+        board_list[i] = board_list[i].serialize()
 
     return JsonResponse({"board_list": board_list})
 

@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
   if (localStorage['is_staff'] === "true")
   {  
@@ -13,7 +14,7 @@ $(document).ready(function(){
     $('#addBoardBtn').addClass('hidden');
   }
 
-  $.get(serv_addr+"lb/load/", function(data)
+  $.get(serv_addr+"/lb/load/", {"user_pk": localStorage.user_id} function(data)
   {
     console.log(data);
   });

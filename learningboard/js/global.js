@@ -84,4 +84,60 @@ $.fn.serializeObject = function()
     return o;
 };
 
-serv_addr = "http://127.0.0.1:8000/"
+function BoardTemplate(board)
+{
+  this.board = board;
+  this.display = function()
+  {
+    return '<div class="col-md-3">\
+          <div class="thumbnail">\
+            <img src="'+serv_addr+this.board.image_url+'" alt="Cover Image">\
+            <div class="caption">\
+              <h4 class="title"><a href="board_view.html">'+this.board.title+'</a></a></h4>\
+              <p class="text-muted">Content Level: '+this.getLevelName(this.board.level)+' </p>\
+              <p>'+this.board.description+'</p>\
+              <p class="text-muted title">\
+                Status: <span class="text-success">'+this.getStatusName(this.board.status)+'</span><br /> '+this.board.activity_num+' Learning '+(this.board.activity_num == 1? "Activity": "Activities") +
+              '</p>\
+            </div>\
+            <div class="boardInfoBox">\
+              <div class="row text-center text-muted">\
+                <div class="col-md-4">\
+                  <span class="fa fa-thumb-tack" aria-hidden="true"></span>\
+                  <p>'+ this.board.endorsed_num + ' '+ (this.board.endorsed_num == 1? "has ": "have ") +'endorsed</p>\
+                </div>\
+                <div class="col-md-4">\
+                  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>\
+                  <p>'+ this.board.completed_num + ' ' + (this.board.completed_num == 1? "has ": "have ")+'completed</p>\
+                </div>\
+                <div class="col-md-4">\
+                  <span class="fa fa-users" aria-hidden="true"></span>\
+                  <p>'+ this.board.following_num + ' ' + (this.board.following_num == 1? "is ": "are ") + 'following</p>\
+                </div>\
+              </div>\
+            </div>\
+          </div>\
+        </div>';
+  }
+}
+
+BoardTemplate.prototype.getLevelName = function(level_num)
+{
+    switch (level_num)
+    {
+        case 0: return "beginner";
+        case 1: return "intermediate";
+        case 2: return "advanced";
+    }
+}
+
+BoardTemplate.prototype.getStatusName = function(status_num)
+{
+  switch (status_num)
+  {
+    case 0: return "unpublished";
+    case 1: return "published";
+  }
+}
+
+serv_addr = "http://127.0.0.1:8000"

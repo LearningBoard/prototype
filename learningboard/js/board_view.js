@@ -9,7 +9,7 @@ $(document).ready(function(){
   // fetch and render board data
   if(/\?\d+/.test(location.search)){
     var pk = location.search.replace('?', '');
-    $.get(serv_addr+'lb/get/'+pk+'/', function(data){
+    $.get(serv_addr+'/lb/get/'+pk+'/', function(data){
       // unpublish board, deny access
       if(data.board.status == 'UP' && !localStorage['is_staff']){
         location.href = 'boards.html';
@@ -37,7 +37,7 @@ $(document).ready(function(){
   // follow button
   $('.action button:eq(0)').on('click', function(){
     if($(this).hasClass('btn-primary')){
-      //$.post(serv_addr+'activity/unfollow/', {user_id: localStorage['user_id'], lb_id: location.})
+      //$.post(serv_addr+'/activity/unfollow/', {user_id: localStorage['user_id'], lb_id: location.})
       $('.progress_following').text(parseInt($('.progress_following').text()) - 1);
       $(this).removeClass('btn-primary');
     }else{
