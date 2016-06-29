@@ -143,14 +143,14 @@ def lb_delete(request, board_id):
 def lb_publish(request, board_id):
     # pk = board id
     board = LearningBoard.objects.get(pk = board_id)
-    board.status = "PB"
+    board.status = 1
     board.save()
     return HttpResponse("done")
 
 @csrf_exempt
 def lb_unpublish(request, board_id):
     board = LearningBoard.objects.get(pk = board_id)
-    board.status = "UP"
+    board.status = 0
     board.save()
     return HttpResponse("done")
 
@@ -275,8 +275,12 @@ def news_getAll(request):
     if len(news) < 1:
         return JsonResponse({'news': []})
     else:
-        news = [ model_to_dict(obj) for obj in news ]
-        return JsonResponse({'news': news});
+        result = []
+        for obj in news:
+          objDict = model_to_dict(obj, [], ['author'])
+          objDict['lb'] = LearningBoard.objects.get(pk = objDict['id']).serialize()
+          result.append(objDict)
+        return JsonResponse({'news': result});
 
 @csrf_exempt
 def news_add(request):

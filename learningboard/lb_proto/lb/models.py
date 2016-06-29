@@ -61,6 +61,7 @@ class LearningBoard(models.Model):
             ele['image_url'] = ele.pop('image').url
         else:
             ele.pop('image')
+            ele['image'] = None
             ele['image_url'] = "/media/image-not-found.png"
         ele['following_num'] = self.followed_by.count()
         ele['endorsed_num'] = self.endorsed_by.count()
