@@ -118,6 +118,12 @@ function BoardTemplate(board)
                 </div>\
               </div>\
             </div>\
+            <div class="boardEditButton hidden">\
+              <a href="board_edit.html">Edit</a>\
+            </div>\
+            <div class="boardSendNewsButton hidden">\
+             <a href="#" data-toggle="modal" data-target="#sendNewsModal">Send News</a>\
+           </div>\
           </div>\
         </div>';
   }
