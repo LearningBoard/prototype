@@ -29,7 +29,7 @@ $(document).ready(function(){
                 <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
                 <br />My Boards
               </a></li>
-              <li><a href="#Whatsnew">
+              <li class="${location.href.includes('news.html') ? 'active' : ''}"><a href="news.html">
                 <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
                 <br />What's New
               </a></li>

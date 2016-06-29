@@ -43,5 +43,6 @@ urlpatterns = [
     url(r'^activity/unfollow/$', views.activity_unfollow),
     url(r'^tag/getAll/$', views.tag_getAll),
     url(r'^tag/add/$', views.tag_add),
+    url(r'^news/getAll/$', views.news_getAll),
     url(r'^news/add/$', views.news_add),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -10,6 +10,7 @@ $(document).ready(function(){
     });
 
     $('#sendNewsModal').on('shown.bs.modal', function(){
+      var modal = $(this);
       $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
         if(!CKEDITOR.instances['sendNewsText']){
           var editor = CKEDITOR.replace('sendNewsText', {
@@ -21,10 +22,22 @@ $(document).ready(function(){
             });
           })(editor);
         }
-        var modal = $(this);
-        modal.find('.modal-footer button:eq(1)').on('click', function(e){
-          e.preventDefault();
-          console.log($('#sendNewsText').val());
+        modal.find('.modal-footer button:eq(1)').off('click').on('click', function(e){
+          // trigger html5 validation
+          if(modal.find('form')[0].checkValidity()){
+            e.preventDefault();
+          }else{
+            return;
+          }
+          dataObject = $(this).parents('form').serializeObject();
+          dataObject['author_id'] = localStorage['user_id'];
+          dataObject['lb_id'] = 1; // TODO hardcode value
+          $.post(serv_addr+'/news/add/', dataObject, function(data){
+            modal.find('input[name=title]').val('');
+            CKEDITOR.instances['sendNewsText'].setData('');
+            alert('News sent!');
+            modal.modal('hide');
+          });
         });
       });
     });
