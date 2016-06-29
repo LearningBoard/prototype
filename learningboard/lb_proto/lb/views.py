@@ -4,7 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from django.forms.models import model_to_dict
 from django.utils.text import slugify
-import tools, json
+from django.core.files.base import ContentFile
+import tools, json, base64
 from models import *
 # Create your views here.
 
@@ -25,7 +26,7 @@ def method_required(required_method):
 def category_getAll(request):
     category = Category.objects.all()
     if len(category) < 1:
-        return JsonResponse({})
+        return JsonResponse({'category': []})
     else:
         category = [ model_to_dict(obj) for obj in category ]
         return JsonResponse({'category': category});
@@ -37,10 +38,14 @@ def lb_get(request, board_id):
     if board is None:
         return HttpResponse("not found", status = 404)
     else:
-        # TODO output image field
+        board_dict = model_to_dict(board, fields=[], exclude=[])
+        try:
+            board_dict['image'] = board_dict['image'].url
+        except:
+            board_dict['image'] = None
         tag =  [ model_to_dict(obj) for obj in board.tags.all() ]
-        activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id) ]
-        return JsonResponse({'board': model_to_dict(board, fields=[], exclude=['image']), 'activity': activity, 'tag': tag});
+        activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id).order_by('order') ]
+        return JsonResponse({'board': board_dict, 'activity': activity, 'tag': tag});
 
 def lb_load(request):
     board_list = list(LearningBoard.objects.all().select_related('author'))
@@ -72,14 +77,13 @@ def lb_activity_load(request):
 
 @csrf_exempt
 def lb_add(request):
-    data = dict(request.POST.iterlists())
     print request.POST
     board = LearningBoard.objects.create(
         author_id = request.POST["author_id"],
         title = request.POST['title'],
         description = request.POST['description'],
-        category = Category.objects.get(pk = request.POST['category']),
-        level = request.POST['contentLevel']
+        category = tools.get_or_None(Category, pk = request.POST.get('category', None)),
+        level = request.POST.get('contentLevel', 0)
     )
     # Assign board id to tag
     if request.POST.getlist('tag_list[]', None) is not None:
@@ -88,6 +92,11 @@ def lb_add(request):
     # Assign board id to previous saved activity
     if request.POST.getlist('activity_list[]', None) is not None:
         Activity.objects.filter(pk__in = request.POST.getlist('activity_list[]')).update(lb = board.id)
+    # Cover image
+    if request.POST.get('cover_img', None) is not None:
+        format, img = request.POST.get('cover_img').split(';base64,')
+        ext = format.split('/')[-1]
+        board.image.save('cover.' + ext, ContentFile(base64.decodestring(img)), save=True)
     return JsonResponse({"pk": board.id});
 
 @csrf_exempt
@@ -99,13 +108,21 @@ def lb_edit(request, board_id):
     else:
         board.title = request.POST['title']
         board.description = request.POST['description']
-        board.category = Category.objects.get(pk = request.POST['category'])
-        board.level = request.POST['contentLevel']
+        board.category = tools.get_or_None(Category, pk = request.POST.get('category', None))
+        board.level = request.POST.get('contentLevel', 0)
         if request.POST.getlist('tag_list[]', None) is not None:
             board.tags.exclude(pk__in = request.POST.getlist('tag_list[]')).delete()
             for tag in Tag.objects.filter(pk__in = request.POST.getlist('tag_list[]')):
                 board.tags.add(tag.id);
         board.save()
+        if request.POST.get('cover_img', None) is not None:
+            if request.POST['cover_img'].startswith('data:'):
+                format, img = request.POST.get('cover_img').split(';base64,')
+                ext = format.split('/')[-1]
+                board.image.save('cover.' + ext, ContentFile(base64.decodestring(img)), save=True)
+        else:
+            board.image.delete()
+            board.save()
         return JsonResponse({"pk": board.id});
 
 @csrf_exempt
@@ -141,14 +158,15 @@ def activity_get(request, activity_id):
 @csrf_exempt
 def activity_add(request):
     print request.POST
-    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id']})
+    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id', 'order']})
     # pk = board_id
     if request.POST.get('pk', None) is None:
         act = Activity.objects.create(
             title = request.POST['title'],
             description = request.POST['description'],
             type = request.POST['type'],
-            data = data
+            data = data,
+            order = request.POST['order']
         )
     else:
         act = Activity.objects.create(
@@ -156,6 +174,7 @@ def activity_add(request):
             description = request.POST['description'],
             type = request.POST['type'],
             data = data,
+            order = request.POST['order'],
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
     return JsonResponse({"pk": act.id});
@@ -167,10 +186,11 @@ def activity_edit(request, activity_id):
     if act is None:
         return HttpResponse("not found", status = 404)
     else:
-        data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id']})
+        data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id', 'order']})
         act.title = request.POST['title']
         act.description = request.POST['description']
         act.data = data
+        act.order = request.POST['order']
         act.save()
         return JsonResponse({"pk": act.id});
 
@@ -191,6 +211,14 @@ def activity_unpublish(request, activity_id):
     act = Activity.objects.get(pk = activity_id)
     act.status = "UP"
     act.save()
+    return HttpResponse("done")
+
+@csrf_exempt
+def activity_orderchange(request):
+    for key, value in request.POST.iteritems():
+        act = Activity.objects.get(pk = key)
+        act.order = value
+        act.save()
     return HttpResponse("done")
 
 @csrf_exempt
@@ -215,6 +243,15 @@ def activity_unfollow(request):
 
 @csrf_exempt
 @method_required("post")
+def tag_getAll(request):
+    tag = Tag.objects.all()
+    if len(tag) < 1:
+        return JsonResponse({'tags': []})
+    else:
+        tag = [ model_to_dict(obj) for obj in tag ]
+        return JsonResponse({'tags': tag});
+
+@csrf_exempt
 def tag_add(request):
     tag = tools.get_or_None(Tag, tag = request.POST['tag'])
     if tag is not None:

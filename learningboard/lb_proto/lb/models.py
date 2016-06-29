@@ -76,6 +76,7 @@ class Activity(models.Model):
             (UNPUB, 'unpublished')
         ), max_length = 127, default=PUB
     )
+    order = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(Staff, null=True, related_name="activities")
     last_modified = models.DateTimeField(auto_now = True)
     post_time = models.DateTimeField(auto_now_add = True)

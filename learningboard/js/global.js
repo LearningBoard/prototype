@@ -55,10 +55,17 @@ $(document).ready(function(){
   // logout
   $('.navbar-nav .logout').on('click', function(e){
     e.preventDefault();
-    localStorage.removeItem('user_id');
+    // clear all localStorage
+    Object.keys(localStorage).map(function(key){
+      localStorage.removeItem(key);
+    });
     location.reload();
   });
 });
+
+$.getCSS = function(url){
+  $('head').append($('<link rel="stylesheet" type="text/css" />').attr('href', url));
+};
 
 $.fn.serializeObject = function()
 {

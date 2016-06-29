@@ -7,20 +7,28 @@ $(document).ready(function()
   }
   console.log($("button.loginBtn"));
 
+  // switch to register mode
   $('.login_text a').on('click', function(){
     $('button.loginBtn, .login_text').addClass('hidden');
     $('button.registerBtn, .register_text').removeClass('hidden');
     $('.page-header h1').text('Register');
   });
 
+  // switch to login mode
   $('.register_text a').on('click', function(){
     $('button.loginBtn, .login_text').removeClass('hidden');
     $('button.registerBtn, .register_text').addClass('hidden');
     $('.page-header h1').text('Login');
   });
 
+  // login submit
   $("button.loginBtn").on("click", function(e) {
-    e.preventDefault();
+    // trigger html5 validation
+    if($('form.loginForm')[0].checkValidity()){
+      e.preventDefault();
+    }else{
+      return;
+    }
     var o = $("form.loginForm").serializeObject();
     console.log(o);
     $.get(serv_addr+'accts/login/', o, function(data)
@@ -32,8 +40,14 @@ $(document).ready(function()
     });
   });
 
+  // register submit
   $('button.registerBtn').on('click', function(e) {
-    e.preventDefault();
+    // trigger html5 validation
+    if($('form.loginForm')[0].checkValidity()){
+      e.preventDefault();
+    }else{
+      return;
+    }
     var o = $('form.loginForm').serializeObject();
     console.log(o);
     $.post(serv_addr+'accts/register/', o, function(data)

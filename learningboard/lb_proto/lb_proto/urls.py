@@ -13,8 +13,10 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.conf.urls import include, url
-from django.contrib import admin 
+from django.contrib import admin
 from lb import views
 
 urlpatterns = [
@@ -35,7 +37,9 @@ urlpatterns = [
     url(r'^activity/delete/(?P<activity_id>\d+)/$', views.activity_delete),
     url(r'^activity/publish/(?P<activity_id>\d+)/$', views.activity_publish),
     url(r'^activity/unpublish/(?P<activity_id>\d+)/$', views.activity_unpublish),
+    url(r'^activity/orderchange/$', views.activity_orderchange),
     url(r'^activity/follow/$', views.activity_follow),
     url(r'^activity/unfollow/$', views.activity_unfollow),
+    url(r'^tag/getAll/$', views.tag_getAll),
     url(r'^tag/add/$', views.tag_add),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

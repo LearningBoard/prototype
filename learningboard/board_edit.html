@@ -48,7 +48,7 @@
               <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
               <br />Unpublish Board
             </a></li>
-            <li><a href="#">
+            <li><a href="#" class="previewBoardBtn">
               <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>
               <br />Preview Board
             </a></li>
@@ -109,6 +109,7 @@
             <div class="tagList">
               <ul></ul>
             </div>
+            <button type="submit" class="hidden"></button> <!-- for trigger html5 validation only -->
           </form>
         </div>
         <div class="col-md-9">
@@ -127,6 +128,8 @@
                   <ul id="activityTab" class="nav nav-tabs" role="addActivityTab">
                     <li role="presentation" class="active"><a href="#video" aria-controls="video" role="tab" data-toggle="tab">Video</a></li>
                     <li role="presentation"><a href="#text" aria-controls="text" role="tab" data-toggle="tab">Text</a></li>
+                    <li role="presentation"><a href="#code" aria-controls="code" role="tab" data-toggle="tab">Code</a></li>
+                    <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File</a></li>
                   </ul>
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="video">
@@ -135,17 +138,18 @@
                         <input type="hidden" name="type" value="video">
                         <div class="form-group">
                           <label for="video_title">Title</label>
-                          <input type="text" class="form-control" id="video_title" name="title" placeholder="Activity title">
+                          <input type="text" class="form-control" id="video_title" name="title" placeholder="Activity title" required>
                         </div>
                         <div class="form-group">
                           <label for="video_link">Video Link</label>
-                          <input type="url" class="form-control" id="video_link" name="video_link" placeholder="Video link (Support YouTube)">
+                          <input type="url" class="form-control" id="video_link" name="video_link" placeholder="Video link (Support YouTube, Vimeo)" pattern=".*(youtube.com|vimeo.com).*" required>
                         </div>
                         <div class="form-group">
                           <label for="video_description">Description</label>
                           <textarea class="form-control" id="video_description" name="description" rows="3" placeholder="Description"></textarea>
                         </div>
-                        <button type="button" class="btn btn-default addActivityBtn">Submit</button>
+                        <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
+                        <span class="result_msg"></span>
                       </form>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="text">
@@ -154,13 +158,56 @@
                         <input type="hidden" name="type" value="text">
                         <div class="form-group">
                           <label for="text_title">Title</label>
-                          <input type="text" class="form-control" id="text_title" name="title" placeholder="Activity title">
+                          <input type="text" class="form-control" id="text_title" name="title" placeholder="Activity title" required>
                         </div>
+                        <input type="file" id="text_image_placeholder">
+                        <textarea name="text_image" class="hidden"></textarea>
                         <div class="form-group">
                           <label for="text_text">Text</label>
                           <textarea class="form-control" id="text_text" name="description" rows="8" placeholder="Text"></textarea>
                         </div>
-                        <button type="button" class="btn btn-default addActivityBtn">Submit</button>
+                        <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
+                        <span class="result_msg"></span>
+                      </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="code">
+                      <form class="addActivityForm">
+                        <input type="hidden" name="activity_id" value="">
+                        <input type="hidden" name="type" value="code">
+                        <div class="form-group">
+                          <label for="code_title">Title</label>
+                          <input type="text" class="form-control" id="code_title" name="title" placeholder="Activity title" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="code_link">Code demo Link</label>
+                          <input type="url" class="form-control" id="code_link" name="code_link" placeholder="Code demo link (Support JSFiddle, Plunker)" pattern=".*(jsfiddle.net|plnkr.co).*" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="code_description">Description</label>
+                          <textarea class="form-control" id="code_description" name="description" rows="3" placeholder="Description"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
+                        <span class="result_msg"></span>
+                      </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="file">
+                      <form class="addActivityForm">
+                        <input type="hidden" name="activity_id" value="">
+                        <input type="hidden" name="type" value="file">
+                        <div class="form-group">
+                          <label for="file_title">Title</label>
+                          <input type="text" class="form-control" id="file_title" name="title" placeholder="Activity title" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="file_link">File Link</label>
+                          <input type="url" class="form-control" id="file_link" name="file_link" placeholder="File link (Support Google Drive folder)" pattern=".*drive.google.com/.*" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="file_description">Description</label>
+                          <textarea class="form-control" id="file_description" name="description" rows="3" placeholder="Description"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
+                        <span class="result_msg"></span>
                       </form>
                     </div>
                   </div>
@@ -169,6 +216,7 @@
             </div>
           </div>
           <div class="activityList">
+            <p class="text-right"><button type="button" class="btn btn-default btn-sm sortLockMode"><span>Lock</span> Sorting</button></p>
             <p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>
           </div>
         </div>
@@ -183,7 +231,7 @@
             <h4 class="modal-title">Add Tag</h4>
           </div>
           <div class="modal-body">
-            <input type="text" class="form-control" name="tag" placeholder="Tag">
+            <select name="tag" class="form-control"></select>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
