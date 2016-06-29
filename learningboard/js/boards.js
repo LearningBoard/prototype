@@ -3,10 +3,10 @@ $(document).ready(function(){
   if (localStorage['is_staff'] === "true")
   {
     $(document).on('mouseenter', '.thumbnail', function(e) {
-      $(this).parent().find('.boardEditButton, .boardSendNewsButton').toggleClass('hidden');
+      $(this).parent().find('.boardControlBtn').toggleClass('hidden');
     });
     $(document).on('mouseleave', '.thumbnail', function(e) {
-      $(this).parent().find('.boardEditButton, .boardSendNewsButton').toggleClass('hidden');
+      $(this).parent().find('.boardControlBtn').toggleClass('hidden');
     });
 
     $('#sendNewsModal').on('shown.bs.modal', function(e){

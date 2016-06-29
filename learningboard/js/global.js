@@ -118,10 +118,10 @@ function BoardTemplate(board)
                 </div>\
               </div>\
             </div>\
-            <div class="boardEditButton hidden">\
+            <div class="boardControlBtn boardEditButton hidden">\
               <a href="board_edit.html?'+this.board.id+'">Edit</a>\
             </div>\
-            <div class="boardSendNewsButton hidden">\
+            <div class="boardControlBtn boardSendNewsButton hidden">\
              <a href="#" data-toggle="modal" data-target="#sendNewsModal">Send News</a>\
            </div>\
           </div>\
