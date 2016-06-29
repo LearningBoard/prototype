@@ -45,10 +45,10 @@ $(document).ready(function(){
       $('form.addBoardForm input[name=title]').val(data.board.title).trigger('keydown');
       $('form.addBoardForm textarea[name=description]').val(data.board.description);
       $('form.addBoardForm input[name=contentLevel][value='+data.board.level+']').prop('checked', true);
-      if(data.activity && data.activity.length > 0){
+      if(data.board.activities && data.board.activities.length > 0){
         $('.activityList .noActivity').hide();
-        for(var i = 0; i < data.activity.length; i++){
-          $('.activityList').append(renderActivity(++activity_index, data.activity[i].id, $.extend(data.activity[i], JSON.parse(data.activity[i].data))));
+        for(var i = 0; i < data.board.activities.length; i++){
+          $('.activityList').append(renderActivity(++activity_index, data.board.activities[i].id, $.extend(data.board.activities[i], JSON.parse(data.board.activities[i].data))));
         }
       }
       $('.navbar-nav li:not(:first) a').css({});

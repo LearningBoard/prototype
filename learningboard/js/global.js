@@ -187,7 +187,7 @@ BoardTemplate.prototype.display = function()
 }
 BoardTemplate.prototype.detail = function()
 {
-  return `
+  var html = `
     <div class="row">
       <div class="col-md-9">
         <p class="lead title board_title"></p>
@@ -224,9 +224,19 @@ BoardTemplate.prototype.detail = function()
             </div>
           </div>
         </div>
-        <div class="activityList viewMode">
-          <p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>
-        </div>
+        <div class="activityList viewMode">`;
+        if(this.board.activities && this.board.activities.length > 0){
+          for(var i = 0; i < this.board.activities.length; i++){
+            html += renderActivity(i+1, this.board.activities[i].id, this.board.activities[i]);
+          }
+        }else{
+          html += `
+          <div class="activityList viewMode">
+            <p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>
+          </div>`;
+        }
+      html += `
+      </div>
       </div>
       <div class="col-md-3">
         <h4>About This Board</h4>
@@ -238,6 +248,7 @@ BoardTemplate.prototype.detail = function()
       </div>
     </div>
   `;
+  return html;
 }
 
 BoardTemplate.prototype.published = function()

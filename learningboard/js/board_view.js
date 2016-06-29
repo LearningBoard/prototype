@@ -15,12 +15,12 @@ $(document).ready(function(){
         return;
       }
       $(".body_container").append(board.detail());
-      
+
     if (localStorage['is_staff'] !== "true")
     {
       $(".endorseBtn").addClass("hidden");
     }
-    else 
+    else
     {
       $(".followBtn").addClass("hidden");
     }
