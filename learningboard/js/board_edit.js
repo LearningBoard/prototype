@@ -83,7 +83,7 @@ $(document).ready(function(){
   $('#addTagModal').on('shown.bs.modal', function(e){
     var modal = $(this);
     var tag = modal.find('.modal-body select[name=tag]');
-    $.get(serv_addr + 'tag/getAll/', function(data){
+    $.get(serv_addr + '/tag/getAll/', function(data){
       data = $.map(data.tags, function(item){
         return {
           id: item.tag,
@@ -104,7 +104,7 @@ $(document).ready(function(){
       if(tagArray.length > 0){
         for(var i = 0; i < tagArray.length; i++){
           var item = tagArray[i];
-          $.post(serv_addr+'tag/add/', {tag: item}, function(data){
+          $.post(serv_addr+'/tag/add/', {tag: item}, function(data){
             if(tag_list.indexOf(data.pk) === -1){
               tag_list.push(data.pk);
               $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
@@ -159,7 +159,7 @@ $(document).ready(function(){
     if(!pk) return false;
     var r = confirm('Are you sure to delete the board?');
     if(r){
-      $.post(serv_addr+'lb/delete/'+pk+'/', function(data)
+      $.post(serv_addr+'/lb/delete/'+pk+'/', function(data)
       {
         alert('Board deleted');
         location.href = 'boards.html';
@@ -172,7 +172,7 @@ $(document).ready(function(){
   {
     e.preventDefault();
     if(!pk) return false;
-    $.post(serv_addr+'lb/publish/'+pk+'/', function(data)
+    $.post(serv_addr+'/lb/publish/'+pk+'/', function(data)
     {
       $('.publishBoardBtn').parent().addClass('hidden');
       $('.unpublishBoardBtn').parent().removeClass('hidden');
@@ -185,7 +185,7 @@ $(document).ready(function(){
   {
     e.preventDefault();
     if(!pk) return false;
-    $.post(serv_addr+'lb/unpublish/'+pk+'/', function(data)
+    $.post(serv_addr+'/lb/unpublish/'+pk+'/', function(data)
     {
       $('.publishBoardBtn').parent().removeClass('hidden');
       $('.unpublishBoardBtn').parent().addClass('hidden');
@@ -227,7 +227,7 @@ $(document).ready(function(){
     console.log(dataObject);
     if(dataObject.activity_id){ // edit existing activity
       dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.activity_id+']').parents('.activity'));
-      $.post(serv_addr+'activity/edit/'+dataObject.activity_id+'/', dataObject, function(data)
+      $.post(serv_addr+'/activity/edit/'+dataObject.activity_id+'/', dataObject, function(data)
       {
         // clear form data
         CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
@@ -244,7 +244,7 @@ $(document).ready(function(){
       });
     }else{ // add new activity
       dataObject.order = $('.activityList .activity').size();
-      $.post(serv_addr+'activity/add/', dataObject, function(data)
+      $.post(serv_addr+'/activity/add/', dataObject, function(data)
       {
         console.log(data);
         activity_list.push(data.pk);
@@ -274,7 +274,7 @@ $(document).ready(function(){
       $(this).find('h4').text(newIndexForRender < 10 ? '0' + newIndexForRender : newIndexForRender);
       order[$(this).find('.control').data('id')] = i;
     });
-    $.post(serv_addr+'activity/orderchange/', order);
+    $.post(serv_addr+'/activity/orderchange/', order);
   });
 
   // lock sort
@@ -293,7 +293,7 @@ $(document).ready(function(){
     var $this = $(this).parents('div.activity');
     var $thisBtn = $(this);
     var id = $(this).parents('div.control').data('id');
-    $.post(serv_addr+'activity/unpublish/'+id+'/', function(data)
+    $.post(serv_addr+'/activity/unpublish/'+id+'/', function(data)
     {
       $this.addClass('unpublish');
       $thisBtn.parent().addClass('hidden');
@@ -306,7 +306,7 @@ $(document).ready(function(){
     var $this = $(this).parents('div.activity');
     var $thisBtn = $(this);
     var id = $(this).parents('div.control').data('id');
-    $.post(serv_addr+'activity/publish/'+id+'/', function(data)
+    $.post(serv_addr+'/activity/publish/'+id+'/', function(data)
     {
       $this.removeClass('unpublish');
       $thisBtn.parent().addClass('hidden');
@@ -318,7 +318,7 @@ $(document).ready(function(){
   $(document).on('click', '.activity span.glyphicon-pencil', function(e){
     var $this = $(this).parents('div.activity');
     var id = $(this).parents('div.control').data('id');
-    $.get(serv_addr+'activity/get/'+id+'/', function(data)
+    $.get(serv_addr+'/activity/get/'+id+'/', function(data)
     {
       $('#collapseAddActivity').collapse('show');
       $('#activityTab a[href="#'+data.type+'"]').tab('show');
@@ -344,7 +344,7 @@ $(document).ready(function(){
     var r = confirm('Are you sure to delete this activity?');
     if(r){
       var id = $(this).parents('div.control').data('id');
-      $.post(serv_addr+'activity/delete/'+id+'/', function(data)
+      $.post(serv_addr+'/activity/delete/'+id+'/', function(data)
       {
         activity_list.splice(activity_list.indexOf(parseInt(id)), 1);
         $this.fadeOut('slow', function(){
