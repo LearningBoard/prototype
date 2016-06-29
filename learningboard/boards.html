@@ -93,9 +93,32 @@
             <div class="boardEditButton hidden">
               <a href="board_edit.html">Edit</a>
             </div>
+            <div class="boardSendNewsButton hidden">
+              <a href="#" data-toggle="modal" data-target="#sendNewsModal">Send News</a>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <div id="sendNewsModal" class="modal fade" tabindex="-1" role="dialog">
+      <form>
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Send News to Student</h4>
+            </div>
+            <div class="modal-body">
+              <textarea id="sendNewsText" class="form-control" rows="8"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
 
     <footer class="footer">

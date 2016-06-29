@@ -33,10 +33,14 @@ $(document).ready(function()
     console.log(o);
     $.get(serv_addr+'/accts/login/', o, function(data)
     {
-      localStorage['user_id'] = data.pk;
-      localStorage['is_staff'] = data.is_staff? data.is_staff: false;
-      console.log(data.pk);
-      location.href = 'index.html';
+      if(data.ok || data.pk){
+        localStorage['user_id'] = data.pk;
+        localStorage['is_staff'] = data.is_staff? data.is_staff: false;
+        console.log(data.pk);
+        location.href = 'index.html';
+      }else{
+        alert('Username or password not correct')
+      }
     });
   });
 
@@ -59,7 +63,7 @@ $(document).ready(function()
         console.log(data.pk);
         location.href = "index.html";
       }
-      else 
+      else
       {
         alert("user already exists");
       }

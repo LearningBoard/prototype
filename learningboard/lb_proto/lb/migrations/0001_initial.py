@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
                 ('image', models.ImageField(null=True, upload_to=b'', blank=True)),
                 ('title', models.CharField(max_length=127)),
                 ('description', models.CharField(max_length=1023, null=True, blank=True)),
-                ('status', models.CharField(default=b'UP', max_length=127, choices=[(b'PB', b'published'), (b'UP', b'unpublished')])),
+                ('status', models.PositiveSmallIntegerField(default=0, choices=[(0, b'Unpublished'), (1, b'Published')])),
                 ('level', models.PositiveSmallIntegerField(default=0, choices=[(0, b'Beginner'), (1, b'Intermediate'), (2, b'Advanced')])),
                 ('completed', models.BooleanField(default=False)),
                 ('following', models.BooleanField(default=False)),
@@ -70,6 +70,15 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('lb', models.ForeignKey(related_name='liked_by', to='lb.LearningBoard')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='News',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=255)),
+                ('text', models.TextField()),
+                ('post_time', models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
@@ -97,6 +106,16 @@ class Migration(migrations.Migration):
                 ('tag', models.CharField(max_length=255)),
                 ('slug', models.SlugField(max_length=255)),
             ],
+        ),
+        migrations.AddField(
+            model_name='news',
+            name='author',
+            field=models.ForeignKey(to='lb.Staff'),
+        ),
+        migrations.AddField(
+            model_name='news',
+            name='lb',
+            field=models.ForeignKey(to='lb.LearningBoard'),
         ),
         migrations.AddField(
             model_name='like',
@@ -131,12 +150,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='endorsement',
             name='board',
-            field=models.ForeignKey(related_name='endorsed_lb', to='lb.LearningBoard'),
+            field=models.ForeignKey(related_name='endorsed_by', to='lb.LearningBoard'),
         ),
         migrations.AddField(
             model_name='endorsement',
             name='endorser',
-            field=models.ForeignKey(related_name='endorsed_by', to='lb.Staff'),
+            field=models.ForeignKey(related_name='endorsed', to='lb.Staff'),
         ),
         migrations.AddField(
             model_name='completion',

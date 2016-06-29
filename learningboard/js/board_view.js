@@ -25,6 +25,7 @@ $(document).ready(function(){
       if(data.activity && data.activity.length > 0){
         $('.activityList .noActivity').hide();
         for(var i = 0; i < data.activity.length; i++){
+          if(data.activity[i].status == 'UP') continue;
           $('.activityList').append(renderActivity(++activity_index, data.activity[i].id, $.extend(data.activity[i], JSON.parse(data.activity[i].data))));
         }
       }
