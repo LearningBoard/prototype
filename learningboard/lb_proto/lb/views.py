@@ -45,16 +45,26 @@ def lb_get(request, board_id):
             board_dict['image_url'] = "/media/img-not-found.png"
         tag =  [ model_to_dict(obj) for obj in board.tags.all() ]
         activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id).order_by('order') ]
-        return JsonResponse({'board': board_dict, 'activity': activity, 'tag': tag});
+        return JsonResponse({'board': board_dict, 'activity': activity, 'tag': tag})
 
-def lb_user_load(request, user_pk):
-    user = tools.get_or_None(pk = user_pk);
-    if user is None:
-        return HttpResponse({'msg': 'please login first'}, status = 401)
+def lb_user_load(request):
+    is_staff = request.GET.get("is_staff")
+    is_staff = True if is_staff == "true" else False
+    user_pk = request.GET.get("user_pk")
+
+    if is_staff:
+        user = tools.get_or_None(Staff, pk = user_pk)
+        if user is None:
+            return JsonResponse({'msg': 'please login first'}, status = 401)
+        lb_set = [lb.serialize() for lb in user.lbs.filter()]
     else:
-        board_list = list(user.follows.filter().select_related('lb'))
-        for i in board_list:
-            board_list[i] = board_list[i].lb.serialize()
+        user = tools.get_or_None(Student, pk = user_pk)
+        if user is None:
+            return JsonResponse({'msg': 'please login first'}, status = 401)
+        follow_list = list(user.follows.filter())
+        lb_set = [f.lb.serialize() for f in follow_list]
+
+    return JsonResponse({"board_list": lb_set})
 
 
 def lb_load(request):
@@ -268,9 +278,9 @@ def news_add(request):
         title = request.POST['title'],
         text = request.POST['text'],
         author = request.POST['author_id'],
-        lb = request.POST['lb_id'];
+        lb = request.POST['lb_id']
     )
-    return JsonResponse({"pk": news.id});
+    return JsonResponse({"pk": news.id})
 
 @csrf_exempt
 @method_required('post')

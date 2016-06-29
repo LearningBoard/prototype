@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^category/getAll/$', views.category_getAll),
     url(r'^lb/get/(?P<board_id>\d+)/$', views.lb_get),
     url(r'^lb/load/$', views.lb_load),
+    url(r'^lb/user_load/$', views.lb_user_load),
     url(r'^lb/add/$', views.lb_add),
     url(r'^lb/edit/(?P<board_id>\d+)/$', views.lb_edit),
     url(r'^lb/delete/(?P<board_id>\d+)/$', views.lb_delete),

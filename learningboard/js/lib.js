@@ -19,14 +19,4 @@ $.fn.serializeObject = function()
     return o;
 };
 
-$.getLevelName = function(level_num)
-{
-    switch (level_num)
-    {
-        case 0: return "Beginner"
-        case 1: return "Intermediate"
-        case 2: return "Advanced"
-    }
-}
-
 serv_addr = "http://127.0.0.1:8000"

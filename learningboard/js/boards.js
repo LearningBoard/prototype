@@ -34,8 +34,16 @@ $(document).ready(function(){
     $('#addBoardBtn').addClass('hidden');
   }
 
-  $.get(serv_addr+"/lb/load/", {"user_pk": localStorage.user_id} function(data)
+  $.get(serv_addr+"/lb/user_load/", {user_pk: localStorage.user_id, is_staff: localStorage.is_staff}, function(data)
   {
-    console.log(data);
+    console.log(data.board_list);
+    var board_list = data.board_list;
+    var $board_list_ele = $("#boardList")
+    var length = data.board_list.length;
+    for (var i = 0; i < length; ++i)
+    {
+      board = new BoardTemplate(board_list[i]);
+      $board_list_ele.append(board.display());
+    }
   });
 });

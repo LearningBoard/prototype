@@ -30,7 +30,7 @@ class Category(models.Model):
     name = models.CharField(max_length = 255)
 
 class LearningBoard(models.Model):
-    author = models.ForeignKey(Staff)
+    author = models.ForeignKey(Staff, related_name="lbs")
     image = models.ImageField(null=True, blank=True)
     title = models.CharField(max_length = 127)
     description = models.CharField(max_length = 1023, null=True, blank=True)
@@ -70,7 +70,7 @@ class LearningBoard(models.Model):
         return ele
 
 class Endorsement(models.Model):
-    endorser = models.ForeignKey(Staff, related_name = "endorsed")
+    endorser = models.ForeignKey(Staff, related_name = "endorses")
     board = models.ForeignKey(LearningBoard, related_name = "endorsed_by")
 
 class Activity(models.Model):

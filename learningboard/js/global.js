@@ -95,11 +95,11 @@ function BoardTemplate(board)
           <div class="thumbnail">\
             <img src="'+serv_addr+this.board.image_url+'" alt="Cover Image">\
             <div class="caption">\
-              <h4 class="title"><a href="board_view.html">'+this.board.title+'</a></a></h4>\
+              <h4 class="title"><a href="board_view.html?'+this.board.id+'">'+this.board.title+'</a></a></h4>\
               <p class="text-muted">Content Level: '+this.getLevelName(this.board.level)+' </p>\
               <p>'+this.board.description+'</p>\
               <p class="text-muted title">\
-                Status: <span class="text-success">'+this.getStatusName(this.board.status)+'</span><br /> '+this.board.activity_num+' Learning '+(this.board.activity_num == 1? "Activity": "Activities") +
+                Status: <span class="text-success">'+this.getStatusName(this.board.status)+'</span><br /> '+this.board.activity_num+' learning '+(this.board.activity_num == 1? "Activity": "Activities") +
               '</p>\
             </div>\
             <div class="boardInfoBox">\
@@ -142,4 +142,8 @@ BoardTemplate.prototype.getStatusName = function(status_num)
   }
 }
 
+BoardTemplate.prototype.published = function()
+{
+  return this.board.status === 1;
+}
 serv_addr = "http://127.0.0.1:8000"
