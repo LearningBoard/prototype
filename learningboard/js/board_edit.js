@@ -351,6 +351,11 @@ $(document).ready(function(){
           $this.remove();
           if($('.activityList .activity').length < 1){
             $('.activityList .noActivity').fadeIn('fast');
+          }else{
+            $('.activityList .activity').each(function(i){
+              i = i + 1;
+              $(this).find('h4').text(i < 10 ? '0' + i : i);
+            });
           }
         });
       });
