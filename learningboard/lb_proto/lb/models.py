@@ -40,7 +40,7 @@ class LearningBoard(models.Model):
             (1, "Published"),
         ), default = 0
     )
-    category = models.ForeignKey(Category, null=True)
+    category = models.ForeignKey(Category, null=True, blank=True)
     level = models.PositiveSmallIntegerField(
         choices=(
             (0, 'Beginner'),
@@ -48,7 +48,7 @@ class LearningBoard(models.Model):
             (2, 'Advanced'),
         ), default=0
     )
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
     completed = models.BooleanField(default = False)
     following = models.BooleanField(default = False)
 
@@ -60,12 +60,13 @@ class LearningBoard(models.Model):
         if ele['image']:
             ele['image_url'] = ele.pop('image').url
         else:
+            ele.pop('image')
             ele['image'] = None
             ele['image_url'] = "/media/image-not-found.png"
         ele['following_num'] = self.followed_by.count()
         ele['endorsed_num'] = self.endorsed_by.count()
         ele['completed_num'] = self.completed_by.count()
-        ele['activity_num'] = self.activities.count()
+        ele['activity_num'] = self.activity_set.count()
         ele['author'] = self.author.username
         ele['author_id'] = self.author.id
         return ele
@@ -87,7 +88,7 @@ class Activity(models.Model):
     description = models.TextField(null = True, blank = True)
     type = models.CharField(max_length = 255)
     data = models.TextField(null = True, blank = True)
-    lb = models.ForeignKey(LearningBoard, related_name="activities", null=True, blank=True)
+    lb = models.ForeignKey(LearningBoard, related_name="activity_set", null=True, blank=True)
     PUB = "PB"
     UNPUB = "UP"
     status = models.CharField(
@@ -102,6 +103,9 @@ class Activity(models.Model):
     post_time = models.DateTimeField(auto_now_add = True)
 
 class News(models.Model):
+    class Meta:
+        verbose_name_plural = "news"
+
     title = models.CharField(max_length = 255)
     text = models.TextField()
     author = models.ForeignKey(Staff)

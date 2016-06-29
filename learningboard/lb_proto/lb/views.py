@@ -37,15 +37,12 @@ def lb_get(request, board_id):
     board = LearningBoard.objects.get(pk = board_id)
     if board is None:
         return HttpResponse("not found", status = 404)
-    else:
-        board_dict = model_to_dict(board, fields=[], exclude=[])
-        try:
-            board_dict['image_url'] = board_dict.pop('image').url
-        except:
-            board_dict['image_url'] = "/media/image-not-found.png"
-        tag =  [ model_to_dict(obj) for obj in board.tags.all() ]
-        activity =  [ model_to_dict(obj) for obj in Activity.objects.filter(lb = board_id).order_by('order') ]
-        return JsonResponse({'board': board_dict, 'activity': activity, 'tag': tag})
+    board_dict = board.serialize()
+    tag = [ model_to_dict(obj) for obj in board.tags.all() ]
+    activity = [ model_to_dict(obj) for obj in board.activity_set.filter().order_by('order') ]
+    board_dict['activities'] = activity
+    board_dict['tags'] = tag
+    return JsonResponse({'board': board_dict})
 
 def lb_user_load(request):
     is_staff = request.GET.get("is_staff")

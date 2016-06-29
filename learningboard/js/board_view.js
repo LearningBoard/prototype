@@ -1,37 +1,31 @@
+"use strict"
 var activity_index = 0;
 
 $(document).ready(function(){
-  if (localStorage['is_staff'] !== "true")
-  {
-    $("#endorseBtn").addClass("hidden");
-  }
 
   // fetch and render board data
   if(/\?\d+/.test(location.search)){
     var pk = location.search.replace('?', '');
     $.get(serv_addr+'/lb/get/'+pk+'/', function(data){
+      console.log(data);
+      var board = new BoardTemplate(data.board);
       // unpublish board, deny access
-      if(data.board.status == 'UP' && !localStorage['is_staff']){
+      if(!board.published() && !localStorage['is_staff']){
         location.href = 'boards.html';
+        return;
       }
-      if(data.tag){
-        data.tag.map(function(item){
-          $('.tagList ul').append(`<li>${item.tag}</li>`);
-        });
-      }
-      $('.board_title').text(data.board.title);
-      $('.board_description').text(data.board.description);
-      $('.board_level').text(data.board.level);
-      if(data.activity && data.activity.length > 0){
-        $('.activityList .noActivity').hide();
-        for(var i = 0; i < data.activity.length; i++){
-          if(data.activity[i].status == 'UP') continue;
-          $('.activityList').append(renderActivity(++activity_index, data.activity[i].id, $.extend(data.activity[i], JSON.parse(data.activity[i].data))));
-        }
-      }
+      $(".body_container").append(board.detail());
+      
+    if (localStorage['is_staff'] !== "true")
+    {
+      $(".endorseBtn").addClass("hidden");
+    }
+    else 
+    {
+      $(".followBtn").addClass("hidden");
+    }
     }).fail(function(){
       alert('Learning Board not found');
-      location.href = 'boards.html';
     });
   }
 
