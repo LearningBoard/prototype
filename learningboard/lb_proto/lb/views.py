@@ -33,11 +33,11 @@ def category_getAll(request):
 
 @csrf_exempt
 def lb_get(request, board_id):
-    print request.GET
     board = LearningBoard.objects.get(pk = board_id)
+    user_id = request.GET.get("user_id")
     if board is None:
         return HttpResponse("not found", status = 404)
-    board_dict = board.serialize()
+    board_dict = board.serialize(user_id = user_id)
     tag = [ model_to_dict(obj) for obj in board.tags.all() ]
     activity = [ model_to_dict(obj) for obj in board.activity_set.filter().order_by('order') ]
     board_dict['activities'] = activity
@@ -63,7 +63,7 @@ def lb_user_load(request):
 
     return JsonResponse({"board_list": lb_set})
 
-
+@method_required("get")
 def lb_load(request):
     board_list = list(LearningBoard.objects.filter().select_related('author'))
     leng = len(board_list)
@@ -72,7 +72,6 @@ def lb_load(request):
 
     return JsonResponse({"board_list": board_list})
 
-@csrf_exempt
 @method_required("get")
 def lb_activity_load(request):
     pk_board = request.GET.get('pk_board')
@@ -231,21 +230,24 @@ def activity_orderchange(request):
 @csrf_exempt
 @method_required("post")
 def activity_follow(request):
-    lb_id = request.POST.get('activity_id')
+    lb_id = request.POST.get('lb_id')
     u_id = request.POST.get('user_id')
-    if Follow.objects.filter(lb_id = lb_id, stu_id = u_id).exists():
-        Follow.objects.create(lb_id = lb_id, stu_id = u_id)
-        return JsonResponse({"ok": True})
+    if Follow.objects.filter(lb_id = lb_id, user_id = u_id).exists() == False:
+        Follow.objects.create(lb_id = lb_id, user_id = u_id)
+        count = Follow.objects.filter(lb_id = lb_id).count()
+        return JsonResponse({"ok": True, "count": count})
     return JsonResponse({"ok": False})
 
 @csrf_exempt
 @method_required("post")
 def activity_unfollow(request):
-    lb_id = request.POST.get('activity_id')
+    lb_id = request.POST.get('lb_id')
     u_id = request.POST.get('user_id')
-    if Follow.objects.filter(lb_id = lb_id, stu_id = u_id).exists():
-        Follow.objects.delete(lb_id = lb_id, stu_id = u_id)
-        return JsonResponse({"ok": True})
+    follow = tools.get_or_None(Follow, lb_id = lb_id, user_id = u_id)
+    if follow:
+        follow.delete()
+        count = Follow.objects.filter(lb_id = lb_id).count()
+        return JsonResponse({"ok": True, "count": count})
     return JsonResponse({"ok": False})
 
 @csrf_exempt

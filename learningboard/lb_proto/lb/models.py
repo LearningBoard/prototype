@@ -48,15 +48,20 @@ class LearningBoard(models.Model):
             (2, 'Advanced'),
         ), default=0
     )
-    tags = models.ManyToManyField(Tag, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
     completed = models.BooleanField(default = False)
     following = models.BooleanField(default = False)
 
     def __str__(self):
         return self.title
 
-    def serialize(self):
+    def serialize(self, user_id = None):
         ele = model_to_dict(self)
+        if user_id != None:
+            if self.followed_by.filter(user__id = user_id).exists():
+                ele['followed'] = True
+            else:
+                ele['followed'] = False
         if ele['image']:
             ele['image_url'] = ele.pop('image').url
         else:

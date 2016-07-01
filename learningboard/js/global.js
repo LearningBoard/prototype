@@ -91,6 +91,37 @@ $.fn.serializeObject = function()
 function BoardTemplate(board)
 {
   this.board = board;
+  this.$display_parent = [];
+  this.$detail_parent = []
+  this.id = board.id;
+}
+BoardTemplate.prototype.addDetailParent = function(p)
+{
+  this.$detail_parent.push(p);
+
+}
+BoardTemplate.prototype.addDisplayParent = function(p)
+{
+  this.$display_parent.push(p);
+}
+BoardTemplate.prototype.update = function()
+{
+  for (var i = 0; i < this.$display_parent.length; ++i)
+  {
+    var test = this.$display_parent[i].find("[myclass="+this.id+"]");
+    console.log(test);
+    this.$display_parent[i].find("[myclass=boardTemplate_"+this.id+"]").remove();
+    this.$display_parent[i].append(this.display_string());
+  }
+  for (var i = 0; i < this.$detail_parent.length; ++i)
+  {
+    var test = this.$detail_parent[i].find("[myclass="+this.id+"]");
+    console.log(test);
+    console.log(this.$detail_parent);
+    this.$detail_parent[i].find("[myclass=boardTemplate_"+this.id+"]").remove();
+    console.log(this.$detail_parent[i]);
+    this.$detail_parent[i].append(this.detail_string());
+  }
 }
 
 BoardTemplate.prototype.getLevelName = function()
@@ -114,7 +145,7 @@ BoardTemplate.prototype.getStatusName = function()
 BoardTemplate.prototype.display = function()
 {
   return '\
-    <div class="col-md-3">\
+    <div class="col-md-3" myclass="boardTemplate_'+this.id+'">\
       <div class="thumbnail">\
         <img src="'+serv_addr+this.board.image_url+'" alt="Cover Image">\
         <div class="caption">\
@@ -148,6 +179,96 @@ BoardTemplate.prototype.display = function()
     </div>';
 }
 BoardTemplate.prototype.detail = function()
+{
+  return `
+    <div class="row">
+      <div class="col-md-9">
+        <p class="lead title board_title"></p>
+        <p class="title">By <a href="#">`+this.board.author+`</a> | Content Level: <span class="board_level">`+this.getLevelName()+`</span></p>
+        <div class="action">
+          <button type="button" class="btn btn-default text-uppercase followBtn">Follow</button>
+          <button type="button" class="btn btn-default text-uppercase endorseBtn">Endorse</button>
+          <button type="button" class="btn btn-default text-uppercase">Share</button>
+        </div>
+        <div class="row progressBox">
+          <div class="col-md-2">
+            <span class="glyphicon glyphicon-book" aria-hidden="true"></span>`+ this.board.activity_num+' learning '+(this.board.activity_num == 1? "activity": "activities")+`
+          </div>
+          <div class="col-md-2">
+            <span aria-hidden="true" class="fa fa-thumb-tack"></span> <span class="progress_endorsed"></span>`+  
+              this.board.endorsed_num + ' '+ (this.board.endorsed_num == 1? "has ": "have ")+`
+            endorsed
+          </div>
+          <div class="col-md-2">
+            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>`+ 
+            this.board.completed_num + ' ' + (this.board.completed_num == 1? "has ": "have ") +`
+            completed
+          </div>
+          <div class="col-md-2">
+            <span aria-hidden="true" class="fa fa-users"></span> <span class="progress_following"></span>`+ 
+              this.board.following_num + ' ' + (this.board.following_num == 1? "is ": "are ")+`
+              following
+          </div>
+          <div class="col-md-4">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 0%<br />
+            0 completed<br />
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="activityList viewMode">
+          <p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <h4>About This Board</h4>
+        <div class="board_description"></div>
+        <h4>Tag</h4>
+        <div class="tagList">
+          <ul></ul>
+        </div>
+      </div>
+    </div>
+  `;
+}
+BoardTemplate.prototype.display_string = function()
+{
+  return '\
+    <div class="col-md-3" myclass="boardTemplate_'+this.id+'">\
+      <div class="thumbnail">\
+        <img src="'+serv_addr+this.board.image_url+'" alt="Cover Image">\
+        <div class="caption">\
+          <h4 class="title"><a href="board_view.html?'+this.board.id+'">'+this.board.title+'</a></a></h4>\
+          <p class="text-muted title">Content Level: '+this.getLevelName()+' </p>\
+          <p>'+this.board.description+'</p>\
+          <p class="text-muted title">\
+            Status: <span class="text-success">'+this.getStatusName()+'</span>\
+          </p>\
+          <p class="text-muted">\
+            '+this.board.activity_num+' learning '+(this.board.activity_num == 1? "activity": "activities") +
+          '</p>\
+        </div>\
+        <div class="boardInfoBox">\
+          <div class="row text-center text-muted">\
+            <div class="col-md-4">\
+              <span class="fa fa-thumb-tack" aria-hidden="true"></span>\
+              <p>'+ this.board.endorsed_num + ' '+ (this.board.endorsed_num == 1? "has ": "have ") +'endorsed</p>\
+            </div>\
+            <div class="col-md-4">\
+              <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>\
+              <p>'+ this.board.completed_num + ' ' + (this.board.completed_num == 1? "has ": "have ")+'completed</p>\
+            </div>\
+            <div class="col-md-4">\
+              <span class="fa fa-users" aria-hidden="true"></span>\
+              <p>'+ this.board.following_num + ' ' + (this.board.following_num == 1? "is ": "are ") + 'following</p>\
+            </div>\
+          </div>\
+        </div>\
+      </div>\
+    </div>';
+}
+BoardTemplate.prototype.detail_string = function()
 {
   return `
     <div class="row">
