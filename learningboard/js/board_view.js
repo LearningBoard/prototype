@@ -1,4 +1,8 @@
-"use strict"
+(function() {
+  "use strict";
+}());
+
+$.getScript('js/templates.js');
 var activity_index = 0;
 
 $(document).ready(function(){
@@ -8,65 +12,30 @@ $(document).ready(function(){
     var pk = location.search.replace('?', '');
     $.get(serv_addr+'/lb/get/'+pk+'/', {user_id: localStorage.user_id}, function(data){
       console.log(data);
-      var board = new BoardTemplate(data.board);
+      var board = new BoardDetailTemplate(data.board);
+      board.display($(".body_container"));
       // unpublish board, deny access
-      if(!board.published() && !localStorage['is_staff']){
+      if(!board.published() && !localStorage.is_staff){
         location.href = 'boards.html';
         return;
       }
-      board.addDetailParent($(".body_container"));
-      board.update();
-      if (data.board.followed)
-      {
-        $(".followBtn").addClass('btn-primary').text("Unfollow");
-      }
-      
-      if (localStorage['is_staff'] !== "true")
-      {
-        $(".endorseBtn").addClass("hidden");
-      }
-      else 
-      {
-        if (localStorage.user_id == data.board.id)
-        {
-          $(".endorseBtn").addClass("hidden");
-        }
-        $(".followBtn").addClass("hidden");
-      }
-      $('.followBtn').on('click', function(){
-        if($(".followBtn").hasClass('btn-primary'))
-        {
-          $.post(serv_addr+'/activity/unfollow/', {user_id: localStorage.user_id, lb_id: pk}, function(data)
-          {
-            if (data.ok)
-            {
-              board.board.following_num = data.count;
-              board.board.followed = false;
-              board.update();
-              $(".followBtn").removeClass('btn-primary').text("Follow");
-            }
-          });
-        }
-        else
-        {
-          $.post(serv_addr+'/activity/follow/', {user_id: localStorage.user_id, lb_id: pk}, function(data)
-          {
-            if (data.ok)
-            {
-              console.log(board);
-              console.log(data.count);
-              board.board.followed = true;
-              board.update();
-              $(".followBtn").addClass('btn-primary').text("Unfollow");
-              board.board.following_num = data.count;
-            }
-          });
-        }
-      });
-    })
+    });
+    /*
     .fail(function(){
+      $(".body_container").append(board.detail());
+
+    if (localStorage['is_staff'] !== "true")
+    {
+      $(".endorseBtn").addClass("hidden");
+    }
+    else
+    {
+      $(".followBtn").addClass("hidden");
+    }
+    }).fail(function(){
       alert('Learning Board not found');
     });
+    */
 
   }
 
@@ -115,5 +84,3 @@ $(document).ready(function(){
     target.val('');
   });
 });
-
-

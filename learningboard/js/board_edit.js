@@ -7,6 +7,7 @@ var activity_index = 0;
 
 $.getScript("js/lib.js");
 $.getScript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js');
+$.getScript('js/tempates.js');
 $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
 $(document).ready(function(){
@@ -36,8 +37,8 @@ $(document).ready(function(){
         $('.publishBoardBtn').parent().addClass('hidden');
         $('.unpublishBoardBtn').parent().removeClass('hidden');
       }
-      if(data.tag){
-        data.tag.map(function(item){
+      if(data.board.tags){
+        data.board.tags.map(function(item){
           tag_list.push(item.id);
           $('.tagList ul').append(`<li data-id="${item.id}">${item.tag} <span>x</span></li>`);
         });
@@ -45,10 +46,10 @@ $(document).ready(function(){
       $('form.addBoardForm input[name=title]').val(data.board.title).trigger('keydown');
       $('form.addBoardForm textarea[name=description]').val(data.board.description);
       $('form.addBoardForm input[name=contentLevel][value='+data.board.level+']').prop('checked', true);
-      if(data.activity && data.activity.length > 0){
+      if(data.board.activities && data.board.activities.length > 0){
         $('.activityList .noActivity').hide();
-        for(var i = 0; i < data.activity.length; i++){
-          $('.activityList').append(renderActivity(++activity_index, data.activity[i].id, $.extend(data.activity[i], JSON.parse(data.activity[i].data))));
+        for(var i = 0; i < data.board.activities.length; i++){
+          $('.activityList').append(renderActivity(++activity_index, data.board.activities[i].id, $.extend(data.board.activities[i], JSON.parse(data.board.activities[i].data))));
         }
       }
       $('.navbar-nav li:not(:first) a').css({});
@@ -104,12 +105,14 @@ $(document).ready(function(){
       if(tagArray.length > 0){
         for(var i = 0; i < tagArray.length; i++){
           var item = tagArray[i];
-          $.post(serv_addr+'/tag/add/', {tag: item}, function(data){
-            if(tag_list.indexOf(data.pk) === -1){
-              tag_list.push(data.pk);
-              $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
-            }
-          });
+          (function(item){
+            $.post(serv_addr+'/tag/add/', {tag: item}, function(data){
+              if(tag_list.indexOf(data.pk) === -1){
+                tag_list.push(data.pk);
+                $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
+              }
+            });
+          })(item);
         }
       }
       $('#addTagModal').modal('hide');
@@ -351,6 +354,11 @@ $(document).ready(function(){
           $this.remove();
           if($('.activityList .activity').length < 1){
             $('.activityList .noActivity').fadeIn('fast');
+          }else{
+            $('.activityList .activity').each(function(i){
+              i = i + 1;
+              $(this).find('h4').text(i < 10 ? '0' + i : i);
+            });
           }
         });
       });
@@ -373,7 +381,7 @@ function initCoverImage(url){
       layoutTemplates: {main2: '{preview} {remove}'},
       allowedFileExtensions: ['jpg', 'png', 'gif']
     });
-    (function(){
+    (function(instance){
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
         cover_img = reader.result;
       });
@@ -402,7 +410,7 @@ function initImageInput(inputEle, targetEle, url){
       layoutTemplates: {main2: '{preview} {remove}'},
       allowedFileExtensions: ['jpg', 'png', 'gif']
     });
-    (function(){
+    (function(instance){
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
         targetEle.val(reader.result);
       });
@@ -420,7 +428,7 @@ function initCkeditor(){
       var editor = CKEDITOR.replace($(this).attr('id'), {
         language: 'en'
       });
-      (function(){
+      (function(editor){
         editor.on('change', function(e){
           $('#' + e.editor.name).val(e.editor.getData());
         });

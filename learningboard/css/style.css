@@ -222,3 +222,47 @@ body > .body_container {
 .title {
   text-transform: capitalize;
 }
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .navbar-form .form-control {
+    position: absolute;
+    width: 180px;
+    top: 0;
+  }
+
+  .navbar-form:hover .form-control {
+    width: 100%;
+    z-index: 1;
+    transition: width .8s;
+  }
+
+  .navbar-form .form-group span {
+    position: absolute;
+    z-index: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  body > .container {
+    padding: 70px 15px 0;
+  }
+
+  .nav > li {
+    display: inline-block;
+  }
+
+  .navbar-brand {
+    margin-top: auto;
+  }
+
+  .navbar-form .form-control {
+    height: auto;
+    width: 100%;
+  }
+
+  .navbar-form .form-group span {
+    position: absolute;
+    margin-top: 58px;
+    margin-left: 12px;
+  }
+}

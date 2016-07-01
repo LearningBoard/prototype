@@ -208,14 +208,14 @@ def activity_delete(request, activity_id):
 @csrf_exempt
 def activity_publish(request, activity_id):
     act = Activity.objects.get(pk = activity_id)
-    act.status = "PB"
+    act.status = 1
     act.save()
     return HttpResponse("done")
 
 @csrf_exempt
 def activity_unpublish(request, activity_id):
     act = Activity.objects.get(pk = activity_id)
-    act.status = "UP"
+    act.status = 1
     act.save()
     return HttpResponse("done")
 
@@ -234,8 +234,7 @@ def activity_follow(request):
     u_id = request.POST.get('user_id')
     if Follow.objects.filter(lb_id = lb_id, user_id = u_id).exists() == False:
         Follow.objects.create(lb_id = lb_id, user_id = u_id)
-        count = Follow.objects.filter(lb_id = lb_id).count()
-        return JsonResponse({"ok": True, "count": count})
+        return JsonResponse({"ok": True})
     return JsonResponse({"ok": False})
 
 @csrf_exempt
@@ -246,8 +245,7 @@ def activity_unfollow(request):
     follow = tools.get_or_None(Follow, lb_id = lb_id, user_id = u_id)
     if follow:
         follow.delete()
-        count = Follow.objects.filter(lb_id = lb_id).count()
-        return JsonResponse({"ok": True, "count": count})
+        return JsonResponse({"ok": True})
     return JsonResponse({"ok": False})
 
 @csrf_exempt

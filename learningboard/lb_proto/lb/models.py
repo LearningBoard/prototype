@@ -96,11 +96,11 @@ class Activity(models.Model):
     lb = models.ForeignKey(LearningBoard, related_name="activity_set", null=True, blank=True)
     PUB = "PB"
     UNPUB = "UP"
-    status = models.CharField(
+    status = models.PositiveSmallIntegerField(
         choices=(
-            (PUB, 'published'),
-            (UNPUB, 'unpublished')
-        ), max_length = 127, default=PUB
+            (0, "Unpublished"),
+            (1, "Published"),
+        ), default = 0
     )
     order = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(Staff, null=True, related_name="activities")
