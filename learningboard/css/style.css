@@ -17,7 +17,6 @@ textarea {
 }
 
 .page-header {
-  margin: 0 0 20px;
 }
 
 .panel-group .panel-heading {
@@ -26,20 +25,31 @@ textarea {
 }
 
 body > .container {
-  padding: 100px 15px 0;
+  padding-top: 80px;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 body > .body_container {
+  padding: 0 30px 0;
+}
+
+.shift-left {
   padding: 0 15px 0;
 }
+
 
 .navbar .glyphicon {
   font-size: 22px;
 }
 
+.search-bar-glyphicon {
+  margin-top: 28px;
+  color: #888 !important;
+}
+
 .navbar-brand {
-  margin-top: 12px;
-  font-size: 26px;
+  font-size: 22px;
 }
 
 .navbar-form {
@@ -47,15 +57,19 @@ body > .body_container {
   margin: 0;
 }
 
-.navbar-form .form-control {
-  height: 77px;
-  width: 360px;
-  font-size: 18px;
+.navbar-header {
+  margin-top: 10px;
+
 }
 
+.navbar-form .form-control {
+  margin-top: 20px;
+  height: 40px;
+  width: 360px;
+  font-size: 16px;
+}
 .navbar-form .form-group span {
   position: absolute;
-  margin-top: 26px;
   margin-left: 12px;
   color: #FFF;
   opacity: 0.8;
@@ -63,10 +77,9 @@ body > .body_container {
 
 .navbar-form .form-group input {
   padding-left: 43px;
-  border-radius: 0;
   border: none;
-  color: #FFF;
-  background-color: #158CB2;
+  color: black;
+  background-color: white;
 }
 
 .boardInfoBox {
@@ -103,29 +116,26 @@ body > .body_container {
   text-decoration: none;
 }
 
-.progressBox {
-  padding: 25px 0 0;
-}
-
-.progressBox > div {
+.board_status > div {
+  padding-left: 0;
   border-right: 1px solid #CCC;
   color: #555;
 }
 
-.progressBox > div:hover {
+.board_status > div:hover {
   color: #111;
 }
 
-.progressBox > div:last-child {
+.board_status > div:last-child {
   border-right: none;
 }
 
-.progressBox > div .glyphicon, .progressBox > div .fa {
+.board_status > div .glyphicon, .board_status > div .fa {
   font-size: 20px;
   padding: 5px;
 }
 
-.progressBox .progress {
+.board_status .progress {
   margin: 2px 0;
 }
 
@@ -244,15 +254,12 @@ body > .body_container {
 
 @media (max-width: 768px) {
   body > .container {
-    padding: 70px 15px 0;
+    padding: 40px 15px 0;
   }
 
   .nav > li {
+    padding-top: 0px;
     display: inline-block;
-  }
-
-  .navbar-brand {
-    margin-top: auto;
   }
 
   .navbar-form .form-control {
@@ -266,3 +273,38 @@ body > .body_container {
     margin-left: 12px;
   }
 }
+
+.nav > li > a {
+  padding-top: 15px;
+  font-size: 14px;
+}
+.navbar-brand {
+  padding-top: 19px;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: #555;
+}
+
+.btn:focus {
+  background-color: white;
+  outline: none;
+}
+
+.btn:hover {
+  outline:none
+}
+
+p {
+  margin: 0;
+}
+
+/*
+.btn-primary {
+  background-color: #00BFFF;
+  border-color: #00BFFF;
+}
+*/

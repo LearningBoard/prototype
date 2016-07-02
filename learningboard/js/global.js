@@ -4,7 +4,7 @@ $(document).ready(function(){
   // dump the nav bar to body
   if(!location.href.includes('board_edit.html')){
     $('body').prepend(`
-      <nav class="navbar navbar-default navbar-fixed-top">
+      <nav class="navbar navbar-default navbar-fixed-top top-navbar"> 
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -18,8 +18,8 @@ $(document).ready(function(){
           <div id="navbar" class="collapse navbar-collapse">
             <form class="navbar-form navbar-left" role="search">
               <div class="form-group">
-                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                <input type="text" class="form-control" placeholder="What do you want to learn today?" required>
+                <span class="glyphicon glyphicon-search search-bar-glyphicon" aria-hidden="true"></span>
+                <input type="text" class="form-control search-bar" placeholder="What do you want to learn today?" required>
               </div>
             </form>
             <ul class="nav navbar-nav navbar-right text-center">

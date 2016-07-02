@@ -1,3 +1,4 @@
+$.getScript('js/templates.js')
 
 $(document).ready(function(){
   if (localStorage['is_staff'] === "true")
@@ -56,8 +57,8 @@ $(document).ready(function(){
     var length = data.board_list.length;
     for (var i = 0; i < length; ++i)
     {
-      board = new BoardTemplate(board_list[i]);
-      $board_list_ele.append(board.display());
+      board = new BoardBriefTemplate(board_list[i]);
+      board.display($("#boardList"));
     }
   });
 });
