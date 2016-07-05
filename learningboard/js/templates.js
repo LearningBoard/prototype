@@ -248,6 +248,7 @@ function BoardDetailTemplate(board)
           <button type="button" class="btn btn-default endorseBtn">Endorse</button>
           <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-send"></span>&nbsp share</button>
         </div>
+        <br/>
         <div class="row board_status">
           <div class="col-md-3">
             <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ this.board.activity_num+' '+(this.board.activity_num == 1? "activity": "activities")+`</span>
@@ -265,12 +266,11 @@ function BoardDetailTemplate(board)
             </span>
           </div>
         </div>
+        <br>
         <div class="row progressBox">
-          <div>
-            <div class="progress">
-              <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                <span>60%</span>
-              </div>
+          <div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+              <span>60%</span>
             </div>
           </div>
         </div>
@@ -310,7 +310,7 @@ function BoardDetailTemplate(board)
   $followBtn.hover(
     function(){if(board.followed) $(this).html(unfollow_html);},
     function(){if(board.followed) $(this).html(following_html);}
-  )
+  );
   if (!board.followed) $followBtn.html(follow_html);
   else $followBtn.html(following_html);
 
