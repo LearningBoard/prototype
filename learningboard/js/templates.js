@@ -70,7 +70,7 @@ function ActivityTemplate(activity, index)
 
   var html;
   var activityControl = `
-  <div class="control" data-id="${activity.pk}">
+  <div class="control" data-id="${activity.id}">
     <ul class="text-muted">
       <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Re Add</li>
       <li><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</li>
@@ -346,7 +346,7 @@ function BoardDetailTemplate(board)
         board.following_num -= 1;
         board.followed = false;
         $followBtn.html(follow_html);
-        $template.find(".following_num").html(board.following_num + ' following');
+        $template.find(".following_num").html(board.following_num + ' subscribing');
       }
     });
   }
@@ -361,7 +361,7 @@ function BoardDetailTemplate(board)
         console.log($template);
         console.log($template.find(".following_num"));
         $followBtn.html(unfollow_html);
-        $template.find(".following_num").html(board.following_num + ' following');
+        $template.find(".following_num").html(board.following_num + ' subscribing');
       }
     });
   }
