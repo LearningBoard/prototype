@@ -39,7 +39,7 @@ def lb_get(request, board_id):
         return HttpResponse("not found", status = 404)
     board_dict = board.serialize(user_id = user_id)
     tag = [ model_to_dict(obj) for obj in board.tags.all() ]
-    activity = [ model_to_dict(obj) for obj in board.activity_set.filter().order_by('order') ]
+    activity = [ dict(model_to_dict(obj).items() + {'post_time': obj.post_time}.items()) for obj in board.activity_set.all().order_by('order') ]
     board_dict['activities'] = activity
     board_dict['tags'] = tag
     return JsonResponse({'board': board_dict})

@@ -92,7 +92,7 @@ function ActivityTemplate(activity, index)
       <ul></ul>
     </div>
   </div>`;
-  try 
+  try
   {
     $.extend(activity, JSON.parse(activity.data));
   }
@@ -116,7 +116,7 @@ function ActivityTemplate(activity, index)
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
-          Posted date: 09 | May | 2016
+          Posted date: ${new Date(activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
@@ -139,7 +139,7 @@ function ActivityTemplate(activity, index)
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
-          Posted date: 09 | May | 2016
+          Posted date: ${new Date(activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
@@ -166,7 +166,7 @@ function ActivityTemplate(activity, index)
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
-          Posted date: 09 | May | 2016
+          Posted date: ${new Date(activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
@@ -194,7 +194,7 @@ function ActivityTemplate(activity, index)
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
-          Posted date: 09 | May | 2016
+          Posted date: ${new Date(activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
