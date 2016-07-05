@@ -310,7 +310,7 @@ function BoardDetailTemplate(board)
   $followBtn.hover(
     function(){if(board.followed) $(this).html(unfollow_html);}, 
     function(){if(board.followed) $(this).html(following_html);}
-  )
+  );
   if (!board.followed) $followBtn.html(follow_html);
   else $followBtn.html(following_html);
   
@@ -320,7 +320,7 @@ function BoardDetailTemplate(board)
   }
   else 
   {
-    if (localStorage.user_id == data.board.id)
+    if (localStorage.user_id == this.board.id)
     {
       $template.find(".endorseBtn").addClass("hidden");
     }
@@ -371,7 +371,7 @@ function BoardDetailTemplate(board)
   }
   if (count === 0)
   {
-    actList.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
+    $actList.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
   }
 };
 
