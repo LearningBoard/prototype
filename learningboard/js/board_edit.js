@@ -255,6 +255,7 @@ $(document).ready(function(){
       });
     }else{ // add new activity
       dataObject.order = $('.activityList .activity').size();
+      dataObject.author_id = localStorage.user_id;
       $.post(serv_addr+'/activity/add/', dataObject, function(data)
       {
         console.log(data);

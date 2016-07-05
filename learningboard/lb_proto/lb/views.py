@@ -172,7 +172,8 @@ def activity_add(request):
             description = request.POST['description'],
             type = request.POST['type'],
             data = data,
-            order = request.POST['order']
+            order = request.POST['order'],
+            author = Staff.objects.get(pk = request.POST['author_id']),
         )
     else:
         act = Activity.objects.create(
@@ -181,6 +182,7 @@ def activity_add(request):
             type = request.POST['type'],
             data = data,
             order = request.POST['order'],
+            author = Staff.objects.get(pk = request.POST['author_id']),
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
     return JsonResponse({"pk": act.id});

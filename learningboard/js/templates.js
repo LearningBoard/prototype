@@ -69,14 +69,28 @@ function ActivityTemplate(activity, index)
   this.index = index++;
 
   var html;
-  var activityControl = `
-  <div class="control" data-id="${activity.id}">
-    <ul class="text-muted">
-      <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Re Add</li>
-      <li><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</li>
-      <li class="markAsComplete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Mark as complete</li>
-    </ul>
-  </div>`;
+  var activityControl;
+
+  if(localStorage.is_staff && location.href.includes('board_edit.html')){
+    activityControl = `
+    <div class="control" data-id="${activity.id}">
+      <ul>
+        <li ${activity['status'] == 0 ? 'class="hidden"' : ''}><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
+        <li ${activity['status'] == 0 ? '' : 'class="hidden"'}><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
+        <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
+        <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
+      </ul>
+    </div>`;
+  }else{
+    activityControl = `
+    <div class="control" data-id="${activity.id}">
+      <ul class="text-muted">
+        <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Re Add</li>
+        <li><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</li>
+        <li class="markAsComplete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Mark as complete</li>
+      </ul>
+    </div>`;
+  }
   var activityComment = `
   <div class="comment">
     <span class="glyphicon glyphicon-heart"></span> 0
