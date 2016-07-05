@@ -224,6 +224,7 @@ def activity_unpublish(request, activity_id):
 
 @csrf_exempt
 def activity_orderchange(request):
+    print request.POST
     for key, value in request.POST.iteritems():
         act = Activity.objects.get(pk = key)
         act.order = value
