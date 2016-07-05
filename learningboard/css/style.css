@@ -103,6 +103,11 @@ body > .body_container {
 }
 
 /* board grid */
+#boardList .description {
+  padding: 10px 0;
+  min-height: 100px;
+}
+
 .boardInfoBox {
   background-color: #E8E8E7;
 }

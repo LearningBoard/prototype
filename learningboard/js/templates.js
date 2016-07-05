@@ -112,6 +112,7 @@ function ActivityTemplate(activity, index)
   try
   {
     $.extend(activity, JSON.parse(activity.data));
+    delete activity.data;
   }
   catch (err)
   {
