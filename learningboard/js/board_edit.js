@@ -267,6 +267,7 @@ $(document).ready(function(){
 
   // sort activity
   $('.activityList').sortable({
+    cancel: '.noActivity',
     opacity: 0.95,
     cursor: 'move'
   });
