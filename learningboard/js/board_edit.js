@@ -443,8 +443,8 @@ function renderActivity(index, pk, dataObject){
   var activityControl = `
   <div class="control" data-id="${pk}">
     <ul>
-      <li ${dataObject['status'] == 'UP' ? 'class="hidden"' : ''}><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
-      <li ${dataObject['status'] == 'UP' ? '' : 'class="hidden"'}><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
+      <li ${dataObject['status'] == 1 ? '' : 'class="hidden"'}><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
+      <li ${dataObject['status'] == 1 ? 'class="hidden"' : ''}><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
       <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
       <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
     </ul>
@@ -460,7 +460,7 @@ function renderActivity(index, pk, dataObject){
         }
       }
       html = `
-      <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
+      <div class="activity ${dataObject['status'] == 0 ? 'unpublish' : ''}">
         <h4>${index < 10 ? '0' + index : index}</h4>
         <div class="row">
           <div class="col-md-6">
@@ -478,7 +478,7 @@ function renderActivity(index, pk, dataObject){
       break;
     case 'text':
       html = `
-      <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
+      <div class="activity ${dataObject['status'] == 0 ? 'unpublish' : ''}">
         <h4>${index < 10 ? '0' + index : index}</h4>
         <div class="row">
           ${dataObject['text_image'] ? `<div class="col-md-6"><img src="${dataObject['text_image']}" class="img-responsive"></div>` : ''}
@@ -500,7 +500,7 @@ function renderActivity(index, pk, dataObject){
         }
       }
       html = `
-      <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
+      <div class="activity ${dataObject['status'] == 0 ? 'unpublish' : ''}">
         <h4>${index < 10 ? '0' + index : index}</h4>
         <div class="row">
           <div class="col-md-12">
@@ -522,7 +522,7 @@ function renderActivity(index, pk, dataObject){
         }
       }
       html = `
-      <div class="activity ${dataObject['status'] == 'UP' ? 'unpublish' : ''}">
+      <div class="activity ${dataObject['status'] == 0 ? 'unpublish' : ''}">
         <h4>${index < 10 ? '0' + index : index}</h4>
         <div class="row">
           <div class="col-md-12">
