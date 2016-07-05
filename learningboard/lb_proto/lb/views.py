@@ -53,13 +53,13 @@ def lb_user_load(request):
         user = tools.get_or_None(Staff, pk = user_pk)
         if user is None:
             return JsonResponse({'msg': 'please login first'}, status = 401)
-        lb_set = [lb.serialize() for lb in user.lbs.filter()]
+        lb_set = [lb.serialize(user_pk) for lb in user.lbs.filter()]
     else:
         user = tools.get_or_None(Student, pk = user_pk)
         if user is None:
             return JsonResponse({'msg': 'please login first'}, status = 401)
         follow_list = list(user.follows.filter())
-        lb_set = [f.lb.serialize() for f in follow_list]
+        lb_set = [f.lb.serialize(user_pk) for f in follow_list]
 
     return JsonResponse({"board_list": lb_set})
 

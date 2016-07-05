@@ -278,7 +278,7 @@ function BoardDetailTemplate(board)
         <br/>
         <div class="row board_status">
           <div class="col-md-3">
-            <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ this.board.activity_num+' '+(this.board.activity_num == 1? "activity": "activities")+`</span>
+            <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ this.board.activity_num+(this.board.activity_num_all ? `(+${this.board.activity_num_all - this.board.activity_num})` : '')+' '+(this.board.activity_num == 1? "activity": "activities")+`</span>
           </div>
           <div class="col-md-3">
             <span aria-hidden="true" class="glyphicon glyphicon-pushpin" style="width: 45px"></span><span>`+ this.board.endorsed_num + ` endorsed </span>
@@ -420,7 +420,7 @@ function BoardBriefTemplate(board)
           Status: <span class="text-success">'+this.getStatusName()+'</span>\
         </p>\
         <p class="text-muted">\
-          '+this.board.activity_num+' activities</p>\
+          '+this.board.activity_num+ (this.board.activity_num_all ? `(+${this.board.activity_num_all - this.board.activity_num})` : '') +' activities</p>\
       </div>\
       <div class="boardInfoBox">\
         <div class="row text-center text-muted">\

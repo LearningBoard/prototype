@@ -71,7 +71,12 @@ class LearningBoard(models.Model):
         ele['following_num'] = self.followed_by.count()
         ele['endorsed_num'] = self.endorsed_by.count()
         ele['completed_num'] = self.completed_by.count()
-        ele['activity_num'] = self.activity_set.count()
+        ele['activity_num'] = self.activity_set.filter(status = 1).count()
+        try:
+          if int(user_id) == ele['author']:
+            ele['activity_num_all'] = self.activity_set.count()
+        except:
+          pass
         ele['author'] = self.author.username
         ele['author_id'] = self.author.id
         return ele
