@@ -66,7 +66,7 @@ function ActivityTemplate(activity, index)
   // inherits Activity and Template
 
   Activity.call(this, activity);
-  this.index = index;
+  this.index = index++;
 
   var html;
   var activityControl = `
@@ -103,7 +103,7 @@ function ActivityTemplate(activity, index)
         }
       }
       html = `
-      <div class="activity ${activity['status'] == 'UP' ? 'unpublish' : ''}">
+      <div class="activity ${this.published() ? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="lead">${activity['title']}</p>
         <p class="text-muted">
@@ -126,7 +126,7 @@ function ActivityTemplate(activity, index)
       break;
     case 'text':
       html = `
-      <div class="activity ${this.published() ? 'unpublish' : ''}">
+      <div class="activity ${this.published() ? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="lead">${activity['title']}</p>
         <p class="text-muted">
@@ -153,7 +153,7 @@ function ActivityTemplate(activity, index)
         }
       }
       html = `
-      <div class="activity ${this.published()? 'unpublish' : ''}">
+      <div class="activity ${this.published()? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="lead">${activity['title']}</p>
         <p class="text-muted">
@@ -180,7 +180,7 @@ function ActivityTemplate(activity, index)
         }
       }
       html = `
-      <div class="activity ${this.published()? 'unpublish' : ''}">
+      <div class="activity ${this.published()? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="lead">${activity['title']}</p>
         <p class="text-muted">
@@ -248,7 +248,7 @@ function BoardDetailTemplate(board)
           <button type="button" class="btn btn-default endorseBtn">Endorse</button>
           <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-send"></span>&nbsp share</button>
         </div>
-        <div class="board_status">
+        <div class="row board_status">
           <div class="col-md-3">
             <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ this.board.activity_num+' '+(this.board.activity_num == 1? "activity": "activities")+`</span>
           </div>
@@ -366,12 +366,14 @@ function BoardDetailTemplate(board)
   for (var i = 0; i < length; ++i)
   {
     var act = new ActivityTemplate(activities[i], i);
-    if (act.published()) act.display($actList);
-    count++;
+    if (act.published()) {
+      act.display($actList);
+      count++;
+    }
   }
   if (count === 0)
   {
-    actList.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
+    $actList.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
   }
 };
 
