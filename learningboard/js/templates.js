@@ -92,6 +92,15 @@ function ActivityTemplate(activity, index)
       <ul></ul>
     </div>
   </div>`;
+  try 
+  {
+    $.extend(activity, JSON.parse(activity.data));
+  }
+  catch (err)
+  {
+    console.log(err);
+    console.log(this);
+  }
   switch(activity['type']){
     case 'video':
       // handle different links
@@ -105,7 +114,7 @@ function ActivityTemplate(activity, index)
       html = `
       <div class="activity ${this.published() ? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
-        <p class="lead">${activity['title']}</p>
+        <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
           Posted date: 09 | May | 2016
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
@@ -128,7 +137,7 @@ function ActivityTemplate(activity, index)
       html = `
       <div class="activity ${this.published() ? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
-        <p class="lead">${activity['title']}</p>
+        <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
           Posted date: 09 | May | 2016
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
@@ -155,7 +164,7 @@ function ActivityTemplate(activity, index)
       html = `
       <div class="activity ${this.published()? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
-        <p class="lead">${activity['title']}</p>
+        <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
           Posted date: 09 | May | 2016
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
@@ -174,15 +183,16 @@ function ActivityTemplate(activity, index)
       break;
     case 'file':
       // handle different links
+      console.log(activity);
       if(activity['file_link']){
-        if(activity['file_link'].match(/drive\.google\.com/) != null){
+        if(activity['file_link'].match(/drive\.google\.com/) !== null && activity['file_link'].match(/id=(.*)/) !== null){
           activity['file_link'] = 'https://drive.google.com/embeddedfolderview?id=' + activity['file_link'].match(/id=(.*)/)[1] + '#list';
         }
       }
       html = `
       <div class="activity ${this.published()? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
-        <p class="lead">${activity['title']}</p>
+        <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
           Posted date: 09 | May | 2016
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>

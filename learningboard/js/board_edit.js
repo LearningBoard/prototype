@@ -7,11 +7,12 @@ var activity_index = 0;
 
 $.getScript("js/lib.js");
 $.getScript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js');
-$.getScript('js/tempates.js');
+$.getScript('js/templates.js');
 $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
 $(document).ready(function(){
   // load category data
+  var actTempList = [];
   $.get(serv_addr+'/category/getAll/', function(data){
     for(var i = 0; i < data.category.length; i++){
       $('select[name=category]').append(`<option value="${data.category[i].id}">${data.category[i].name}</option>`)
@@ -48,8 +49,15 @@ $(document).ready(function(){
       $('form.addBoardForm input[name=contentLevel][value='+data.board.level+']').prop('checked', true);
       if(data.board.activities && data.board.activities.length > 0){
         $('.activityList .noActivity').hide();
-        for(var i = 0; i < data.board.activities.length; i++){
+        var activities = data.board.activities;
+        var length = activities.length;
+        for(var i = 0; i < length; i++){
+          var act = new ActivityTemplate(activities[i], i);
+          act.display($(".activityList"));
+          actTempList.push(act);
+          /*
           $('.activityList').append(renderActivity(++activity_index, data.board.activities[i].id, $.extend(data.board.activities[i], JSON.parse(data.board.activities[i].data))));
+          */
         }
       }
       $('.navbar-nav li:not(:first) a').css({});
@@ -437,7 +445,7 @@ function initCkeditor(){
   });
 }
 
-function renderActivity(index, pk, dataObject){
+function renderActivity1(index, pk, dataObject){
   var html;
   var activityControl = `
   <div class="control" data-id="${pk}">

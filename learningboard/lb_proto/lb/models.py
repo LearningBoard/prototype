@@ -88,14 +88,11 @@ class Activity(models.Model):
     def __str__(self):
         return self.title
 
-
     title = models.CharField(max_length = 255)
     description = models.TextField(null = True, blank = True)
     type = models.CharField(max_length = 255)
     data = models.TextField(null = True, blank = True)
     lb = models.ForeignKey(LearningBoard, related_name="activity_set", null=True, blank=True)
-    PUB = "PB"
-    UNPUB = "UP"
     status = models.PositiveSmallIntegerField(
         choices=(
             (0, "Unpublished"),
