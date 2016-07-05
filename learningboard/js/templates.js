@@ -13,7 +13,7 @@ Template.prototype.display = function($container)
   $container.append(this.$template);
 };
 
-var Board = function(board) 
+var Board = function(board)
 {
   this.board = board;
 };
@@ -48,7 +48,7 @@ Board.prototype = {
 
 };
 
-var Activity = function(activity) 
+var Activity = function(activity)
 {
   this.activity = activity;
 };
@@ -285,8 +285,8 @@ function BoardDetailTemplate(board)
         <div class="tagList">`;
       var lenth = this.board.tags.length;
       if (length === 0) html += "This board currently has no tags.";
-      else { 
-        html+= 
+      else {
+        html+=
           `<ul>`;
         if(this.board.tags && length > 0){
           for(var i = 0; i < length; i++){
@@ -308,17 +308,17 @@ function BoardDetailTemplate(board)
   $followBtn = $template.find(".followBtn");
 
   $followBtn.hover(
-    function(){if(board.followed) $(this).html(unfollow_html);}, 
+    function(){if(board.followed) $(this).html(unfollow_html);},
     function(){if(board.followed) $(this).html(following_html);}
   );
   if (!board.followed) $followBtn.html(follow_html);
   else $followBtn.html(following_html);
-  
+
   if (localStorage['is_staff'] !== "true")
   {
     $template.find(".endorseBtn").addClass("hidden");
   }
-  else 
+  else
   {
     if (localStorage.user_id == this.board.id)
     {
@@ -380,7 +380,7 @@ $.extend(BoardDetailTemplate.prototype, Board.prototype, Template.prototype);
 function BoardBriefTemplate(board)
 {
   Board.call(this, board);
-  var html = '<div class="col-md-3" myclass="boardTemplate_'+this.id+'">\
+  var html = '<div class="col-md-3" data-id="'+this.board.id+'" myclass="boardTemplate_'+this.board.id+'">\
     <div class="thumbnail">\
       <img src="'+serv_addr+this.board.image_url+'" alt="Cover Image">\
       <div class="caption">\
@@ -409,9 +409,17 @@ function BoardBriefTemplate(board)
           </div>\
         </div>\
       </div>\
-    </div>\
+      ';
+      if (localStorage.is_staff) {
+      html += '<div class="boardControlBtn boardEditButton hidden">\
+        <a href="board_edit.html?'+this.board.id+'">Edit</a>\
+      </div>\
+      <div class="boardControlBtn boardSendNewsButton hidden">\
+        <a href="#" data-toggle="modal" data-target="#sendNewsModal">Send News</a>\
+      </div>';
+    }
+    html += '</div>\
   </div>';
   Template.call(this, $(html));
 }
 $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
-
