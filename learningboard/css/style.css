@@ -1,3 +1,4 @@
+/* global & helper class */
 html {
   position: relative;
   min-height: 100%;
@@ -16,40 +17,54 @@ textarea {
   resize: vertical;
 }
 
-.page-header {
-}
-
-.panel-group .panel-heading {
-  background-color: #337AB7;
-  color: #FFF;
+p {
+  margin: 0;
 }
 
 body > .container {
   padding-top: 80px;
   padding-right: 0;
   padding-left: 0;
+  padding-bottom: 20px;
 }
 
 body > .body_container {
-  padding: 0 30px 0;
+  padding: 0 30px 20px;
+}
+
+.title {
+  text-transform: capitalize;
 }
 
 .shift-left {
   padding: 0 15px 0;
 }
 
-
-.navbar .glyphicon {
-  font-size: 22px;
+.btn:focus {
+  background-color: white;
+  outline: none;
 }
 
-.search-bar-glyphicon {
-  margin-top: 28px;
-  color: #888 !important;
+.btn:hover {
+  outline: none;
+}
+
+/* navbar */
+.navbar .glyphicon {
+  font-size: 20px;
+}
+
+.navbar-toggle .icon-bar {
+  border: 1px solid #DDD;
+}
+
+.navbar-toggle:hover .icon-bar {
+  border: 1px solid #999;
 }
 
 .navbar-brand {
   font-size: 22px;
+  margin-top: 8px;
 }
 
 .navbar-form {
@@ -58,12 +73,11 @@ body > .body_container {
 }
 
 .navbar-header {
-  margin-top: 10px;
-
+  margin-top: 3px;
 }
 
 .navbar-form .form-control {
-  margin-top: 20px;
+  margin-top: 16px;
   height: 40px;
   width: 360px;
   font-size: 16px;
@@ -71,7 +85,8 @@ body > .body_container {
 .navbar-form .form-group span {
   position: absolute;
   margin-left: 12px;
-  color: #FFF;
+  margin-top: 23px;
+  color: #888;
   opacity: 0.8;
 }
 
@@ -80,6 +95,17 @@ body > .body_container {
   border: none;
   color: black;
   background-color: white;
+}
+
+.nav > li > a {
+  padding-top: 15px;
+  font-size: 14px;
+}
+
+/* board grid */
+#boardList .description {
+  padding: 10px 0;
+  min-height: 100px;
 }
 
 .boardInfoBox {
@@ -116,6 +142,13 @@ body > .body_container {
   text-decoration: none;
 }
 
+/* board edit */
+.panel-group .panel-heading {
+  background-color: #337AB7;
+  color: #FFF;
+}
+
+/* single board detail */
 .board_status > div {
   padding-left: 0;
   border-right: 1px solid #CCC;
@@ -139,6 +172,14 @@ body > .body_container {
   margin: 2px 0;
 }
 
+.progressBox .progress span {
+  position: absolute;
+  display: block;
+  width: 100%;
+  color: #555;
+}
+
+/* activity list */
 .activityList {
   margin-top: 10px;
   width: 100%;
@@ -171,6 +212,10 @@ body > .body_container {
   color: #FF8C00;
 }
 
+.activityList > .activity .description {
+  padding: 15px 0;
+}
+
 .activityList > .activity .control ul {
   list-style: none;
   position: absolute;
@@ -189,6 +234,7 @@ body > .body_container {
   padding: 0 5px;
 }
 
+/* tag list */
 .tagList ul {
   list-style: none;
   padding: 0;
@@ -211,6 +257,7 @@ body > .body_container {
   cursor: pointer;
 }
 
+/* footer */
 .footer > .container .text-muted {
   margin: 20px 0;
 }
@@ -229,10 +276,7 @@ body > .body_container {
   background-color: #f5f5f5;
 }
 
-.title {
-  text-transform: capitalize;
-}
-
+/* RWD */
 @media (min-width: 769px) and (max-width: 992px) {
   .navbar-form .form-control {
     position: absolute;
@@ -262,44 +306,19 @@ body > .body_container {
     display: inline-block;
   }
 
+  .navbar-brand {
+    margin-top: auto;
+  }
+
   .navbar-form .form-control {
-    height: auto;
     width: 100%;
   }
 
   .navbar-form .form-group span {
     position: absolute;
-    margin-top: 58px;
+    margin-top: 83px;
     margin-left: 12px;
   }
-}
-
-.nav > li > a {
-  padding-top: 15px;
-  font-size: 14px;
-}
-.navbar-brand {
-  padding-top: 19px;
-}
-
-.progress span {
-    position: absolute;
-    display: block;
-    width: 100%;
-    color: #555;
-}
-
-.btn:focus {
-  background-color: white;
-  outline: none;
-}
-
-.btn:hover {
-  outline:none
-}
-
-p {
-  margin: 0;
 }
 
 /*

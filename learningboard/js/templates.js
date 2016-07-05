@@ -95,32 +95,50 @@ function ActivityTemplate(activity, index)
   this.index = index++;
 
   var html;
-  var activityControl = `
-  <div class="control" data-id="${activity.id}">
-    <ul class="text-muted">
-      <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Re Add</li>
-      <li><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</li>
-      <li class="markAsComplete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Mark as complete</li>
-    </ul>
-  </div>`;
-  var activityComment = `
-  <div class="comment">
-    <span class="glyphicon glyphicon-heart"></span> 0
-    <span class="glyphicon glyphicon-comment"></span> 0 comment
-    <a href="#">Add comment</a>
-    <div class="commentBox hidden">
-      <form>
-        <input type="text" name="comment">
-        <button type="button" class="btn btn-default btn-xs">Submit</button>
-      </form>
-    </div>
-    <div class="commentList">
-      <ul></ul>
-    </div>
-  </div>`;
-  try 
+  var activityControl;
+
+  if(localStorage.is_staff && location.href.includes('board_edit.html')){
+    activityControl = `
+    <div class="control" data-id="${activity.id}">
+      <ul>
+        <li ${activity['status'] == 0 ? 'class="hidden"' : ''}><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
+        <li ${activity['status'] == 0 ? '' : 'class="hidden"'}><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
+        <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
+        <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
+      </ul>
+    </div>`;
+  }else{
+    activityControl = `
+    <div class="control" data-id="${activity.id}">
+      <ul class="text-muted">
+        <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Re Add</li>
+        <li><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</li>
+        <li class="markAsComplete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Mark as complete</li>
+      </ul>
+    </div>`;
+  }
+  var activityComment = '';
+  if (!location.href.includes('board_edit.html')) {
+    activityComment = `
+    <div class="comment">
+      <span class="glyphicon glyphicon-heart"></span> 0
+      <span class="glyphicon glyphicon-comment"></span> 0 comment
+      <a href="#">Add comment</a>
+      <div class="commentBox hidden">
+        <form>
+          <input type="text" name="comment">
+          <button type="button" class="btn btn-default btn-xs">Submit</button>
+        </form>
+      </div>
+      <div class="commentList">
+        <ul></ul>
+      </div>
+    </div>`;
+  }
+  try
   {
     $.extend(activity, JSON.parse(activity.data));
+    delete activity.data;
   }
   catch (err)
   {
@@ -142,7 +160,7 @@ function ActivityTemplate(activity, index)
         <h2 class="index">${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
-          Posted date: 09 | May | 2016
+          Posted date: ${new Date(activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
@@ -152,7 +170,7 @@ function ActivityTemplate(activity, index)
             </div>
           </div>
           <div class="col-md-12">
-            <div>${activity['description']}</div>
+            <div class="description">${activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -165,13 +183,13 @@ function ActivityTemplate(activity, index)
         <h2 class="index">${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
-          Posted date: 09 | May | 2016
+          Posted date: ${new Date(activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
           ${activity['text_image'] ? `<div class="col-md-12"><img src="${activity['text_image']}" class="img-responsive"></div>` : ''}
           <div class="col-md-12">
-            <div>${activity['description']}</div>
+            <div class="description">${activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -192,7 +210,7 @@ function ActivityTemplate(activity, index)
         <h2 class="index">${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
-          Posted date: 09 | May | 2016
+          Posted date: ${new Date(activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
@@ -200,7 +218,7 @@ function ActivityTemplate(activity, index)
             <div class="embed-responsive embed-responsive-16by9">
               <iframe class="embed-responsive-item" src="${activity['code_link']}" allowfullscreen></iframe>
             </div>
-            <div>${activity['description']}</div>
+            <div class="description">${activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -220,7 +238,7 @@ function ActivityTemplate(activity, index)
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
-          Posted date: 09 | May | 2016
+          Posted date: ${new Date(activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
@@ -228,7 +246,7 @@ function ActivityTemplate(activity, index)
             <div class="embed-responsive embed-responsive-16by9">
               <iframe class="embed-responsive-item" src="${activity['file_link']}" allowfullscreen></iframe>
             </div>
-            <div>${activity['description']}</div>
+            <div class="description">${activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -283,7 +301,7 @@ function BoardDetailTemplate(board)
             Level:
           </div>
           <div class="col-md-1 col-sm-1 col-xs-1">
-            <span class="board_level">`+this.getLevelName()+`</span>
+            <span class="board_level title">`+this.getLevelName()+`</span>
           </div>
         </div>
         <div class="action" style="margin-top: 15px">
@@ -294,7 +312,7 @@ function BoardDetailTemplate(board)
         <br/>
         <div class="row board_status">
           <div class="col-md-3">
-            <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ this.board.activity_num+' '+(this.board.activity_num == 1? "activity": "activities")+`</span>
+            <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ this.board.activity_num+(this.board.activity_num_all ? `(+${this.board.activity_num_all - this.board.activity_num})` : '')+' '+(this.board.activity_num == 1? "activity": "activities")+`</span>
           </div>
           <div class="col-md-3">
             <span aria-hidden="true" class="glyphicon glyphicon-pushpin" style="width: 45px"></span><span>`+ this.board.endorsed_num + ` endorsed </span>
@@ -435,12 +453,12 @@ function BoardBriefTemplate(board)
       <div class="caption">\
         <h4 class="title"><a href="board_view.html?'+this.board.id+'">'+this.board.title+'</a></a></h4>\
         <p class="text-muted title">Content Level: '+this.getLevelName()+' </p>\
-        <p>'+this.board.description+'</p>\
+        <p class="description">'+this.board.description+'</p>\
         <p class="text-muted title">\
           Status: <span class="text-success">'+this.getStatusName()+'</span>\
         </p>\
         <p class="text-muted">\
-          '+this.board.activity_num+' activities</p>\
+          '+this.board.activity_num+ (this.board.activity_num_all ? `(+${this.board.activity_num_all - this.board.activity_num})` : '') +' activities</p>\
       </div>\
       <div class="boardInfoBox">\
         <div class="row text-center text-muted">\

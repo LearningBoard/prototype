@@ -39,7 +39,7 @@ def lb_get(request, board_id):
         return HttpResponse("not found", status = 404)
     board_dict = board.serialize(user_id = user_id)
     tag = [ model_to_dict(obj) for obj in board.tags.all() ]
-    activity = [ model_to_dict(obj) for obj in board.activity_set.filter().order_by('order') ]
+    activity = [ dict(model_to_dict(obj).items() + {'post_time': obj.post_time}.items()) for obj in board.activity_set.all().order_by('order') ]
     board_dict['activities'] = activity
     board_dict['tags'] = tag
     return JsonResponse({'board': board_dict})
@@ -53,19 +53,19 @@ def lb_user_load(request):
         user = tools.get_or_None(Staff, pk = user_pk)
         if user is None:
             return JsonResponse({'msg': 'please login first'}, status = 401)
-        lb_set = [lb.serialize() for lb in user.lbs.filter()]
+        lb_set = [lb.serialize(user_pk) for lb in user.lbs.filter()]
     else:
         user = tools.get_or_None(Student, pk = user_pk)
         if user is None:
             return JsonResponse({'msg': 'please login first'}, status = 401)
         follow_list = list(user.follows.filter())
-        lb_set = [f.lb.serialize() for f in follow_list]
+        lb_set = [f.lb.serialize(user_pk) for f in follow_list]
 
     return JsonResponse({"board_list": lb_set})
 
 @method_required("get")
 def lb_load(request):
-    board_list = list(LearningBoard.objects.filter().select_related('author'))
+    board_list = list(LearningBoard.objects.filter(status = 1).select_related('author'))
     leng = len(board_list)
     for i in range(leng):
         board_list[i] = board_list[i].serialize()
@@ -173,7 +173,8 @@ def activity_add(request):
             description = request.POST['description'],
             type = request.POST['type'],
             data = data,
-            order = request.POST['order']
+            order = request.POST['order'],
+            author = Staff.objects.get(pk = request.POST['author_id']),
         )
     else:
         act = Activity.objects.create(
@@ -182,6 +183,7 @@ def activity_add(request):
             type = request.POST['type'],
             data = data,
             order = request.POST['order'],
+            author = Staff.objects.get(pk = request.POST['author_id']),
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
     return JsonResponse({"pk": act.id});

@@ -1,6 +1,13 @@
 $.getScript('js/templates.js')
 
 $(document).ready(function(){
+  // login required
+  if (!localStorage.user_id) {
+    alert('Login required!');
+    location.href = 'login.html';
+    return;
+  }
+
   if (localStorage['is_staff'] === "true")
   {
     $(document).on('mouseenter', '.thumbnail', function(e) {

@@ -34,7 +34,7 @@ $(document).ready(function(){
   if(/\?\d+/.test(location.search)){
     pk = location.search.replace('?', '');
     $.get(serv_addr+'/lb/get/'+pk+'/', function(data){
-      if(data.board.status == 'PB'){
+      if(data.board.status == 1){
         $('.publishBoardBtn').parent().addClass('hidden');
         $('.unpublishBoardBtn').parent().removeClass('hidden');
       }
@@ -252,6 +252,7 @@ $(document).ready(function(){
       });
     }else{ // add new activity
       dataObject.order = $('.activityList .activity').size();
+      dataObject.author_id = localStorage.user_id;
       $.post(serv_addr+'/activity/add/', dataObject, function(data)
       {
         console.log(data);
