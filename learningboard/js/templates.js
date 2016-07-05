@@ -91,21 +91,24 @@ function ActivityTemplate(activity, index)
       </ul>
     </div>`;
   }
-  var activityComment = `
-  <div class="comment">
-    <span class="glyphicon glyphicon-heart"></span> 0
-    <span class="glyphicon glyphicon-comment"></span> 0 comment
-    <a href="#">Add comment</a>
-    <div class="commentBox hidden">
-      <form>
-        <input type="text" name="comment">
-        <button type="button" class="btn btn-default btn-xs">Submit</button>
-      </form>
-    </div>
-    <div class="commentList">
-      <ul></ul>
-    </div>
-  </div>`;
+  var activityComment = '';
+  if (!location.href.includes('board_edit.html')) {
+    activityComment = `
+    <div class="comment">
+      <span class="glyphicon glyphicon-heart"></span> 0
+      <span class="glyphicon glyphicon-comment"></span> 0 comment
+      <a href="#">Add comment</a>
+      <div class="commentBox hidden">
+        <form>
+          <input type="text" name="comment">
+          <button type="button" class="btn btn-default btn-xs">Submit</button>
+        </form>
+      </div>
+      <div class="commentList">
+        <ul></ul>
+      </div>
+    </div>`;
+  }
   try
   {
     $.extend(activity, JSON.parse(activity.data));
@@ -140,7 +143,7 @@ function ActivityTemplate(activity, index)
             </div>
           </div>
           <div class="col-md-12">
-            <div>${activity['description']}</div>
+            <div class="description">${activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -159,7 +162,7 @@ function ActivityTemplate(activity, index)
         <div class="row">
           ${activity['text_image'] ? `<div class="col-md-12"><img src="${activity['text_image']}" class="img-responsive"></div>` : ''}
           <div class="col-md-12">
-            <div>${activity['description']}</div>
+            <div class="description">${activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -188,7 +191,7 @@ function ActivityTemplate(activity, index)
             <div class="embed-responsive embed-responsive-16by9">
               <iframe class="embed-responsive-item" src="${activity['code_link']}" allowfullscreen></iframe>
             </div>
-            <div>${activity['description']}</div>
+            <div class="description">${activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -216,7 +219,7 @@ function ActivityTemplate(activity, index)
             <div class="embed-responsive embed-responsive-16by9">
               <iframe class="embed-responsive-item" src="${activity['file_link']}" allowfullscreen></iframe>
             </div>
-            <div>${activity['description']}</div>
+            <div class="description">${activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -264,7 +267,7 @@ function BoardDetailTemplate(board)
             Level:
           </div>
           <div class="col-md-1 col-sm-1 col-xs-1">
-            <span class="board_level">`+this.getLevelName()+`</span>
+            <span class="board_level title">`+this.getLevelName()+`</span>
           </div>
         </div>
         <div class="action" style="margin-top: 15px">
@@ -412,7 +415,7 @@ function BoardBriefTemplate(board)
       <div class="caption">\
         <h4 class="title"><a href="board_view.html?'+this.board.id+'">'+this.board.title+'</a></a></h4>\
         <p class="text-muted title">Content Level: '+this.getLevelName()+' </p>\
-        <p>'+this.board.description+'</p>\
+        <p class="description">'+this.board.description+'</p>\
         <p class="text-muted title">\
           Status: <span class="text-success">'+this.getStatusName()+'</span>\
         </p>\

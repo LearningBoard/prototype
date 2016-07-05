@@ -65,7 +65,7 @@ def lb_user_load(request):
 
 @method_required("get")
 def lb_load(request):
-    board_list = list(LearningBoard.objects.filter().select_related('author'))
+    board_list = list(LearningBoard.objects.filter(status = 1).select_related('author'))
     leng = len(board_list)
     for i in range(leng):
         board_list[i] = board_list[i].serialize()
