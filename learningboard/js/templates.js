@@ -344,7 +344,7 @@ function BoardDetailTemplate(board)
         <div class="board_description">${this.board.description}</div>
         <h4>Tags</h4>
         <div class="tagList">`;
-      var lenth = this.board.tags.length;
+      var length = this.board.tags.length;
       if (length === 0) html += "This board currently has no tags.";
       else {
         html+=
@@ -503,7 +503,7 @@ function ActivityListTemplate(activities)
   for (var i = 0; i < activities.length; ++i)
   {
     var act = new ActivityTemplate(activities[i], i);
-    if (act.published()) 
+    if (act.published())
     {
       _templateList.push(act);
       count++;
