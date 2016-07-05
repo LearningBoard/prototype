@@ -66,7 +66,7 @@ function ActivityTemplate(activity, index)
   // inherits Activity and Template
 
   Activity.call(this, activity);
-  this.index = index;
+  this.index = index++;
 
   var html;
   var activityControl = `
@@ -103,7 +103,7 @@ function ActivityTemplate(activity, index)
         }
       }
       html = `
-      <div class="activity ${activity['status'] == 'UP' ? 'unpublish' : ''}">
+      <div class="activity ${this.published() ? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="lead">${activity['title']}</p>
         <p class="text-muted">
@@ -126,7 +126,7 @@ function ActivityTemplate(activity, index)
       break;
     case 'text':
       html = `
-      <div class="activity ${this.published() ? 'unpublish' : ''}">
+      <div class="activity ${this.published() ? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="lead">${activity['title']}</p>
         <p class="text-muted">
@@ -153,7 +153,7 @@ function ActivityTemplate(activity, index)
         }
       }
       html = `
-      <div class="activity ${this.published()? 'unpublish' : ''}">
+      <div class="activity ${this.published()? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="lead">${activity['title']}</p>
         <p class="text-muted">
@@ -180,7 +180,7 @@ function ActivityTemplate(activity, index)
         }
       }
       html = `
-      <div class="activity ${this.published()? 'unpublish' : ''}">
+      <div class="activity ${this.published()? '' : 'unpublish'}">
         <h2>${index < 10 ? '0' + index : index}</h2>
         <p class="lead">${activity['title']}</p>
         <p class="text-muted">
@@ -366,8 +366,10 @@ function BoardDetailTemplate(board)
   for (var i = 0; i < length; ++i)
   {
     var act = new ActivityTemplate(activities[i], i);
-    if (act.published()) act.display($actList);
-    count++;
+    if (act.published()) {
+      act.display($actList);
+      count++;
+    }
   }
   if (count === 0)
   {
