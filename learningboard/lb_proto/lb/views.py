@@ -159,6 +159,7 @@ def activity_get(request, activity_id):
     if act is None:
         return HttpResponse("not found", status = 404)
     else:
+        print model_to_dict[act]
         return JsonResponse(model_to_dict(act, fields=[], exclude=[]))
 
 @csrf_exempt

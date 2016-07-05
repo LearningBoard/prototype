@@ -1,16 +1,42 @@
 (function() {
   "use strict";
 }());
+$.getScript("https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min.js");
 
+var ListTemplate = function(templateList, $frame, $inner_container)
+{
+  this._templateList = templateList;
+  // a list of Template objects
+
+  this.$_container = $inner_container;
+  // a jQuery html element which contains all children templates
+
+  this.$frame = $frame;
+}
+
+ListTemplate.prototype.display = function()
+{
+  var outer_containers = arguments;
+  this.$_container.empty();
+  for (var i = 0; i < this._templateList.length; ++i)
+  {
+    this._templateList[i].display(this.$_container);
+  }
+  for (var i = 0; i < arguments.length; ++i)
+  {
+    outer_containers[i].append(this.$frame);
+  }
+}
 
 var Template = function($template) {
   // provides a display function for its children
   this.$template = $template;
 };
 
-Template.prototype.display = function($container)
+Template.prototype.display = function()
 {
-  $container.append(this.$template);
+  for (var i = 0; i < arguments.length; ++i)
+    arguments[i].append(this.$template);
 };
 
 var Board = function(board)
@@ -113,7 +139,7 @@ function ActivityTemplate(activity, index)
       }
       html = `
       <div class="activity ${this.published() ? '' : 'unpublish'}">
-        <h2>${index < 10 ? '0' + index : index}</h2>
+        <h2 class="index">${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
           Posted date: 09 | May | 2016
@@ -136,7 +162,7 @@ function ActivityTemplate(activity, index)
     case 'text':
       html = `
       <div class="activity ${this.published() ? '' : 'unpublish'}">
-        <h2>${index < 10 ? '0' + index : index}</h2>
+        <h2 class="index">${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
           Posted date: 09 | May | 2016
@@ -163,7 +189,7 @@ function ActivityTemplate(activity, index)
       }
       html = `
       <div class="activity ${this.published()? '' : 'unpublish'}">
-        <h2>${index < 10 ? '0' + index : index}</h2>
+        <h2 class="index">${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${activity['title']}</p>
         <p class="text-muted">
           Posted date: 09 | May | 2016
@@ -218,6 +244,13 @@ function ActivityTemplate(activity, index)
   }
   Template.call(this, $(html));
 };
+ActivityTemplate.prototype.updateIndex = function(index)
+{
+  this.index = index++;
+  console.log(this.activity, index);
+  console.log(this.$template);
+  this.$template.find(".index").html(index < 10 ? '0' + index : index);
+}
 
 $.extend(ActivityTemplate.prototype, Activity.prototype, Template.prototype);
 
@@ -226,7 +259,7 @@ function BoardDetailTemplate(board)
   /* this.variables:
     board: the object stores the board data
     $template a jQuery object which stores the html content of this board
-    $display_html a jQuery object which stores the the brief html content of this board
+    $html a jQuery object which stores the the brief html content of this board
   */
 
   Board.call(this, board);
@@ -372,7 +405,10 @@ function BoardDetailTemplate(board)
   var count = 0;
   $actList = $template.find(".activityList");
   var activities = this.board.activities;
-  length = this.board.activities.length;
+  var length = this.board.activities.length;
+  var actList = new ActivityListTemplate(activities);
+  actList.display($actList);
+  /*
   for (var i = 0; i < length; ++i)
   {
     var act = new ActivityTemplate(activities[i], i);
@@ -385,6 +421,7 @@ function BoardDetailTemplate(board)
   {
     $actList.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
   }
+  */
 };
 
 $.extend(BoardDetailTemplate.prototype, Board.prototype, Template.prototype);
@@ -435,3 +472,93 @@ function BoardBriefTemplate(board)
   Template.call(this, $(html));
 }
 $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
+
+function ActivityListTemplate(activities)
+{
+  // inherits ListTemplate
+
+  this.activities = activities;
+
+  var _templateList = [];
+
+  var count = 0;
+  for (var i = 0; i < activities.length; ++i)
+  {
+    var act = new ActivityTemplate(activities[i], i);
+    if (act.published()) 
+    {
+      _templateList.push(act);
+      count++;
+    }
+  }
+  if (count === 0)
+  {
+    $actList.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
+  }
+
+  // inner container
+  $frame = $(`
+    <div class="listFrame">
+      <p class="text-right">
+        <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled
+        </button>
+      </p>
+      <div class="activityList viewMode">
+      </div>
+    </div>`
+  );
+  $container = $frame.find(".activityList");
+
+  $container.sortable({
+    cancel: '.noActivity',
+    opacity: 0.95,
+    cursor: 'move'
+  });
+  var startIndex = -1, endIndex = -1;
+  $container.on('sortstart', function(e, ui)
+  {
+    startIndex = ui.item.index();
+  })
+  $container.on('sortupdate', function(e, ui)
+  {
+    var target = _templateList[startIndex];
+    endIndex = ui.item.index();
+    for (var i = startIndex; i > endIndex; --i)
+    {
+      // startIndex > endIndex
+      _templateList[i] = _templateList[i-1];
+      _templateList[i].updateIndex(i);
+    }
+    for (var i = startIndex; i < endIndex; ++i)
+    {
+      // endIndex > startIndex
+      _templateList[i] = _templateList[i+1];
+      _templateList[i].updateIndex(i);
+    }
+    _templateList[endIndex] = target;
+    target.updateIndex(endIndex);
+    // $.post(serv_addr+'/activity/orderchange/', order);
+    console.log(_templateList);
+  });
+
+  var enabled = true;
+  $frame.find(".sortLockMode").on("click", function()
+  {
+    if (enabled)
+    {
+      $container.sortable("disable");
+      $(this).text("Sorting Disabled");
+      enabled = false;
+    }
+    else
+    {
+      enabled = true;
+      $container.sortable("enable");
+      $(this).text("Sorting Enabled");
+    }
+  })
+
+  ListTemplate.call(this, _templateList, $frame, $container);
+}
+
+$.extend(ActivityListTemplate.prototype, ListTemplate.prototype);
