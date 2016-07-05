@@ -9,15 +9,15 @@ $(document).ready(function()
 
   // switch to register mode
   $('.login_text a').on('click', function(){
-    $('button.loginBtn, .login_text').addClass('hidden');
-    $('button.registerBtn, .register_text').removeClass('hidden');
+    $('button.loginBtn, .login_text').addClass('hidden').attr('type', 'button');
+    $('button.registerBtn, .register_text').removeClass('hidden').attr('type', 'submit');
     $('.page-header h1').text('Register');
   });
 
   // switch to login mode
   $('.register_text a').on('click', function(){
-    $('button.loginBtn, .login_text').removeClass('hidden');
-    $('button.registerBtn, .register_text').addClass('hidden');
+    $('button.loginBtn, .login_text').removeClass('hidden').attr('type', 'submit');
+    $('button.registerBtn, .register_text').addClass('hidden').attr('type', 'button');
     $('.page-header h1').text('Login');
   });
 
