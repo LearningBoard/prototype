@@ -311,17 +311,17 @@ function BoardDetailTemplate(board)
         </div>
         <br/>
         <div class="row board_status">
-          <div class="col-md-3">
+          <div class="col-sm-3 col-xs-6">
             <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ this.board.activity_num+(this.board.activity_num_all ? `(+${this.board.activity_num_all - this.board.activity_num})` : '')+' '+(this.board.activity_num == 1? "activity": "activities")+`</span>
           </div>
-          <div class="col-md-3">
+          <div class="col-sm-3 col-xs-6">
             <span aria-hidden="true" class="glyphicon glyphicon-pushpin" style="width: 45px"></span><span>`+ this.board.endorsed_num + ` endorsed </span>
           </div>
-          <div class="col-md-3">
+          <div class="col-sm-3 col-xs-6">
             <span aria-hidden="true" class="glyphicon glyphicon-education" style="width: 45px"></span><span>`+
             this.board.completed_num + ` completed </span>
           </div>
-          <div class="col-md-3">
+          <div class="col-sm-3 col-xs-6">
             <span aria-hidden="true" class="glyphicon glyphicon-play" style="width: 45px"></span><span class="following_num">`+
               this.board.following_num + ` subscribing
             </span>
@@ -344,7 +344,7 @@ function BoardDetailTemplate(board)
         <div class="board_description">${this.board.description}</div>
         <h4>Tags</h4>
         <div class="tagList">`;
-      var lenth = this.board.tags.length;
+      var length = this.board.tags.length;
       if (length === 0) html += "This board currently has no tags.";
       else {
         html+=
@@ -503,7 +503,7 @@ function ActivityListTemplate(activities, sortable)
   for (var i = 0; i < activities.length; ++i)
   {
     var act = new ActivityTemplate(activities[i], i);
-    if (act.published()) 
+    if (act.published())
     {
       _templateList.push(act);
       count++;

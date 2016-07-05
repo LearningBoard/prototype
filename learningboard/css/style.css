@@ -319,6 +319,10 @@ body > .body_container {
     margin-top: 83px;
     margin-left: 12px;
   }
+
+  .board_status > div {
+    border: none;
+  }
 }
 
 /*
