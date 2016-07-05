@@ -16,9 +16,6 @@ textarea {
   resize: vertical;
 }
 
-.page-header {
-}
-
 .panel-group .panel-heading {
   background-color: #337AB7;
   color: #FFF;
@@ -38,14 +35,16 @@ body > .body_container {
   padding: 0 15px 0;
 }
 
-
 .navbar .glyphicon {
   font-size: 22px;
 }
 
-.search-bar-glyphicon {
-  margin-top: 28px;
-  color: #888 !important;
+.navbar-toggle .icon-bar {
+  border: 1px solid #DDD;
+}
+
+.navbar-toggle:hover .icon-bar {
+  border: 1px solid #999;
 }
 
 .navbar-brand {
@@ -59,11 +58,10 @@ body > .body_container {
 
 .navbar-header {
   margin-top: 10px;
-
 }
 
 .navbar-form .form-control {
-  margin-top: 20px;
+  margin-top: 16px;
   height: 40px;
   width: 360px;
   font-size: 16px;
@@ -71,7 +69,8 @@ body > .body_container {
 .navbar-form .form-group span {
   position: absolute;
   margin-left: 12px;
-  color: #FFF;
+  margin-top: 23px;
+  color: #888;
   opacity: 0.8;
 }
 
@@ -263,13 +262,12 @@ body > .body_container {
   }
 
   .navbar-form .form-control {
-    height: auto;
     width: 100%;
   }
 
   .navbar-form .form-group span {
     position: absolute;
-    margin-top: 58px;
+    margin-top: 83px;
     margin-left: 12px;
   }
 }
@@ -277,9 +275,6 @@ body > .body_container {
 .nav > li > a {
   padding-top: 15px;
   font-size: 14px;
-}
-.navbar-brand {
-  padding-top: 19px;
 }
 
 .progress span {
