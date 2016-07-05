@@ -458,7 +458,7 @@ function BoardBriefTemplate(board)
           Status: <span class="text-success">'+this.getStatusName()+'</span>\
         </p>\
         <p class="text-muted">\
-          '+this.board.activity_num+ (this.board.activity_num_all ? `(+${this.board.activity_num_all - this.board.activity_num})` : '') +' activities</p>\
+          '+this.board.activity_num+ (this.board.activity_num_all ? `(+${this.board.activity_num_all - this.board.activity_num})` : '') +' Learning Activities</p>\
       </div>\
       <div class="boardInfoBox">\
         <div class="row text-center text-muted">\
