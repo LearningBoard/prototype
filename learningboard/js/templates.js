@@ -424,7 +424,7 @@ function BoardDetailTemplate(board)
   $actList = $template.find(".activityList");
   var activities = this.board.activities;
   var length = this.board.activities.length;
-  var actList = new ActivityListTemplate(activities);
+  var actList = new ActivityListTemplate(activities, false);
   actList.display($actList);
   /*
   for (var i = 0; i < length; ++i)
@@ -491,7 +491,7 @@ function BoardBriefTemplate(board)
 }
 $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
 
-function ActivityListTemplate(activities)
+function ActivityListTemplate(activities, sortable)
 {
   // inherits ListTemplate
 
@@ -526,56 +526,61 @@ function ActivityListTemplate(activities)
     </div>`
   );
   $container = $frame.find(".activityList");
-
-  $container.sortable({
-    cancel: '.noActivity',
-    opacity: 0.95,
-    cursor: 'move'
-  });
-  var startIndex = -1, endIndex = -1;
-  $container.on('sortstart', function(e, ui)
+  if (sortable)
   {
-    startIndex = ui.item.index();
-  })
-  $container.on('sortupdate', function(e, ui)
-  {
-    var target = _templateList[startIndex];
-    endIndex = ui.item.index();
-    for (var i = startIndex; i > endIndex; --i)
+    $container.sortable({
+      cancel: '.noActivity',
+      opacity: 0.95,
+      cursor: 'move'
+    });
+    var startIndex = -1, endIndex = -1;
+    $container.on('sortstart', function(e, ui)
     {
-      // startIndex > endIndex
-      _templateList[i] = _templateList[i-1];
-      _templateList[i].updateIndex(i);
-    }
-    for (var i = startIndex; i < endIndex; ++i)
+      startIndex = ui.item.index();
+    });
+    $container.on('sortupdate', function(e, ui)
     {
-      // endIndex > startIndex
-      _templateList[i] = _templateList[i+1];
-      _templateList[i].updateIndex(i);
-    }
-    _templateList[endIndex] = target;
-    target.updateIndex(endIndex);
-    // $.post(serv_addr+'/activity/orderchange/', order);
-    console.log(_templateList);
-  });
+      var target = _templateList[startIndex];
+      endIndex = ui.item.index();
+      for (var i = startIndex; i > endIndex; --i)
+      {
+        // startIndex > endIndex
+        _templateList[i] = _templateList[i-1];
+        _templateList[i].updateIndex(i);
+      }
+      for (var i = startIndex; i < endIndex; ++i)
+      {
+        // endIndex > startIndex
+        _templateList[i] = _templateList[i+1];
+        _templateList[i].updateIndex(i);
+      }
+      _templateList[endIndex] = target;
+      target.updateIndex(endIndex);
+      var order = {};
+      for (var i = 0; i < _templateList.length; ++i)
+      {
+        order[_templateList[i].activity.id] = i;
+      }
+      $.post(serv_addr+'/activity/orderchange/', order);
+    });
 
-  var enabled = true;
-  $frame.find(".sortLockMode").on("click", function()
-  {
-    if (enabled)
+    var enabled = true;
+    $frame.find(".sortLockMode").on("click", function()
     {
-      $container.sortable("disable");
-      $(this).text("Sorting Disabled");
-      enabled = false;
-    }
-    else
-    {
-      enabled = true;
-      $container.sortable("enable");
-      $(this).text("Sorting Enabled");
-    }
-  })
-
+      if (enabled)
+      {
+        $container.sortable("disable");
+        $(this).text("Sorting Disabled");
+        enabled = false;
+      }
+      else
+      {
+        enabled = true;
+        $container.sortable("enable");
+        $(this).text("Sorting Enabled");
+      }
+    });
+  }
   ListTemplate.call(this, _templateList, $frame, $container);
 }
 

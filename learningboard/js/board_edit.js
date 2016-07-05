@@ -51,7 +51,7 @@ $(document).ready(function(){
         $('.activityListContainer .noActivity').hide();
         var activities = data.board.activities;
         var length = activities.length;
-        var actList = new ActivityListTemplate(activities);
+        var actList = new ActivityListTemplate(activities, true);
         actList.display($(".activityListContainer"));
           /*
           $('.activityList').append(renderActivity(++activity_index, data.board.activities[i].id, $.extend(data.board.activities[i], JSON.parse(data.board.activities[i].data))));
