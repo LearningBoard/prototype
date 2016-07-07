@@ -14,6 +14,7 @@ $(document).ready(function(){
       console.log(data);
       var board = new BoardDetailTemplate(data.board);
       board.display($(".body_container"));
+      document.title = board.board.title + ' | Learning Boards';
       // unpublish board, deny access
       if(!board.published() && !localStorage.is_staff){
         location.href = 'boards.html';
