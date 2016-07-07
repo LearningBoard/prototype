@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/jquery/1.12.4/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/global.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/browse.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -22,7 +22,10 @@
   <body>
     <div class="container">
       <div class="page-header">
-        <h1>Popular Boards <small><a href="browse.html">View more</a></small></h1>
+        <button type="button" class="btn btn-default btn-primary filter_showall">Show All</button>
+        <button type="button" class="btn btn-default filter_beginner">Beginner</button>
+        <button type="button" class="btn btn-default filter_advanced">Advanced</button>
+        <button type="button" class="btn btn-default filter_intermediate">Intermediate</button>
       </div>
       <div class="row" id="boardList">
         <div class="col-md-3">

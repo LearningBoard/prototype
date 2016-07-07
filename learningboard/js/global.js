@@ -23,7 +23,7 @@ $(document).ready(function(){
               </div>
             </form>
             <ul class="nav navbar-nav navbar-right text-center">
-              <li><a href="#browse">
+              <li class="${location.href.includes('browse.html') ? 'active' : ''}"><a href="browse.html">
                 <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
                 <br />Browse
               </a></li>

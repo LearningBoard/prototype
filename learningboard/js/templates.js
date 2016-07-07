@@ -447,7 +447,7 @@ $.extend(BoardDetailTemplate.prototype, Board.prototype, Template.prototype);
 function BoardBriefTemplate(board)
 {
   Board.call(this, board);
-  var html = '<div class="col-md-3" data-id="'+this.board.id+'" myclass="boardTemplate_'+this.board.id+'">\
+  var html = '<div class="col-md-3 '+this.getLevelName()+'" data-id="'+this.board.id+'" myclass="boardTemplate_'+this.board.id+'">\
     <div class="thumbnail">\
       <img src="'+serv_addr+this.board.image_url+'" alt="Cover Image">\
       <div class="caption">\
