@@ -275,7 +275,17 @@ def tag_add(request):
 
 @csrf_exempt
 def news_getAll(request):
-    news = News.objects.all().order_by('-post_time')
+    student = tools.get_or_None(Student, pk = request.GET['user_id'])
+    if student is None:
+        student = []
+    else:
+        student = [obj.pk for obj in student.follows.filter()]
+    if(request.GET['is_staff'] == 'true'):
+        author = [obj.pk for obj in LearningBoard.objects.filter(author = request.GET['user_id'])]
+    else:
+        author = []
+    lb = student + author
+    news = News.objects.filter(lb__in = lb).order_by('-post_time')
     if len(news) < 1:
         return JsonResponse({'news': []})
     else:
