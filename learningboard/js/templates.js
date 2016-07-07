@@ -502,16 +502,12 @@ function ActivityListTemplate(activities, sortable)
   var count = 0;
   for (var i = 0; i < activities.length; ++i)
   {
-    var act = new ActivityTemplate(activities[i], i);
-    if (act.published())
+    var act = new ActivityTemplate(activities[i], count);
+    if (act.published() || sortable === true)
     {
       _templateList.push(act);
       count++;
     }
-  }
-  if (count === 0)
-  {
-    $actList.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
   }
 
   // inner container
@@ -521,11 +517,15 @@ function ActivityListTemplate(activities, sortable)
         <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled
         </button>
       </p>
-      <div class="activityList viewMode">
+      <div class="activityList ${sortable ? '' : 'viewMode'}">
       </div>
     </div>`
   );
   $container = $frame.find(".activityList");
+  if (count === 0)
+  {
+    $container.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
+  }
   if (sortable)
   {
     $container.sortable({
