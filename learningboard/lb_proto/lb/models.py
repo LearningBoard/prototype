@@ -102,7 +102,7 @@ class Activity(models.Model):
         choices=(
             (0, "Unpublished"),
             (1, "Published"),
-        ), default = 0
+        ), default = 1
     )
     order = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(Staff, null=True, related_name="activities")
