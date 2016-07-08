@@ -68,6 +68,10 @@ $(document).ready(function(){
 
   // init image input
   initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
+  initImageInput($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), 'https://placehold.it/300x200');
+
+  // init recorder
+  initRecorder($('button.audioRecorderControl'), $('audio.lbRecorder'), $('#audio .addActivityForm textarea[name=audio_audio]'));
 
   // board title word count
   $('#boardTitle').on('keydown', function(e){
@@ -441,6 +445,50 @@ function initCkeditor(){
           $('#' + e.editor.name).val(e.editor.getData());
         });
       })(editor);
+    });
+  });
+}
+
+function initRecorder(controlEle, playerEle, targetEle){
+  $.getScript('js/WebAudioRecorder.min.js', function(){
+    navigator.getUserMedia = (navigator.getUserMedia ||
+                              navigator.webkitGetUserMedia ||
+                              navigator.mozGetUserMedia ||
+                              navigator.msGetUserMedia);
+    navigator.getUserMedia({audio: true}, function(stream){
+      var audioContext = new AudioContext();
+      var input = audioContext.createMediaStreamSource(stream);
+      var recorder = new WebAudioRecorder(input, {
+        workerDir: 'js/',
+        encoding: 'mp3'
+      });
+      (function(recorder){
+        var recording = false;
+        controlEle.off('click').on('click', function(){
+          if(recording){
+            recorder.finishRecording();
+            controlEle.text('Record');
+            recording = false;
+          }else{
+            recorder.startRecording();
+            controlEle.text('Stop');
+            targetEle.val('');
+            playerEle.text('').addClass('hidden');
+            recording = true;
+          }
+        });
+        recorder.onComplete = function(rec, blob){
+          var reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = function(){
+            console.log(reader.result);
+            targetEle.val(reader.result);
+            playerEle.html(`<source src="${URL.createObjectURL(blob)}" type="audio/mpeg">`).removeClass('hidden');
+          }
+        };
+      })(recorder);
+    }, function(e){
+      console.log(e);
     });
   });
 }

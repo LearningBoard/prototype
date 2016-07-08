@@ -127,6 +127,7 @@
                     <li role="presentation"><a href="#text" aria-controls="text" role="tab" data-toggle="tab">Text</a></li>
                     <li role="presentation"><a href="#code" aria-controls="code" role="tab" data-toggle="tab">Code</a></li>
                     <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File</a></li>
+                    <li role="presentation"><a href="#audio" aria-controls="audio" role="tab" data-toggle="tab">Audio</a></li>
                   </ul>
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="video">
@@ -202,6 +203,31 @@
                         <div class="form-group">
                           <label for="file_description">Description</label>
                           <textarea class="form-control" id="file_description" name="description" rows="3" placeholder="Description"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
+                        <span class="result_msg"></span>
+                      </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="audio">
+                      <form class="addActivityForm">
+                        <input type="hidden" name="activity_id" value="">
+                        <input type="hidden" name="type" value="audio">
+                        <div class="form-group">
+                          <label for="audio_title">Title</label>
+                          <input type="text" class="form-control" id="audio_title" name="title" placeholder="Activity title" required>
+                        </div>
+                        <label class="control-label">Select File</label>
+                        <input id="audio_image_placeholder" type="file" class="file-loading">
+                        <textarea name="audio_image" class="hidden"></textarea>
+                        <div class="form-group">
+                          <label for="audio_audio">Audio</label>
+                          <button type="button" class="btn btn-default audioRecorderControl">Record</button>
+                          <textarea name="audio_audio" class="hidden"></textarea>
+                          <audio controls class="lbRecorder hidden"></audio>
+                        </div>
+                        <div class="form-group">
+                          <label for="audio_description">Description</label>
+                          <textarea class="form-control" id="audio_description" name="description" rows="3" placeholder="Description"></textarea>
                         </div>
                         <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
                         <span class="result_msg"></span>

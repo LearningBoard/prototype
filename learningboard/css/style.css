@@ -148,6 +148,11 @@ body > .body_container {
   color: #FFF;
 }
 
+.lbRecorder {
+  position: absolute;
+  padding: 5px;
+}
+
 /* single board detail */
 .board_status > div {
   padding-left: 0;

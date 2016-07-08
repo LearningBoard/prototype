@@ -259,10 +259,36 @@ ActivityTemplate.prototype.render = function(activity)
         ${activityControl}
       </div>`;
       break;
+    case 'audio':
+      html = `
+      <div class="activity ${this.published()? '' : 'unpublish'}">
+        <h2>${this.index < 10 ? '0' + this.index : this.index}</h2>
+        <p class="title lead">${this.activity['title']}</p>
+        <p class="text-muted">
+          Posted date: ${new Date(this.activity['post_time']).toDateString()}
+          Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
+        </p>
+        <div class="row">
+          <div class="col-md-12">
+            <img src="${this.activity['audio_image']}" class="img-responsive">
+          </div>
+          <div class="col-md-12">
+            <audio controls>
+              <source src="${this.activity['audio_audio']}" type="audio/mpeg">
+            </audio>
+          </div>
+          <div class="col-md-12">
+            <div class="description">${this.activity['description']}</div>
+          </div>
+        </div>
+        ${activityComment}
+        ${activityControl}
+      </div>`;
+      break;
     default:
       html = `
       <div class="activity">
-        <h4>01</h4>
+        <h4>${this.index < 10 ? '0' + this.index : this.index}</h4>
         <p><i>Error occur when rendering activity</i></p>
       </div>`;
   }
