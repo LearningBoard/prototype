@@ -4,6 +4,7 @@ var cover_img = 'empty';
 var tag_list = [];
 var activity_list = [];
 var activity_index = 0;
+var actList;
 
 $.getScript("js/lib.js");
 $.getScript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js');
@@ -51,11 +52,8 @@ $(document).ready(function(){
         $('.activityListContainer .noActivity').hide();
         var activities = data.board.activities;
         var length = activities.length;
-        var actList = new ActivityListTemplate(activities, true);
+        actList = new ActivityListTemplate(activities, true);
         actList.display($(".activityListContainer"));
-          /*
-          $('.activityList').append(renderActivity(++activity_index, data.board.activities[i].id, $.extend(data.board.activities[i], JSON.parse(data.board.activities[i].data))));
-          */
       }
       $('.navbar-nav li:not(:first) a').css({});
       initCoverImage(data.board.image_url ? serv_addr + data.board.image_url: data.board.image.length);
@@ -242,8 +240,8 @@ $(document).ready(function(){
         initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
         $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
         var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
-        var index = $('.activityList .activity').index(prevDom) + 1;
-        prevDom.replaceWith(renderActivity(index, data.pk, dataObject));
+        var index = $('.activityList .activity').index(prevDom);
+        actList.updateActivity(dataObject, index);
         $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
           $(this).text('');
         });
@@ -262,7 +260,7 @@ $(document).ready(function(){
         CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
         initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
         $('.activityList .noActivity').hide();
-        $('.activityList').append(renderActivity(++activity_index, data.pk, dataObject));
+        actList.addActivity(dataObject);
         $this.parent().find('.result_msg').text('Activity added!').delay(1000).fadeOut('fast', function(){
           $(this).text('');
         });
@@ -445,112 +443,4 @@ function initCkeditor(){
       })(editor);
     });
   });
-}
-
-function renderActivity1(index, pk, dataObject){
-  var html;
-  var activityControl = `
-  <div class="control" data-id="${pk}">
-    <ul>
-      <li ${dataObject['status'] == 1 ? '' : 'class="hidden"'}><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
-      <li ${dataObject['status'] == 1 ? 'class="hidden"' : ''}><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
-      <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
-      <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
-    </ul>
-  </div>`;
-  switch(dataObject['type']){
-    case 'video':
-      // handle different links
-      if(dataObject['video_link']){
-        if(dataObject['video_link'].match(/watch\?v=(.*)/) != null){
-          dataObject['video_link'] = 'https://www.youtube.com/embed/' + dataObject['video_link'].match(/watch\?v=(.*)/)[1];
-        }else if(dataObject['video_link'].match(/vimeo\.com\/(.*)/) != null){
-          dataObject['video_link'] = 'https://player.vimeo.com/video/' + dataObject['video_link'].match(/vimeo\.com\/(.*)/)[1];
-        }
-      }
-      html = `
-      <div class="activity ${dataObject['status'] == 0 ? 'unpublish' : ''}">
-        <h4>${index < 10 ? '0' + index : index}</h4>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="embed-responsive embed-responsive-16by9">
-              <iframe class="embed-responsive-item" src="${dataObject['video_link']}" allowfullscreen></iframe>
-            </div>
-          </div>
-          <div class="col-md-12" style="float:none;">
-            <p class="lead">${dataObject['title']}</p>
-            <div>${dataObject['description']}</div>
-          </div>
-        </div>
-        ${activityControl}
-      </div>`;
-      break;
-    case 'text':
-      html = `
-      <div class="activity ${dataObject['status'] == 0 ? 'unpublish' : ''}">
-        <h4>${index < 10 ? '0' + index : index}</h4>
-        <div class="row">
-          ${dataObject['text_image'] ? `<div class="col-md-6"><img src="${dataObject['text_image']}" class="img-responsive"></div>` : ''}
-          <div class="col-md-12" ${dataObject['text_image'] ? 'style="float:none;"' : ''}>
-            <p class="lead">${dataObject['title']}</p>
-            <div>${dataObject['description']}</div>
-          </div>
-        </div>
-        ${activityControl}
-      </div>`;
-      break;
-    case 'code':
-      // handle different links
-      if(dataObject['code_link']){
-        if(dataObject['code_link'].match(/jsfiddle\.net/) != null){
-          dataObject['code_link'] = dataObject['code_link'] + 'embedded/';
-        }else if(dataObject['code_link'].match(/plnkr\.co/) != null){
-          dataObject['code_link'] = 'https://embed.plnkr.co/' + dataObject['code_link'].replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
-        }
-      }
-      html = `
-      <div class="activity ${dataObject['status'] == 0 ? 'unpublish' : ''}">
-        <h4>${index < 10 ? '0' + index : index}</h4>
-        <div class="row">
-          <div class="col-md-12">
-            <p class="lead">${dataObject['title']}</p>
-            <div class="embed-responsive embed-responsive-16by9">
-              <iframe class="embed-responsive-item" src="${dataObject['code_link']}" allowfullscreen></iframe>
-            </div>
-            <div>${dataObject['description']}</div>
-          </div>
-        </div>
-        ${activityControl}
-      </div>`;
-      break;
-    case 'file':
-      // handle different links
-      if(dataObject['file_link']){
-        if(dataObject['file_link'].match(/drive\.google\.com/) != null){
-          dataObject['file_link'] = 'https://drive.google.com/embeddedfolderview?id=' + dataObject['file_link'].match(/id=(.*)/)[1] + '#list';
-        }
-      }
-      html = `
-      <div class="activity ${dataObject['status'] == 0 ? 'unpublish' : ''}">
-        <h4>${index < 10 ? '0' + index : index}</h4>
-        <div class="row">
-          <div class="col-md-12">
-            <p class="lead">${dataObject['title']}</p>
-            <div class="embed-responsive embed-responsive-16by9">
-              <iframe class="embed-responsive-item" src="${dataObject['file_link']}" allowfullscreen></iframe>
-            </div>
-            <div>${dataObject['description']}</div>
-          </div>
-        </div>
-        ${activityControl}
-      </div>`;
-      break;
-    default:
-      html = `
-      <div class="activity">
-        <h4>01</h4>
-        <p><i>Error occur when rending activity</i></p>
-      </div>`;
-  }
-  return html;
 }

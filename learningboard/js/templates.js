@@ -92,24 +92,31 @@ function ActivityTemplate(activity, index)
   // inherits Activity and Template
 
   Activity.call(this, activity);
-  this.index = index++;
+  this.index = ++index;
+  this.render();
+};
 
+ActivityTemplate.prototype.render = function(activity)
+{
+  if(activity){
+    this.activity = activity;
+  }
   var html;
   var activityControl;
 
   if(localStorage.is_staff && location.href.includes('board_edit.html')){
     activityControl = `
-    <div class="control" data-id="${activity.id}">
+    <div class="control" data-id="${this.activity.id}">
       <ul>
-        <li ${activity['status'] == 0 ? 'class="hidden"' : ''}><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
-        <li ${activity['status'] == 0 ? '' : 'class="hidden"'}><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
+        <li ${this.activity['status'] == 0 ? 'class="hidden"' : ''}><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></li>
+        <li ${this.activity['status'] == 0 ? '' : 'class="hidden"'}><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span></li>
         <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></li>
         <li><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></li>
       </ul>
     </div>`;
   }else{
     activityControl = `
-    <div class="control" data-id="${activity.id}">
+    <div class="control" data-id="${this.activity.id}">
       <ul class="text-muted">
         <li><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Re Add</li>
         <li><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</li>
@@ -137,40 +144,39 @@ function ActivityTemplate(activity, index)
   }
   try
   {
-    $.extend(activity, JSON.parse(activity.data));
-    delete activity.data;
+    $.extend(this.activity, JSON.parse(this.activity.data));
   }
   catch (err)
   {
     console.log(err);
     console.log(this);
   }
-  switch(activity['type']){
+  switch(this.activity['type']){
     case 'video':
       // handle different links
-      if(activity['video_link']){
-        if(activity['video_link'].match(/watch\?v=(.*)/) != null){
-          activity['video_link'] = 'https://www.youtube.com/embed/' + activity['video_link'].match(/watch\?v=(.*)/)[1];
-        }else if(activity['video_link'].match(/vimeo\.com\/(.*)/) != null){
-          activity['video_link'] = 'https://player.vimeo.com/video/' + activity['video_link'].match(/vimeo\.com\/(.*)/)[1];
+      if(this.activity['video_link']){
+        if(this.activity['video_link'].match(/watch\?v=(.*)/) != null){
+          this.activity['video_link'] = 'https://www.youtube.com/embed/' + this.activity['video_link'].match(/watch\?v=(.*)/)[1];
+        }else if(this.activity['video_link'].match(/vimeo\.com\/(.*)/) != null){
+          this.activity['video_link'] = 'https://player.vimeo.com/video/' + this.activity['video_link'].match(/vimeo\.com\/(.*)/)[1];
         }
       }
       html = `
       <div class="activity ${this.published() ? '' : 'unpublish'}">
-        <h2 class="index">${index < 10 ? '0' + index : index}</h2>
-        <p class="title lead">${activity['title']}</p>
+        <h2 class="index">${this.index < 10 ? '0' + this.index : this.index}</h2>
+        <p class="title lead">${this.activity['title']}</p>
         <p class="text-muted">
-          Posted date: ${new Date(activity['post_time']).toDateString()}
+          Posted date: ${new Date(this.activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
           <div class="col-md-12">
             <div class="embed-responsive embed-responsive-16by9">
-              <iframe class="embed-responsive-item" src="${activity['video_link']}" allowfullscreen></iframe>
+              <iframe class="embed-responsive-item" src="${this.activity['video_link']}" allowfullscreen></iframe>
             </div>
           </div>
           <div class="col-md-12">
-            <div class="description">${activity['description']}</div>
+            <div class="description">${this.activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -180,16 +186,16 @@ function ActivityTemplate(activity, index)
     case 'text':
       html = `
       <div class="activity ${this.published() ? '' : 'unpublish'}">
-        <h2 class="index">${index < 10 ? '0' + index : index}</h2>
-        <p class="title lead">${activity['title']}</p>
+        <h2 class="index">${this.index < 10 ? '0' + this.index : this.index}</h2>
+        <p class="title lead">${this.activity['title']}</p>
         <p class="text-muted">
-          Posted date: ${new Date(activity['post_time']).toDateString()}
+          Posted date: ${new Date(this.activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
-          ${activity['text_image'] ? `<div class="col-md-12"><img src="${activity['text_image']}" class="img-responsive"></div>` : ''}
+          ${this.activity['text_image'] ? `<div class="col-md-12"><img src="${this.activity['text_image']}" class="img-responsive"></div>` : ''}
           <div class="col-md-12">
-            <div class="description">${activity['description']}</div>
+            <div class="description">${this.activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -198,27 +204,27 @@ function ActivityTemplate(activity, index)
       break;
     case 'code':
       // handle different links
-      if(activity['code_link']){
-        if(activity['code_link'].match(/jsfiddle\.net/) != null){
-          activity['code_link'] = activity['code_link'] + 'embedded/';
-        }else if(activity['code_link'].match(/plnkr\.co/) != null){
-          activity['code_link'] = 'https://embed.plnkr.co/' + activity['code_link'].replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
+      if(this.activity['code_link']){
+        if(this.activity['code_link'].match(/jsfiddle\.net/) != null){
+          this.activity['code_link'] = this.activity['code_link'] + 'embedded/';
+        }else if(this.activity['code_link'].match(/plnkr\.co/) != null){
+          this.activity['code_link'] = 'https://embed.plnkr.co/' + this.activity['code_link'].replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
         }
       }
       html = `
       <div class="activity ${this.published()? '' : 'unpublish'}">
-        <h2 class="index">${index < 10 ? '0' + index : index}</h2>
-        <p class="title lead">${activity['title']}</p>
+        <h2 class="index">${this.index < 10 ? '0' + this.index : this.index}</h2>
+        <p class="title lead">${this.activity['title']}</p>
         <p class="text-muted">
-          Posted date: ${new Date(activity['post_time']).toDateString()}
+          Posted date: ${new Date(this.activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
           <div class="col-md-12">
             <div class="embed-responsive embed-responsive-16by9">
-              <iframe class="embed-responsive-item" src="${activity['code_link']}" allowfullscreen></iframe>
+              <iframe class="embed-responsive-item" src="${this.activity['code_link']}" allowfullscreen></iframe>
             </div>
-            <div class="description">${activity['description']}</div>
+            <div class="description">${this.activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -227,26 +233,26 @@ function ActivityTemplate(activity, index)
       break;
     case 'file':
       // handle different links
-      console.log(activity);
-      if(activity['file_link']){
-        if(activity['file_link'].match(/drive\.google\.com/) !== null && activity['file_link'].match(/id=(.*)/) !== null){
-          activity['file_link'] = 'https://drive.google.com/embeddedfolderview?id=' + activity['file_link'].match(/id=(.*)/)[1] + '#list';
+      console.log(this.activity);
+      if(this.activity['file_link']){
+        if(this.activity['file_link'].match(/drive\.google\.com/) !== null && this.activity['file_link'].match(/id=(.*)/) !== null){
+          this.activity['file_link'] = 'https://drive.google.com/embeddedfolderview?id=' + this.activity['file_link'].match(/id=(.*)/)[1] + '#list';
         }
       }
       html = `
       <div class="activity ${this.published()? '' : 'unpublish'}">
-        <h2>${index < 10 ? '0' + index : index}</h2>
-        <p class="title lead">${activity['title']}</p>
+        <h2>${this.index < 10 ? '0' + this.index : this.index}</h2>
+        <p class="title lead">${this.activity['title']}</p>
         <p class="text-muted">
-          Posted date: ${new Date(activity['post_time']).toDateString()}
+          Posted date: ${new Date(this.activity['post_time']).toDateString()}
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
           <div class="col-md-12">
             <div class="embed-responsive embed-responsive-16by9">
-              <iframe class="embed-responsive-item" src="${activity['file_link']}" allowfullscreen></iframe>
+              <iframe class="embed-responsive-item" src="${this.activity['file_link']}" allowfullscreen></iframe>
             </div>
-            <div class="description">${activity['description']}</div>
+            <div class="description">${this.activity['description']}</div>
           </div>
         </div>
         ${activityComment}
@@ -262,6 +268,7 @@ function ActivityTemplate(activity, index)
   }
   Template.call(this, $(html));
 };
+
 ActivityTemplate.prototype.updateIndex = function(index)
 {
   this.index = index++;
@@ -582,6 +589,23 @@ function ActivityListTemplate(activities, sortable)
     });
   }
   ListTemplate.call(this, _templateList, $frame, $container);
+}
+
+ActivityListTemplate.prototype.addActivity = function(activity)
+{
+  var index = this.activity.length;
+  this.activities[index] = activity;
+  var act = new ActivityTemplate(activity, index);
+  this._templateList.push(act);
+  act.display(this.$_container);
+}
+
+ActivityListTemplate.prototype.updateActivity = function(activity, index)
+{
+  this.activities[index] = activity;
+  var act = this._templateList[index];
+  act.render(activity);
+  this.$_container.find('.activity:eq('+index+')').replaceWith($(act.$template));
 }
 
 $.extend(ActivityListTemplate.prototype, ListTemplate.prototype);
