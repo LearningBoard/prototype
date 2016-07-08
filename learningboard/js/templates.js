@@ -601,6 +601,7 @@ ActivityListTemplate.prototype.addActivity = function(activity)
 
 ActivityListTemplate.prototype.updateActivity = function(activity, index)
 {
+  activity.id = activity.activity_id;
   this.activities[index] = activity;
   var act = this._templateList[index];
   act.render(activity);
