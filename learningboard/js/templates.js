@@ -520,9 +520,8 @@ function ActivityListTemplate(activities, sortable)
   // inner container
   $frame = $(`
     <div class="listFrame">
-      <p class="text-right">
-        <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled
-        </button>
+      <p class="text-right ${sortable ? '' : 'hidden'}">
+        <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled</button>
       </p>
       <div class="activityList ${sortable ? '' : 'viewMode'}">
       </div>
