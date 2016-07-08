@@ -618,7 +618,7 @@ function ActivityListTemplate(activities, sortable)
 
 ActivityListTemplate.prototype.addActivity = function(activity)
 {
-  var index = this.activity.length;
+  var index = this.activities.length;
   this.activities[index] = activity;
   var act = new ActivityTemplate(activity, index);
   this._templateList.push(act);
