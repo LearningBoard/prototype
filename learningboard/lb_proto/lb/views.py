@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate
 from django.forms.models import model_to_dict
 from django.utils.text import slugify
 from django.core.files.base import ContentFile
-import tools, json, base64
+from django.conf import settings
+import tools, json, base64, time, hashlib
 from models import *
 # Create your views here.
 
@@ -164,7 +165,12 @@ def activity_get(request, activity_id):
 @csrf_exempt
 def activity_add(request):
     print request.POST
-    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id', 'order']})
+    data = tools.qdict_to_dict(request.POST)
+    exclude_key = ['pk', 'title', 'description', 'type', 'activity_id', 'author_id', 'order']
+    for key in data.keys():
+        if key in exclude_key:
+            del data[key]
+    data = json.dumps(data)
     # pk = board_id
     if request.POST.get('pk', None) is None:
         act = Activity.objects.create(
@@ -194,7 +200,12 @@ def activity_edit(request, activity_id):
     if act is None:
         return HttpResponse("not found", status = 404)
     else:
-        data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id', 'order']})
+        data = tools.qdict_to_dict(request.POST)
+        exclude_key = ['pk', 'title', 'description', 'type', 'activity_id', 'author_id', 'order']
+        for key in data.keys():
+            if key in exclude_key:
+                del data[key]
+        data = json.dumps(data)
         act.title = request.POST['title']
         act.description = request.POST['description']
         act.data = data
@@ -342,3 +353,13 @@ def load_activity(request):
     for i in len(acts):
         acts[i] = model_to_dict[acts[i]]
     return JsonResponse({"activity": acts})
+
+@csrf_exempt
+def media_upload(request):
+    for key, value in request.FILES.iteritems():
+        ext = value.name.split('.')[-1]
+        filename = str(int(time.time())) + '-' + hashlib.md5(value.name.encode('utf-8')).hexdigest() + '.' + ext
+        with open(settings.MEDIA_ROOT + '/' + filename, 'wb+') as destination:
+            for chunk in value.chunks():
+                destination.write(chunk)
+    return JsonResponse({'success': True, 'uploaded': filename})

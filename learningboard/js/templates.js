@@ -270,13 +270,31 @@ ActivityTemplate.prototype.render = function(activity)
         </p>
         <div class="row">
           <div class="col-md-12">
-            <img src="${this.activity['audio_image']}" class="img-responsive">
+            <span class="glyphicon glyphicon-menu-left audio_left"></span>`;
+      try {
+        this.activity['audio_image'] = JSON.parse(this.activity['audio_image']);
+      } catch (e) {
+        this.activity['audio_image'] = [];
+      }
+      for(var i = 0; i < this.activity['audio_image'].length; i++){
+        html += `
+            <img data-index="${i}" src="${media_addr + '/' + this.activity['audio_image'][i]}" class="img-responsive ${i === 0 ? '' : 'hidden'}">`;
+      }
+      html += `
+            <span class="glyphicon glyphicon-menu-right audio_right"></span>
           </div>
-          <div class="col-md-12">
-            <audio controls>
-              <source src="${this.activity['audio_audio']}" type="audio/mpeg">
-            </audio>
-          </div>
+          <div class="col-md-12 text-center">`;
+      if(!this.activity['audio_audio[]'].push){
+        this.activity['audio_audio[]'] = [ this.activity['audio_audio[]'] ];
+      }
+      for(var i = 0; i < this.activity['audio_audio[]'].length; i++){
+        html += `
+            <audio controls data-index="${i}" class="${i === 0 ? '' : 'hidden'}">
+              <source src="${this.activity['audio_audio[]'][i]}" type="audio/mpeg">
+            </audio>`;
+      }
+      html +=
+      `   </div>
           <div class="col-md-12">
             <div class="description">${this.activity['description']}</div>
           </div>
@@ -284,6 +302,37 @@ ActivityTemplate.prototype.render = function(activity)
         ${activityComment}
         ${activityControl}
       </div>`;
+      if(this.activity['audio_audio[]'].length > 1){
+        html += `
+      <script>
+      $(document).off('click', '.audio_left').on('click', '.audio_left', function(e){
+        var currentImg = $(this).parent().find('img:visible');
+        if(currentImg.data('index') != 0){
+          currentImg.prev().removeClass('hidden');
+          currentImg.addClass('hidden');
+        }
+        var currentAudio = $(this).parent().next().find('audio:visible');
+        if(currentAudio.data('index') != 0){
+          currentAudio.prev().removeClass('hidden');
+          currentAudio.addClass('hidden');
+        }
+      });
+      $(document).off('click', '.audio_right').on('click', '.audio_right', function(e){
+        var totalImg = $(this).parent().find('img').length;
+        var currentImg = $(this).parent().find('img:visible');
+        if(currentImg.data('index') < totalImg - 1){
+          currentImg.next().removeClass('hidden');
+          currentImg.addClass('hidden');
+        }
+        var totalAudio = $(this).parent().next().find('audio').length;
+        var currentAudio = $(this).parent().next().find('audio:visible');
+        if(currentAudio.data('index') < totalAudio - 1){
+          currentAudio.next().removeClass('hidden');
+          currentAudio.addClass('hidden');
+        }
+      });
+      </script>`;
+      }
       break;
     default:
       html = `

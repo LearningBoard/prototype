@@ -1,10 +1,11 @@
 serv_addr = "http://127.0.0.1:8000"
+media_addr = serv_addr + '/media';
 
 $(document).ready(function(){
   // dump the nav bar to body
   if(!location.href.includes('board_edit.html')){
     $('body').prepend(`
-      <nav class="navbar navbar-default navbar-fixed-top top-navbar"> 
+      <nav class="navbar navbar-default navbar-fixed-top top-navbar">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -66,6 +67,12 @@ $(document).ready(function(){
     location.reload();
   });
 });
+
+// polyfill
+navigator.getUserMedia = (navigator.getUserMedia ||
+                          navigator.webkitGetUserMedia ||
+                          navigator.mozGetUserMedia ||
+                          navigator.msGetUserMedia);
 
 $.getCSS = function(url){
   $('head').append($('<link rel="stylesheet" type="text/css" />').attr('href', url));
