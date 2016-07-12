@@ -40,7 +40,7 @@ def lb_get(request, board_id):
         return HttpResponse("not found", status = 404)
     board_dict = board.serialize(user_id = user_id)
     tag = [ model_to_dict(obj) for obj in board.tags.all() ]
-    activity = [ dict(model_to_dict(obj).items() + {'post_time': obj.post_time}.items()) for obj in board.activity_set.all().order_by('order') ]
+    activity = [ obj.serialize() for obj in board.activity_set.all().order_by('order') ]
     board_dict['activities'] = activity
     board_dict['tags'] = tag
     return JsonResponse({'board': board_dict})
@@ -191,7 +191,7 @@ def activity_add(request):
             author = Staff.objects.get(pk = request.POST['author_id']),
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
-    return JsonResponse({"pk": act.id});
+    return JsonResponse({'success': True, 'result': act.serialize()});
 
 @csrf_exempt
 def activity_edit(request, activity_id):
@@ -211,7 +211,7 @@ def activity_edit(request, activity_id):
         act.data = data
         act.order = request.POST['order']
         act.save()
-        return JsonResponse({"pk": act.id});
+        return JsonResponse({'success': True, 'result': act.serialize()});
 
 @csrf_exempt
 def activity_delete(request, activity_id):

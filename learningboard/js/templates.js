@@ -17,10 +17,13 @@ var ListTemplate = function(templateList, $frame, $inner_container)
 ListTemplate.prototype.display = function()
 {
   var outer_containers = arguments;
-  this.$_container.empty();
-  for (var i = 0; i < this._templateList.length; ++i)
+  if(this._templateList.length > 0)
   {
-    this._templateList[i].display(this.$_container);
+    this.$_container.empty();
+    for (var i = 0; i < this._templateList.length; ++i)
+    {
+      this._templateList[i].display(this.$_container);
+    }
   }
   for (var i = 0; i < arguments.length; ++i)
   {

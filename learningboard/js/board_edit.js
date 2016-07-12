@@ -248,7 +248,7 @@ $(document).ready(function(){
         $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
         var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
         var index = $('.activityList .activity').index(prevDom);
-        actList.updateActivity(dataObject, index);
+        actList.updateActivity(data.result, index);
         $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
           $(this).text('');
         });
@@ -261,14 +261,14 @@ $(document).ready(function(){
       $.post(serv_addr+'/activity/add/', dataObject, function(data)
       {
         console.log(data);
-        activity_list.push(data.pk);
+        activity_list.push(data.result.pk);
 
         // clear form data
         CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
         initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
         initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), true, null);
         $('.activityList .noActivity').hide();
-        actList.addActivity(dataObject);
+        actList.addActivity(data.result);
         $this.parent().find('.result_msg').text('Activity added!').delay(1000).fadeOut('fast', function(){
           $(this).text('');
         });
