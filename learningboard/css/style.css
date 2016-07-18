@@ -32,6 +32,10 @@ body > .body_container {
   padding: 0 30px 20px;
 }
 
+.img-responsive {
+  margin: 0 auto;
+}
+
 .title {
   text-transform: capitalize;
 }
@@ -148,6 +152,10 @@ body > .body_container {
   color: #FFF;
 }
 
+.lbRecorder {
+  padding: 5px 0;
+}
+
 /* single board detail */
 .board_status > div {
   padding-left: 0;
@@ -214,6 +222,19 @@ body > .body_container {
 
 .activityList > .activity .description {
   padding: 15px 0;
+}
+
+.activityList > .activity .audio_left {
+  position: absolute;
+  top: 50%;
+  cursor: pointer;
+}
+
+.activityList > .activity .audio_right {
+  position: absolute;
+  top: 50%;
+  right: 2%;
+  cursor: pointer;
 }
 
 .activityList > .activity .control ul {

@@ -45,4 +45,5 @@ urlpatterns = [
     url(r'^tag/add/$', views.tag_add),
     url(r'^news/getAll/$', views.news_getAll),
     url(r'^news/add/$', views.news_add),
+    url(r'^media/upload/$', views.media_upload),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

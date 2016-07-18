@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate
 from django.forms.models import model_to_dict
 from django.utils.text import slugify
 from django.core.files.base import ContentFile
-import tools, json, base64
+from django.conf import settings
+import tools, json, base64, time, hashlib
 from models import *
 # Create your views here.
 
@@ -39,7 +40,7 @@ def lb_get(request, board_id):
         return HttpResponse("not found", status = 404)
     board_dict = board.serialize(user_id = user_id)
     tag = [ model_to_dict(obj) for obj in board.tags.all() ]
-    activity = [ dict(model_to_dict(obj).items() + {'post_time': obj.post_time}.items()) for obj in board.activity_set.all().order_by('order') ]
+    activity = [ obj.serialize() for obj in board.activity_set.all().order_by('order') ]
     board_dict['activities'] = activity
     board_dict['tags'] = tag
     return JsonResponse({'board': board_dict})
@@ -164,7 +165,12 @@ def activity_get(request, activity_id):
 @csrf_exempt
 def activity_add(request):
     print request.POST
-    data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id', 'order']})
+    data = tools.qdict_to_dict(request.POST)
+    exclude_key = ['pk', 'title', 'description', 'type', 'activity_id', 'author_id', 'order']
+    for key in data.keys():
+        if key in exclude_key:
+            del data[key]
+    data = json.dumps(data)
     # pk = board_id
     if request.POST.get('pk', None) is None:
         act = Activity.objects.create(
@@ -185,7 +191,7 @@ def activity_add(request):
             author = Staff.objects.get(pk = request.POST['author_id']),
             lb = LearningBoard.objects.get(pk = request.POST['pk'])
         )
-    return JsonResponse({"pk": act.id});
+    return JsonResponse({'success': True, 'result': act.serialize()});
 
 @csrf_exempt
 def activity_edit(request, activity_id):
@@ -194,13 +200,18 @@ def activity_edit(request, activity_id):
     if act is None:
         return HttpResponse("not found", status = 404)
     else:
-        data = json.dumps({key: request.POST.dict()[key] for key in request.POST.dict() if key not in ['pk', 'title', 'description', 'type', 'activity_id', 'order']})
+        data = tools.qdict_to_dict(request.POST)
+        exclude_key = ['pk', 'title', 'description', 'type', 'activity_id', 'author_id', 'order']
+        for key in data.keys():
+            if key in exclude_key:
+                del data[key]
+        data = json.dumps(data)
         act.title = request.POST['title']
         act.description = request.POST['description']
         act.data = data
         act.order = request.POST['order']
         act.save()
-        return JsonResponse({"pk": act.id});
+        return JsonResponse({'success': True, 'result': act.serialize()});
 
 @csrf_exempt
 def activity_delete(request, activity_id):
@@ -342,3 +353,13 @@ def load_activity(request):
     for i in len(acts):
         acts[i] = model_to_dict[acts[i]]
     return JsonResponse({"activity": acts})
+
+@csrf_exempt
+def media_upload(request):
+    for key, value in request.FILES.iteritems():
+        ext = value.name.split('.')[-1]
+        filename = str(int(time.time())) + '-' + hashlib.md5(value.name.encode('utf-8')).hexdigest() + '.' + ext
+        with open(settings.MEDIA_ROOT + '/' + filename, 'wb+') as destination:
+            for chunk in value.chunks():
+                destination.write(chunk)
+    return JsonResponse({'success': True, 'uploaded': filename})

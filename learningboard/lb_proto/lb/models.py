@@ -93,6 +93,9 @@ class Activity(models.Model):
     def __str__(self):
         return self.title
 
+    def serialize(self):
+        return dict(model_to_dict(self).items() + {'post_time': self.post_time}.items());
+
     title = models.CharField(max_length = 255)
     description = models.TextField(null = True, blank = True)
     type = models.CharField(max_length = 255)

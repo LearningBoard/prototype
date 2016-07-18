@@ -17,10 +17,13 @@ var ListTemplate = function(templateList, $template, $inner_container)
 ListTemplate.prototype.display = function()
 {
   var outer_containers = arguments;
-  this.$_container.empty();
-  for (var i = 0; i < this._templateList.length; ++i)
+  if(this._templateList.length > 0)
   {
-    this._templateList[i].display(this.$_container);
+    this.$_container.empty();
+    for (var i = 0; i < this._templateList.length; ++i)
+    {
+      this._templateList[i].display(this.$_container);
+    }
   }
   for (var i = 0; i < arguments.length; ++i)
   {
@@ -270,10 +273,85 @@ ActivityTemplate.prototype.render = function(activity)
         ${activityControl}
       </div>`;
       break;
+    case 'audio':
+      html = `
+      <div class="activity ${this.published()? '' : 'unpublish'}">
+        <h2>${this.index < 10 ? '0' + this.index : this.index}</h2>
+        <p class="title lead">${this.activity['title']}</p>
+        <p class="text-muted">
+          Posted date: ${new Date(this.activity['post_time']).toDateString()}
+          Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
+        </p>
+        <div class="row">
+          <div class="col-md-12">
+            <span class="glyphicon glyphicon-menu-left audio_left"></span>`;
+      try {
+        this.activity['audio_image'] = JSON.parse(this.activity['audio_image']);
+      } catch (e) {
+        this.activity['audio_image'] = [];
+      }
+      for(var i = 0; i < this.activity['audio_image'].length; i++){
+        html += `
+            <img data-index="${i}" src="${media_addr + '/' + this.activity['audio_image'][i]}" class="img-responsive ${i === 0 ? '' : 'hidden'}">`;
+      }
+      html += `
+            <span class="glyphicon glyphicon-menu-right audio_right"></span>
+          </div>
+          <div class="col-md-12 text-center">`;
+      if(!this.activity['audio_audio[]'].push){
+        this.activity['audio_audio[]'] = [ this.activity['audio_audio[]'] ];
+      }
+      for(var i = 0; i < this.activity['audio_audio[]'].length; i++){
+        html += `
+            <audio controls data-index="${i}" class="${i === 0 ? '' : 'hidden'}">
+              <source src="${this.activity['audio_audio[]'][i]}" type="audio/mpeg">
+            </audio>`;
+      }
+      html +=
+      `   </div>
+          <div class="col-md-12">
+            <div class="description">${this.activity['description']}</div>
+          </div>
+        </div>
+        ${activityComment}
+        ${activityControl}
+      </div>`;
+      if(this.activity['audio_audio[]'].length > 1){
+        html += `
+      <script>
+      $(document).off('click', '.audio_left').on('click', '.audio_left', function(e){
+        var currentImg = $(this).parent().find('img:visible');
+        if(currentImg.data('index') != 0){
+          currentImg.prev().removeClass('hidden');
+          currentImg.addClass('hidden');
+        }
+        var currentAudio = $(this).parent().next().find('audio:visible');
+        if(currentAudio.data('index') != 0){
+          currentAudio.prev().removeClass('hidden');
+          currentAudio.addClass('hidden');
+        }
+      });
+      $(document).off('click', '.audio_right').on('click', '.audio_right', function(e){
+        var totalImg = $(this).parent().find('img').length;
+        var currentImg = $(this).parent().find('img:visible');
+        if(currentImg.data('index') < totalImg - 1){
+          currentImg.next().removeClass('hidden');
+          currentImg.addClass('hidden');
+        }
+        var totalAudio = $(this).parent().next().find('audio').length;
+        var currentAudio = $(this).parent().next().find('audio:visible');
+        if(currentAudio.data('index') < totalAudio - 1){
+          currentAudio.next().removeClass('hidden');
+          currentAudio.addClass('hidden');
+        }
+      });
+      </script>`;
+      }
+      break;
     default:
       html = `
       <div class="activity">
-        <h4>01</h4>
+        <h4>${this.index < 10 ? '0' + this.index : this.index}</h4>
         <p><i>Error occur when rendering activity</i></p>
       </div>`;
   }
