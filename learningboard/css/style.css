@@ -189,16 +189,15 @@ body > .body_container {
 
 /* activity list */
 .activityList {
+  padding: 2px;
+}
+
+.activityList.sortableList {
   margin-top: 10px;
   width: 100%;
   min-height: 100px;
   padding: 10px;
   border: 2px dashed #EEE;
-}
-
-.activityList.viewMode {
-  padding: 2px;
-  border: none;
 }
 
 .activityList > .noActivity {
@@ -253,6 +252,16 @@ body > .body_container {
 .activityList > .activity .comment span, .activityList > .activity .comment a {
   cursor: pointer;
   padding: 0 5px;
+}
+
+.activityList > .activity .activity-image {
+  max-width: 50%;
+  max-height: 50%;
+}
+
+.activityList > .activity .activity-video {
+  max-width: 50%;
+  max-height: 50%;
 }
 
 /* tag list */

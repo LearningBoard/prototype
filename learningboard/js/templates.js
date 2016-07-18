@@ -8,10 +8,11 @@ var ListTemplate = function(templateList, $template, $inner_container)
   this._templateList = templateList;
   // a list of Template objects
 
-  this.$_container = $inner_container;
+  this.$_container = ($inner_container === undefined? $template: $inner_container);
   // a jQuery html element which contains all children templates
 
   this.$template = $template;
+  console.log(this.$template);
 }
 
 ListTemplate.prototype.display = function()
@@ -41,17 +42,6 @@ Template.prototype.display = function()
   for (var i = 0; i < arguments.length; ++i)
     arguments[i].append(this.$template);
 };
-
-var TemplateDecorator = function(decoratee)
-{
-  this.decoratee = decoratee; 
-  this.$template = decoratee.$template;
-}
-
-TemplateDecorator.prototype.display = function()
-{
-  this.decoratee.display(arguments);
-}
 
 var Board = function(board)
 {
@@ -138,24 +128,6 @@ ActivityTemplate.prototype.render = function(activity)
       </ul>
     </div>`;
   }
-  var activityComment = '';
-  if (!location.href.includes('board_edit.html')) {
-    activityComment = `
-    <div class="comment">
-      <span class="glyphicon glyphicon-heart"></span> 0
-      <span class="glyphicon glyphicon-comment"></span> 0 comment
-      <a href="#">Add comment</a>
-      <div class="commentBox hidden">
-        <form>
-          <input type="text" name="comment">
-          <button type="button" class="btn btn-default btn-xs">Submit</button>
-        </form>
-      </div>
-      <div class="commentList">
-        <ul></ul>
-      </div>
-    </div>`;
-  }
   try
   {
     $.extend(this.activity, JSON.parse(this.activity.data));
@@ -193,7 +165,6 @@ ActivityTemplate.prototype.render = function(activity)
             <div class="description">${this.activity['description']}</div>
           </div>
         </div>
-        ${activityComment}
         ${activityControl}
       </div>`;
       break;
@@ -207,12 +178,11 @@ ActivityTemplate.prototype.render = function(activity)
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p>
         <div class="row">
-          ${this.activity['text_image'] ? `<div class="col-md-12"><img src="${this.activity['text_image']}" class="img-responsive"></div>` : ''}
+          ${this.activity['text_image'] ? `<div class="col-md-12"><img src="${this.activity['text_image']}" class="img-responsive activity-image"></div>` : ''}
           <div class="col-md-12">
             <div class="description">${this.activity['description']}</div>
           </div>
         </div>
-        ${activityComment}
         ${activityControl}
       </div>`;
       break;
@@ -241,7 +211,6 @@ ActivityTemplate.prototype.render = function(activity)
             <div class="description">${this.activity['description']}</div>
           </div>
         </div>
-        ${activityComment}
         ${activityControl}
       </div>`;
       break;
@@ -269,7 +238,6 @@ ActivityTemplate.prototype.render = function(activity)
             <div class="description">${this.activity['description']}</div>
           </div>
         </div>
-        ${activityComment}
         ${activityControl}
       </div>`;
       break;
@@ -292,7 +260,7 @@ ActivityTemplate.prototype.render = function(activity)
       }
       for(var i = 0; i < this.activity['audio_image'].length; i++){
         html += `
-            <img data-index="${i}" src="${media_addr + '/' + this.activity['audio_image'][i]}" class="img-responsive ${i === 0 ? '' : 'hidden'}">`;
+            <img data-index="${i}" src="${media_addr + '/' + this.activity['audio_image'][i]}" class="img-responsive ${i === 0 ? '' : 'hidden'} activity-image">`;
       }
       html += `
             <span class="glyphicon glyphicon-menu-right audio_right"></span>
@@ -313,39 +281,38 @@ ActivityTemplate.prototype.render = function(activity)
             <div class="description">${this.activity['description']}</div>
           </div>
         </div>
-        ${activityComment}
         ${activityControl}
       </div>`;
       if(this.activity['audio_audio[]'].length > 1){
         html += `
-      <script>
-      $(document).off('click', '.audio_left').on('click', '.audio_left', function(e){
-        var currentImg = $(this).parent().find('img:visible');
-        if(currentImg.data('index') != 0){
-          currentImg.prev().removeClass('hidden');
-          currentImg.addClass('hidden');
-        }
-        var currentAudio = $(this).parent().next().find('audio:visible');
-        if(currentAudio.data('index') != 0){
-          currentAudio.prev().removeClass('hidden');
-          currentAudio.addClass('hidden');
-        }
-      });
-      $(document).off('click', '.audio_right').on('click', '.audio_right', function(e){
-        var totalImg = $(this).parent().find('img').length;
-        var currentImg = $(this).parent().find('img:visible');
-        if(currentImg.data('index') < totalImg - 1){
-          currentImg.next().removeClass('hidden');
-          currentImg.addClass('hidden');
-        }
-        var totalAudio = $(this).parent().next().find('audio').length;
-        var currentAudio = $(this).parent().next().find('audio:visible');
-        if(currentAudio.data('index') < totalAudio - 1){
-          currentAudio.next().removeClass('hidden');
-          currentAudio.addClass('hidden');
-        }
-      });
-      </script>`;
+        <script>
+        $(document).off('click', '.audio_left').on('click', '.audio_left', function(e){
+          var currentImg = $(this).parent().find('img:visible');
+          if(currentImg.data('index') != 0){
+            currentImg.prev().removeClass('hidden');
+            currentImg.addClass('hidden');
+          }
+          var currentAudio = $(this).parent().next().find('audio:visible');
+          if(currentAudio.data('index') != 0){
+            currentAudio.prev().removeClass('hidden');
+            currentAudio.addClass('hidden');
+          }
+        });
+        $(document).off('click', '.audio_right').on('click', '.audio_right', function(e){
+          var totalImg = $(this).parent().find('img').length;
+          var currentImg = $(this).parent().find('img:visible');
+          if(currentImg.data('index') < totalImg - 1){
+            currentImg.next().removeClass('hidden');
+            currentImg.addClass('hidden');
+          }
+          var totalAudio = $(this).parent().next().find('audio').length;
+          var currentAudio = $(this).parent().next().find('audio:visible');
+          if(currentAudio.data('index') < totalAudio - 1){
+            currentAudio.next().removeClass('hidden');
+            currentAudio.addClass('hidden');
+          }
+        });
+        </script>`;
       }
       break;
     default:
@@ -367,6 +334,42 @@ ActivityTemplate.prototype.updateIndex = function(index)
 }
 
 $.extend(ActivityTemplate.prototype, Activity.prototype, Template.prototype);
+
+function CommentableActivity(activityTemplate)
+{
+  $.extend(this, activityTemplate);
+  $.extend(activityTemplate.__proto__);
+  console.log(this);
+
+  var activityComment = `
+    <div class="comment">
+      <span class="glyphicon glyphicon-heart"></span> 0
+      <span class="glyphicon glyphicon-comment"></span> 0 comment
+      <a href="#">Add comment</a>
+      <div class="commentBox hidden">
+        <form>
+          <input type="text" name="comment">
+          <button type="button" class="btn btn-default btn-xs">Submit</button>
+        </form>
+      </div>
+      <div class="commentList">
+        <ul></ul>
+      </div>
+  `;
+  this.$template.append(activityComment);
+}
+
+function arrayMapping(list, mapping_func)
+{
+  // iterate a list and return a mapping of the array
+  // mapping_func(element, index)
+  var arr = [];
+  for (var i = 0; i < list.length; ++i)
+  {
+    arr.push(mapping_func(list[i], i));
+  }
+  return arr;
+}
 
 function BoardDetailTemplate(board)
 {
@@ -431,7 +434,7 @@ function BoardDetailTemplate(board)
             </div>
           </div>
         </div>
-        <div class="activityList viewMode">
+        <div class="activityList">
         </div>`;
       html += `
       </div>
@@ -461,8 +464,8 @@ function BoardDetailTemplate(board)
 
   Template.call(this, $(html));
 
-  $template = this.$template;
-  $followBtn = $template.find(".followBtn");
+  var $template = this.$template;
+  var $followBtn = $template.find(".followBtn");
 
   $followBtn.hover(
     function(){if(board.followed) $(this).html(unfollow_html);},
@@ -516,11 +519,15 @@ function BoardDetailTemplate(board)
 
   console.log(board.activities);
 
-  var count = 0;
   $actList = $template.find(".activityList");
-  var activities = this.board.activities;
-  var length = this.board.activities.length;
-  var actList = new ActivityListTemplate(activities, false);
+  var length = board.activities.length;
+
+  this.actTemps = arrayMapping(board.activities, function(activity, i)
+  {
+    return new CommentableActivity(new ActivityTemplate(board.activities[i], i));
+  });
+
+  var actList = new ActivityListTemplate(this.actTemps, false);
   actList.display($actList);
   /*
   for (var i = 0; i < length; ++i)
@@ -543,7 +550,7 @@ $.extend(BoardDetailTemplate.prototype, Board.prototype, Template.prototype);
 function BoardBriefTemplate(board)
 {
   Board.call(this, board);
-  var html = '<div class="col-md-3 '+this.getLevelName()+'" data-id="'+this.board.id+'" myclass="boardTemplate_'+this.board.id+'">\
+  var html = '<div class="col-md-4 '+this.getLevelName()+'" data-id="'+this.board.id+'" myclass="boardTemplate_'+this.board.id+'">\
     <div class="thumbnail">\
       <img src="'+serv_addr+this.board.image_url+'" alt="Cover Image">\
       <div class="caption">\
@@ -587,121 +594,108 @@ function BoardBriefTemplate(board)
 }
 $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
 
-function SortableList(listTemplate)
+function SortableListTemplate(listTemplate)
 {
-  var temp = listTemplate;
-  this.$template = temp.$template;
-  $template.find(".listFrame").prepend(`
-    <p class="text-right ${sortable ? '' : 'hidden'}">
+  console.log(listTemplate);
+  $.extend(this, listTemplate);
+  $.extend(this, listTemplate.__proto__);
+  console.log(this);
+
+  var $template = this.$template;
+  var _templateList = this._templateList;
+  var $container = this.$_container;
+
+  $template.prepend(`
+    <p class="text-right">
       <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled</button>
     </p>`
   );
+  $container.sortable({
+    cancel: '.noActivity',
+    opacity: 0.95,
+    cursor: 'move'
+  });
+  $container.addClass("sortableList");
+  var startIndex = -1, endIndex = -1;
+  $template.on('sortstart', function(e, ui)
+  {
+    startIndex = ui.item.index();
+  });
+  $template.on('sortupdate', function(e, ui)
+  {
+    var target = _templateList[startIndex];
+    endIndex = ui.item.index();
+    for (var i = startIndex; i > endIndex; --i)
+    {
+      // startIndex > endIndex
+      _templateList[i] = _templateList[i-1];
+      _templateList[i].updateIndex(i);
+    }
+    for (var i = startIndex; i < endIndex; ++i)
+    {
+      // endIndex > startIndex
+      _templateList[i] = _templateList[i+1];
+      _templateList[i].updateIndex(i);
+    }
+    _templateList[endIndex] = target;
+    target.updateIndex(endIndex);
+    var order = {};
+    for (var i = 0; i < _templateList.length; ++i)
+    {
+      order[_templateList[i].activity.id] = i;
+    }
+    $.post(serv_addr+'/activity/orderchange/', order);
+  });
 
+  var enabled = true;
+  $template.find(".sortLockMode").on("click", function()
+  {
+    if (enabled)
+    {
+      $container.sortable("disable");
+      $(this).text("Sorting Disabled");
+      enabled = false;
+    }
+    else
+    {
+      enabled = true;
+      $container.sortable("enable");
+      $(this).text("Sorting Enabled");
+    }
+  });
 }
 
-function ActivityListTemplate(activities, sortable)
+function ActivityListTemplate(actTemps)
 {
   // inherits ListTemplate
 
-  this.activities = activities;
-
-  var _templateList = [];
-
-  var count = 0;
-  for (var i = 0; i < activities.length; ++i)
-  {
-    var act = new ActivityTemplate(activities[i], count);
-    if (act.published() || sortable === true)
-    {
-      _templateList.push(act);
-      count++;
-    }
-  }
+  var _templateList = actTemps.slice();
 
   // inner container
   $template = $(`
     <div class="listFrame">
-
-      <div class="activityList ${sortable ? '' : 'viewMode'}">
+      <div class="activityList">
       </div>
     </div>`
   );
   $container = $template.find(".activityList");
-  if (count === 0)
+  if (actTemps.length === 0)
   {
     $container.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
-  }
-  if (sortable)
-  {
-    $container.sortable({
-      cancel: '.noActivity',
-      opacity: 0.95,
-      cursor: 'move'
-    });
-    var startIndex = -1, endIndex = -1;
-    $container.on('sortstart', function(e, ui)
-    {
-      startIndex = ui.item.index();
-    });
-    $container.on('sortupdate', function(e, ui)
-    {
-      var target = _templateList[startIndex];
-      endIndex = ui.item.index();
-      for (var i = startIndex; i > endIndex; --i)
-      {
-        // startIndex > endIndex
-        _templateList[i] = _templateList[i-1];
-        _templateList[i].updateIndex(i);
-      }
-      for (var i = startIndex; i < endIndex; ++i)
-      {
-        // endIndex > startIndex
-        _templateList[i] = _templateList[i+1];
-        _templateList[i].updateIndex(i);
-      }
-      _templateList[endIndex] = target;
-      target.updateIndex(endIndex);
-      var order = {};
-      for (var i = 0; i < _templateList.length; ++i)
-      {
-        order[_templateList[i].activity.id] = i;
-      }
-      $.post(serv_addr+'/activity/orderchange/', order);
-    });
-
-    var enabled = true;
-    $template.find(".sortLockMode").on("click", function()
-    {
-      if (enabled)
-      {
-        $container.sortable("disable");
-        $(this).text("Sorting Disabled");
-        enabled = false;
-      }
-      else
-      {
-        enabled = true;
-        $container.sortable("enable");
-        $(this).text("Sorting Enabled");
-      }
-    });
   }
   ListTemplate.call(this, _templateList, $template, $container);
 }
 
-ActivityListTemplate.prototype.addActivity = function(activity)
+ActivityListTemplate.prototype.addActivity = function(act)
 {
-  var index = this.activities.length;
-  this.activities[index] = activity;
-  var act = new ActivityTemplate(activity, index);
+  var index = this._templateList.length;
   this._templateList.push(act);
   act.display(this.$_container);
 }
 
-ActivityListTemplate.prototype.updateActivity = function(activity, index)
+ActivityListTemplate.prototype.updateActivity = function(act, index)
 {
-  this.activities[index] = activity;
-  var act = this._templateList[index];
+  this._templateList[index] = act;
   act.render(activity);
   this.$_container.find('.activity:eq('+index+')').replaceWith($(act.$template));
 }

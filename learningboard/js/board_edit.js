@@ -52,10 +52,13 @@ $(document).ready(function(){
         $('.activityListContainer .noActivity').hide();
         var activities = data.board.activities;
         var length = activities.length;
-        actList = new ActivityListTemplate(activities, true);
+        var actTemps = arrayMapping(activities, function(activity, index) {
+          return new ActivityTemplate(activity, index);
+        });
+        actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
         actList.display($(".activityListContainer"));
       }else{
-        actList = new ActivityListTemplate([], true);
+        actList = new SortableListTemplate(new ActivityListTemplate([]));
         actList.display($(".activityListContainer"));
       }
       $('.navbar-nav li:not(:first) a').css({});
