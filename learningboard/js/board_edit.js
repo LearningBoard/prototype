@@ -231,22 +231,22 @@ $(document).ready(function(){
       dataObject.pk = pk;
     }
     console.log(dataObject);
-    if(dataObject.activity_id){ // edit existing activity
-      dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.activity_id+']').parents('.activity'));
-      $.post(serv_addr+'/activity/edit/'+dataObject.activity_id+'/', dataObject, function(data)
+    if(dataObject.id){ // edit existing activity
+      dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.id+']').parents('.activity'));
+      $.post(serv_addr+'/activity/edit/'+dataObject.id+'/', dataObject, function(data)
       {
         // clear form data
         CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
         initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
-        $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
-        var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
+        $(this).parents('form.addActivityForm').find('input[name=id]').val('');
+        var prevDom = $('.activityList .activity [data-id='+dataObject.id+']').parents('.activity');
         var index = $('.activityList .activity').index(prevDom);
         actList.updateActivity(dataObject, index);
         $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
           $(this).text('');
         });
         $this.parent()[0].reset();
-        $this.parent().find('input[name=activity_id]').val('');
+        $this.parent().find('input[name=id]').val('');
       });
     }else{ // add new activity
       dataObject.order = $('.activityList .activity').size();
@@ -260,6 +260,7 @@ $(document).ready(function(){
         CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
         initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
         $('.activityList .noActivity').hide();
+        console.log(dataObject);
         actList.addActivity(dataObject);
         $this.parent().find('.result_msg').text('Activity added!').delay(1000).fadeOut('fast', function(){
           $(this).text('');
@@ -334,7 +335,7 @@ $(document).ready(function(){
       $('#collapseAddActivity').collapse('show');
       $('#activityTab a[href="#'+data.type+'"]').tab('show');
       var targetForm = $('#collapseAddActivity #' + data.type);
-      targetForm.find('.addActivityForm input[name=activity_id]').val(data.id);
+      targetForm.find('.addActivityForm input[name=id]').val(data.id);
       targetForm.find('input[name=title]').val(data.title);
       targetForm.find('textarea[name=description]').val(data.description);
       CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);

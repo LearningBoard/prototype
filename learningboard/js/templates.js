@@ -3,7 +3,7 @@
 }());
 $.getScript("https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min.js");
 
-var ListTemplate = function(templateList, $frame, $inner_container)
+var ListTemplate = function(templateList, $template, $inner_container)
 {
   this._templateList = templateList;
   // a list of Template objects
@@ -11,7 +11,7 @@ var ListTemplate = function(templateList, $frame, $inner_container)
   this.$_container = $inner_container;
   // a jQuery html element which contains all children templates
 
-  this.$frame = $frame;
+  this.$template = $template;
 }
 
 ListTemplate.prototype.display = function()
@@ -24,7 +24,7 @@ ListTemplate.prototype.display = function()
   }
   for (var i = 0; i < arguments.length; ++i)
   {
-    outer_containers[i].append(this.$frame);
+    outer_containers[i].append(this.$template);
   }
 }
 
@@ -38,6 +38,17 @@ Template.prototype.display = function()
   for (var i = 0; i < arguments.length; ++i)
     arguments[i].append(this.$template);
 };
+
+var TemplateDecorator = function(decoratee)
+{
+  this.decoratee = decoratee; 
+  this.$template = decoratee.$template;
+}
+
+TemplateDecorator.prototype.display = function()
+{
+  this.decoratee.display(arguments);
+}
 
 var Board = function(board)
 {
@@ -498,6 +509,18 @@ function BoardBriefTemplate(board)
 }
 $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
 
+function SortableList(listTemplate)
+{
+  var temp = listTemplate;
+  this.$template = temp.$template;
+  $template.find(".listFrame").prepend(`
+    <p class="text-right ${sortable ? '' : 'hidden'}">
+      <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled</button>
+    </p>`
+  );
+
+}
+
 function ActivityListTemplate(activities, sortable)
 {
   // inherits ListTemplate
@@ -518,16 +541,14 @@ function ActivityListTemplate(activities, sortable)
   }
 
   // inner container
-  $frame = $(`
+  $template = $(`
     <div class="listFrame">
-      <p class="text-right ${sortable ? '' : 'hidden'}">
-        <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled</button>
-      </p>
+
       <div class="activityList ${sortable ? '' : 'viewMode'}">
       </div>
     </div>`
   );
-  $container = $frame.find(".activityList");
+  $container = $template.find(".activityList");
   if (count === 0)
   {
     $container.append(`<p class="text-center noActivity"><i>Currently there are no activity in this board</i></p>`);
@@ -571,7 +592,7 @@ function ActivityListTemplate(activities, sortable)
     });
 
     var enabled = true;
-    $frame.find(".sortLockMode").on("click", function()
+    $template.find(".sortLockMode").on("click", function()
     {
       if (enabled)
       {
@@ -587,12 +608,12 @@ function ActivityListTemplate(activities, sortable)
       }
     });
   }
-  ListTemplate.call(this, _templateList, $frame, $container);
+  ListTemplate.call(this, _templateList, $template, $container);
 }
 
 ActivityListTemplate.prototype.addActivity = function(activity)
 {
-  var index = this.activity.length;
+  var index = this.activities.length;
   this.activities[index] = activity;
   var act = new ActivityTemplate(activity, index);
   this._templateList.push(act);
@@ -601,7 +622,6 @@ ActivityListTemplate.prototype.addActivity = function(activity)
 
 ActivityListTemplate.prototype.updateActivity = function(activity, index)
 {
-  activity.id = activity.activity_id;
   this.activities[index] = activity;
   var act = this._templateList[index];
   act.render(activity);
