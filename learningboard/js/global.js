@@ -66,6 +66,18 @@ $(document).ready(function(){
     });
     location.reload();
   });
+  $.getScript("js/lib/bootstrap.min.js");
+  $.getScript("js/temps/Board.js");
+  $.getScript("js/temps/Activity.js");
+  $.getScript("js/temps/Template.js");
+  $.getScript("js/temps/ActivityTemplate.js");
+  $.getScript("js/temps/ListTemplate.js");
+  $.getScript("js/temps/ActivityListTemplate.js");
+  $.getScript("js/temps/CommentableActivityTemplate.js");
+  $.getScript("js/temps/ListTemplate.js");
+  $.getScript("js/temps/BoardDetailTemplate.js");
+  $.getScript("js/temps/BoardBriefTemplate.js");
+  $.getScript("js/temps/SortableListTemplate.js");
 });
 
 // polyfill
@@ -80,17 +92,31 @@ $.getCSS = function(url){
 
 $.fn.serializeObject = function()
 {
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
+  var o = {};
+  var a = this.serializeArray();
+  $.each(a, function() {
+    if (o[this.name] !== undefined) {
+      if (!o[this.name].push) {
+        o[this.name] = [o[this.name]];
+      }
+      o[this.name].push(this.value || '');
+    } else {
+      o[this.name] = this.value || '';
+    }
+  });
+  return o;
+};
+
+var util = {
+  arrayMapping: function(list, mapping_func)
+  {
+    // iterate a list and return a mapping of the array
+    // mapping_func(element, index)
+    var arr = [];
+    for (var i = 0; i < list.length; ++i)
+    {
+      arr.push(mapping_func(list[i], i));
+    }
+    return arr;
+  }
 };

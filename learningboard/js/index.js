@@ -1,10 +1,4 @@
-$.getScript('js/templates.js')
-
-function getLevelName(level)
-{
-  return "Beginner";
-}
-
+  
 $(document).ready(function() 
 {
   $.get(serv_addr+'/lb/load/', function(data)

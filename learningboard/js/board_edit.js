@@ -6,9 +6,8 @@ var activity_list = [];
 var activity_index = 0;
 var actList;
 
-$.getScript("js/lib.js");
+$.getScript("js/lib/util.js");
 $.getScript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js');
-$.getScript('js/templates.js');
 $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
 $(document).ready(function(){
@@ -52,7 +51,7 @@ $(document).ready(function(){
         $('.activityListContainer .noActivity').hide();
         var activities = data.board.activities;
         var length = activities.length;
-        var actTemps = arrayMapping(activities, function(activity, index) {
+        var actTemps = util.arrayMapping(activities, function(activity, index) {
           return new ActivityTemplate(activity, index);
         });
         actList = new SortableListTemplate(new ActivityListTemplate(actTemps));

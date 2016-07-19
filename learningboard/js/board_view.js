@@ -2,8 +2,15 @@
   "use strict";
 }());
 
-$.getScript('js/templates.js');
 var activity_index = 0;
+
+$.getScript("js/temps/Board.js");
+$.getScript("js/temps/Activity.js");
+$.getScript("js/temps/Template.js");
+$.getScript("js/temps/ActivityTemplate.js");
+$.getScript("js/temps/ActivityListTemplate.js");
+$.getScript("js/temps/CommentableActivityTemplate.js");
+$.getScript("js/temps/ListTemplate.js");
 
 $(document).ready(function(){
 

@@ -1,4 +1,3 @@
-$.getScript('js/templates.js')
 
 $(document).ready(function(){
   // login required
