@@ -4,14 +4,6 @@
 
 var activity_index = 0;
 
-$.getScript("js/temps/Board.js");
-$.getScript("js/temps/Activity.js");
-$.getScript("js/temps/Template.js");
-$.getScript("js/temps/ActivityTemplate.js");
-$.getScript("js/temps/ActivityListTemplate.js");
-$.getScript("js/temps/CommentableActivityTemplate.js");
-$.getScript("js/temps/ListTemplate.js");
-
 $(document).ready(function(){
 
   // fetch and render board data
@@ -78,17 +70,4 @@ $(document).ready(function(){
     }
   });
 
-  // add comment button
-  $(document).on('click', '.activity .comment a', function(e){
-    e.preventDefault();
-    $(this).parent().find('.commentBox').toggleClass('hidden');
-  });
-
-  // comment submit button
-  $(document).on('click', '.activity .comment .commentBox button', function(e){
-    e.preventDefault();
-    var target = $(this).prev();
-    $(this).parents('.comment').find('.commentList ul').append(`<li>${target.val()}</li>`);
-    target.val('');
-  });
 });

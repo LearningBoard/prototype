@@ -4,6 +4,7 @@ function ActivityListTemplate(actTemps)
   // inherits ListTemplate
 
   var _templateList = actTemps.slice();
+  // list of ActivityTemplates
 
   // inner container
   $template = $(`

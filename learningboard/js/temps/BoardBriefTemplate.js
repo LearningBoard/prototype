@@ -57,11 +57,5 @@ BoardBriefTemplate.prototype.getStatusName = function(level)
   return "published";
 };
 
-console.log("hehe");
-console.log(Template.prototype);
-console.log(Template);
-console.log(Board);
-console.log(Board.prototype);
 var x = $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
-console.log(x);
 

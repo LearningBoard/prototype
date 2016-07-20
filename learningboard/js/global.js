@@ -73,7 +73,7 @@ $(document).ready(function(){
   $.getScript("js/temps/ActivityTemplate.js");
   $.getScript("js/temps/ListTemplate.js");
   $.getScript("js/temps/ActivityListTemplate.js");
-  $.getScript("js/temps/CommentableActivityTemplate.js");
+  $.getScript("js/temps/CommentableTemplate.js");
   $.getScript("js/temps/ListTemplate.js");
   $.getScript("js/temps/BoardDetailTemplate.js");
   $.getScript("js/temps/BoardBriefTemplate.js");
@@ -81,10 +81,12 @@ $(document).ready(function(){
 });
 
 // polyfill
-navigator.getUserMedia = (navigator.getUserMedia ||
-                          navigator.webkitGetUserMedia ||
-                          navigator.mozGetUserMedia ||
-                          navigator.msGetUserMedia);
+navigator.getUserMedia = (
+  navigator.getUserMedia ||
+  navigator.webkitGetUserMedia ||
+  navigator.mozGetUserMedia ||
+  navigator.msGetUserMedia
+);
 
 $.getCSS = function(url){
   $('head').append($('<link rel="stylesheet" type="text/css" />').attr('href', url));

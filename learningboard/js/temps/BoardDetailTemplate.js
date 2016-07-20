@@ -1,4 +1,4 @@
-// dependencies: Board.js, Template.js, ActivityTemplate.js, ActivityListTemplate.js, CommentableActivity.js, ListTemplate.js
+// dependencies: Board.js, Template.js, ActivityTemplate.js, ActivityListTemplate.js, CommentableTemplate.js, ListTemplate.js
 function BoardDetailTemplate(board)
 {
   /* this.variables:
@@ -152,7 +152,7 @@ function BoardDetailTemplate(board)
 
   this.actTemps = util.arrayMapping(board.activities, function(activity, i)
   {
-    return new CommentableActivityTemplate(new ActivityTemplate(board.activities[i], i));
+    return new CommentableTemplate(new ActivityTemplate(board.activities[i], i));
   });
 
   var actList = new ActivityListTemplate(this.actTemps, false);
