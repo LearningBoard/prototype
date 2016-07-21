@@ -143,6 +143,34 @@ define(['util', 'temps/Board', 'temps/Template', 'temps/CommentableTemplate', 't
     }
     });
 
+    // endorse button
+    $('.endorseBtn').on('click', function(){
+      if($(this).hasClass('btn-primary')){
+        $('.progress_endorsed').text(parseInt($('.progress_endorsed').text()) - 1);
+        $(this).removeClass('btn-primary');
+      }else{
+        $('.progress_endorsed').text(parseInt($('.progress_endorsed').text()) + 1);
+        $(this).addClass('btn-primary');
+      }
+    });
+
+    // mark as complete button
+    $(document).on('click', '.markAsComplete', function(){
+      if($(this).attr('style')){
+        $(this).css('color', '');
+      }else{
+        $(this).css('color', 'green');
+      }
+    });
+
+    // like activity button
+    $(document).on('click', '.activity .comment .glyphicon-heart', function(e){
+      if($(this).attr('style')){
+        $(this).css('color', '');
+      }else{
+        $(this).css('color', 'red');
+      }
+    });
 
     $actList = $template.find(".activityList");
     var length = board.activities.length;
