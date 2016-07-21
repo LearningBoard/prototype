@@ -8,11 +8,8 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script src="https://cdn.jsdelivr.net/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min.js"></script>
-    <script src="js/global.js"></script>
-    <script src="js/lib/bootstrap.min.js"></script>
-    <script src="js/board_edit.js"></script>
+    <script src="js/lib/require.js"></script>
+    <script>requirejs(['./js/common'], function (common) {requirejs(['./board_edit']); });</script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/css/fileinput.min.css" rel="stylesheet">

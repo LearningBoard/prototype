@@ -1,35 +1,40 @@
-var Board = function(board)
-{
-  this.board = board;
-};
-// Board Mixin, for different templates of learning boards
-// extend this Prototype everytime you create a new view for the object
-
-$.extend(Board.prototype, {
-
-  getLevelName: function()
+define(function () {
+  
+  var Board = function(board)
   {
-      switch (this.board.level)
-      {
-          case 0: return "beginner";
-          case 1: return "intermediate";
-          case 2: return "advanced";
-      };
-  },
+    this.board = board;
+  };
+  // Board Mixin, for different templates of learning boards
+  // extend this Prototype everytime you create a new view for the object
 
-  getStatusName: function()
-  {
-    switch (this.board.status)
+  $.extend(Board.prototype, {
+
+    getLevelName: function()
     {
-      case 0: return "unpublished";
-      case 1: return "published";
-    };
-  },
+        switch (this.board.level)
+        {
+            case 0: return "beginner";
+            case 1: return "intermediate";
+            case 2: return "advanced";
+        };
+    },
 
-  published: function()
-  {
-    return this.board.status === 1;
-  }
+    getStatusName: function()
+    {
+      switch (this.board.status)
+      {
+        case 0: return "unpublished";
+        case 1: return "published";
+      };
+    },
 
-});
+    published: function()
+    {
+      return this.board.status === 1;
+    }
 
+  });
+
+  return Board;
+
+})

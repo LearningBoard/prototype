@@ -30,17 +30,18 @@ $(document).ready(function()
       return;
     }
     var o = $("form.loginForm").serializeObject();
-    console.log(o);
-    $.get(serv_addr+'/accts/login/', o, function(data)
+    console.log("babb");
+    $.post(serv_addr+'/auth/local/', o, function(res, status, xhr)
     {
-      if(data.ok || data.pk){
-        localStorage['user_id'] = data.pk;
-        localStorage['is_staff'] = data.is_staff? data.is_staff: false;
-        console.log(data.pk);
-        location.href = 'index.html';
-      }else{
-        alert('Username or password not correct')
-      }
+      var data = res.data;
+      localStorage.user_id = data.user.id;
+      localStorage.is_staff = data.user.is_staff? data.user.is_staff: false;
+      console.log(document.cookie);
+      // location.href = 'index.html';
+    }).error(function(xhr, status, info)
+    {
+      if (xhr.status === 403) alert('Username or password not correct');
+      else alert("internal error");
     });
   });
 
@@ -54,19 +55,16 @@ $(document).ready(function()
     }
     var o = $('form.loginForm').serializeObject();
     console.log(o);
-    $.post(serv_addr+'/accts/register/', o, function(data)
+    $.post(serv_addr+'/register/', o, function(res)
     {
-      if (data.ok)
-      {
-        localStorage['user_id'] = data.pk;
-        localStorage['is_staff'] = data.is_staff? data.is_staff: false;
-        console.log(data.pk);
-        location.href = "index.html";
-      }
-      else
-      {
-        alert("user already exists");
-      }
+      var data = res.data;
+      localStorage.user_id = data.user.id;
+      localStorage.is_staff = data.user.is_staff? data.user.is_staff: false;
+      location.href = "index.html";
+    }).error(function(xhr, status, data)
+    {
+      if (xhr.status === 400) alert("user already exists");
+      else alert("internal error");
     });
   });
 

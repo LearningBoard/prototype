@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="img/favicon.ico">
     <title>Learning Boards</title>
+    <script src="js/lib/require.js"></script>
+    <script>
+      //Load common code that includes config, then load the app
+      //logic for this page. Do the requirejs calls here instead of
+      //a separate file so after a build there are only 2 HTTP
+      //requests instead of three.
+      requirejs(['./js/common'], function (common) { 
+        // use paths configured in common.js
+        requirejs(['index']);
+      });
+    </script>
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -30,7 +41,4 @@
       </div>
     </footer>
   </body>
-  <script src="js/lib/jquery-1.12.4.min.js"></script>
-  <script src="js/global.js"></script>
-  <script src="js/index.js"></script>
 </html>

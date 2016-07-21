@@ -1,12 +1,16 @@
-var Activity = function(activity)
-{
-  this.activity = activity;
-};
-
-Activity.prototype = {
-  published: function()
+define(function() {
+  var Activity = function(activity)
   {
-    return this.activity.status === 1;
-  }
-};
+    this.activity = activity;
+  };
 
+  Activity.prototype = {
+    published: function()
+    {
+      return this.activity.status === 1;
+    }
+  };
+
+  return Activity;
+  
+});

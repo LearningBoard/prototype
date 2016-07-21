@@ -55,7 +55,7 @@ $(document).ready(function(){
     $('#addBoardBtn').addClass('hidden');
   }
 
-  $.get(serv_addr+"/lb/user_load/", {user_pk: localStorage.user_id, is_staff: localStorage.is_staff}, function(data)
+  $.get(serv_addr+"/lb/", function(data)
   {
     console.log(data.board_list);
     var board_list = data.board_list;

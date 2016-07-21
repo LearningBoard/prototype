@@ -6,7 +6,7 @@ $(document).ready(function(){
   }
 
   // fetch and render news
-  $.get(serv_addr+'/news/getAll/?user_id='+localStorage.user_id+'&is_staff='+localStorage.is_staff, function(data){
+  $.get(serv_addr+'/news/?user_id='+localStorage.user_id+'&is_staff='+localStorage.is_staff, function(data){
     if(data.news && data.news.length > 0){
       $('div.row .noNews').hide();
       for(var i = 0; i < data.news.length; i++){
