@@ -8,7 +8,6 @@ define(function() {
     // a jQuery html element which contains all children templates
 
     this.$template = $template;
-    console.log(this.$template);
   };
 
   ListTemplate.prototype.display = function()

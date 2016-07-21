@@ -136,8 +136,6 @@ define(['util', 'temps/Board', 'temps/Template', 'temps/CommentableTemplate', 't
         {
           board.following_num += 1;
           board.followed = true;
-          console.log($template);
-          console.log($template.find(".following_num"));
           $followBtn.html(unfollow_html);
           $template.find(".following_num").html(board.following_num + ' subscribing');
         }
@@ -145,7 +143,6 @@ define(['util', 'temps/Board', 'temps/Template', 'temps/CommentableTemplate', 't
     }
     });
 
-    console.log(board.activities);
 
     $actList = $template.find(".activityList");
     var length = board.activities.length;

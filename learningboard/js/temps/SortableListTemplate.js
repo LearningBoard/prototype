@@ -2,10 +2,8 @@ define(["jquery_ui"], function(ui) {
 
   var SortableListTemplate = function(listTemplate)
   {
-    console.log(listTemplate);
     $.extend(this, listTemplate);
     $.extend(this, listTemplate.__proto__);
-    console.log(this);
 
     var $template = this.$template;
     var _templateList = this._templateList;

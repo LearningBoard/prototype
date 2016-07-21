@@ -38,7 +38,6 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
       pk = location.search.replace('?', '');
       $.get(serv_addr+'/lb/'+pk+'/', function(res){
         // get the info of the board with pk
-        console.log(res.data);
         var board = res.data.learningboard;
         if(board.publish == 1){
           $('.publishBoardBtn').parent().addClass('hidden');
@@ -174,9 +173,9 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
         });
       }else{
         dataObject['author_id'] = localStorage['user_id'];
-        $.post(serv_addr+'/lb/', dataObject, function(data)
+        $.post(serv_addr+'/lb/', dataObject, function(res)
         {
-          console.log(data);
+          console.log(res);
           location.href = 'board_edit.html?' + data.pk;
         })
       }
@@ -233,12 +232,10 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
 
     // add activity collapse
     $('#collapseAddActivity').on('show.bs.collapse', function(e){
-      console.log(e);
       $('#addActivityBox .panel-title a').text('- Add/Edit Learning Activity');
     });
 
     $('#collapseAddActivity').on('hide.bs.collapse', function(e){
-      console.log(e);
       $('#addActivityBox .panel-title a').text('+ Add/Edit Learning Activity');
     });
 
@@ -256,7 +253,6 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
       if(pk){
         dataObject.pk = pk;
       }
-      console.log(dataObject);
       if(dataObject.id){ // edit existing activity
         dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.id+']').parents('.activity'));
         $.post(serv_addr+'/activity/edit/'+dataObject.id+'/', dataObject, function(data)
@@ -305,8 +301,6 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
     });
     $('.activityList').on('sortupdate', function(e, ui){
       var order = {};
-      console.log(e);
-      console.log(ui);
       $('.activityList .activity').each(function(i){
         var newIndexForRender = parseInt(i) + 1;
         $(this).find('h4').text(newIndexForRender < 10 ? '0' + newIndexForRender : newIndexForRender);
@@ -487,7 +481,6 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
       url = url.map(function(value){
         return media_addr + '/' + value;
       });
-      console.log(url);
       $.extend(options, {initialPreview: url, initialPreviewAsData: true});
     }
     inputEle.fileinput('destroy');

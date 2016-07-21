@@ -11,7 +11,6 @@ define(['util', 'temps/BoardDetailTemplate'], function(util, BoardDetailTemplate
     if(/\?\d+/.test(location.search)){
       var pk = location.search.replace('?', '');
       $.get(serv_addr+'/lb/'+pk+'/', {user_id: localStorage.user_id}, function(res){
-        console.log(res);
         var data = res.data;
         var board = new BoardDetailTemplate(data.learningboard);
         board.display($(".body_container"));
