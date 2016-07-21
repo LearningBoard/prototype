@@ -4,7 +4,7 @@ define(['./Board', './Template'], function (Board, Template)
   var BoardBriefTemplate = function(board) 
   {
     Board.call(this, board);
-    var serv_addr = require('common').serv_addr;
+    var serv_addr = require('./js/common').serv_addr;
     var html = '\
     <div class="col-md-4 col-sm-4 col-xs-4'+this.getLevelName()+'" data-id="'+this.board.id+'" myclass="boardTemplate_'+this.board.id+'">\
       <div class="thumbnail">\

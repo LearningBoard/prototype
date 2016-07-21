@@ -13,7 +13,8 @@ requirejs.config({
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
     bootstrap: 'lib/bootstrap.min',
     util: 'lib/util',
-    fileinput: 'https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min'
+    fileinput: 'https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min',
+    isotope: "https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min"
   },
   shim: {
     bootstrap: {

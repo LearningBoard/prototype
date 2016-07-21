@@ -1,6 +1,6 @@
 define(function(require) {
 
-  var serv_addr = require("common").serv_addr;
+  var serv_addr = require("js/common").serv_addr;
   var lib = require("./lib");
   var BoardBriefTemplate = require("temps/BoardBriefTemplate");
 
