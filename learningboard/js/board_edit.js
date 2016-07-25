@@ -1,4 +1,4 @@
-define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'temps/Activity', 'jquery_ui', 'fileinput'], function (util, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, Activity, ui, fi) {
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'jquery_ui', 'fileinput'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ui, fi) {
 
   var pk;
   var cover_img = 'empty';
@@ -6,8 +6,7 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
   var activity_list = [];
   var activity_index = 0;
   var actList;
-
-  var serv_addr = require('js/common').serv_addr;
+  var serv_addr = util.serv_addr;
 
   $.getScript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js');
   $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
@@ -15,64 +14,90 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
   $(document).ready(function(){
     // load category data
     var actTempList = [];
-    $.get(serv_addr+'/category/getAll/', function(res){
-      var data = res.data;
-      for(var i = 0; i < data.category.length; i++){
-        $('select[name=category]').append(`<option value="${data.category[i].id}">${data.category[i].name}</option>`)
+    util.get('/category/', 
+      function(res)
+      {
+        var data = res.data;
+        for(var i = 0; i < data.category.length; i++){
+          $('select[name=category]')
+          .append(`
+            <option value="${data.category[i].id}">
+              ${data.category[i].name}
+            </option>`
+          );
+        }
       }
-    });
+    );
 
     // reset data for new board
     if(location.search.includes('?new')){
-      $('form.addBoardForm input[name=title], form.addBoardForm textarea[name=description]').val('').trigger('keydown');
+      $('form.addBoardForm input[name=title], form.addBoardForm textarea[name=description]')
+      .val('')
+      .trigger('keydown');
+
       $('.tagList ul').text('');
+
       $('.navbar-nav li:not(:first) a').css({
         color: '#CCC',
         cursor: 'not-allowed'
       });
+
       initCoverImage('https://placehold.it/300x200');
     }
 
     // assign value to field when editing the board
     if(/\?\d+/.test(location.search)){
       pk = location.search.replace('?', '');
-      $.get(serv_addr+'/lb/'+pk+'/', function(res){
-        // get the info of the board with pk
-        var board = res.data.learningboard;
-        if(board.publish == 1){
-          $('.publishBoardBtn').parent().addClass('hidden');
-          $('.unpublishBoardBtn').parent().removeClass('hidden');
+      util.get('/lb/'+pk+'/', 
+        function(res){
+          // get the info of the board with pk
+          var board = res.data.learningboard;
+          if(board.publish == 1){
+            $('.publishBoardBtn').parent().addClass('hidden');
+            $('.unpublishBoardBtn').parent().removeClass('hidden');
+          }
+          if(board.tags){
+            board.tags.map(function(item){
+              tag_list.push(item.id);
+              $('.tagList ul')
+              .append(`
+                <li data-id="${item.id}">
+                  ${item.tag} <span>x</span>
+                </li> `
+              );
+            });
+          }
+          $('form.addBoardForm input[name=title]')
+          .val(board.title)
+          .trigger('keydown');
+          $('form.addBoardForm textarea[name=description]')
+          .val(board.description);
+          $('form.addBoardForm input[name=contentLevel][value='+board.level+']')
+          .prop('checked', true);
+          if(board.activities && board.activities.length > 0){
+            $('.activityListContainer .noActivity').hide();
+            var activities = board.activities;
+            var length = activities.length;
+            var actTemps = util.arrayMapping(activities, 
+              function(activity, index) {
+              return new ActivityTemplate(activity, index);
+            });
+            actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
+            actList.display($(".activityListContainer"));
+          }
+          else
+          {
+            actList = new SortableListTemplate(new ActivityListTemplate([]));
+            actList.display($(".activityListContainer"));
+          }
+          $('.navbar-nav li:not(:first) a').css({});
+          initCoverImage(board.image_url ? serv_addr + board.image_url: board.image.length);
+        },
+        function(){
+          alert('Learning Board not found');
+          // location.href = 'boards.html';
         }
-        if(board.tags){
-          board.tags.map(function(item){
-            tag_list.push(item.id);
-            $('.tagList ul').append(`<li data-id="${item.id}">${item.tag} <span>x</span></li>`);
-          });
-        }
-        $('form.addBoardForm input[name=title]').val(board.title).trigger('keydown');
-        $('form.addBoardForm textarea[name=description]').val(board.description);
-        $('form.addBoardForm input[name=contentLevel][value='+board.level+']').prop('checked', true);
-        if(board.activities && board.activities.length > 0){
-          $('.activityListContainer .noActivity').hide();
-          var activities = board.activities;
-          var length = activities.length;
-          var actTemps = util.arrayMapping(activities, function(activity, index) {
-            return new ActivityTemplate(activity, index);
-          });
-          actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
-          actList.display($(".activityListContainer"));
-        }
-        else
-        {
-          actList = new SortableListTemplate(new ActivityListTemplate([]));
-          actList.display($(".activityListContainer"));
-        }
-        $('.navbar-nav li:not(:first) a').css({});
-        initCoverImage(board.image_url ? serv_addr + board.image_url: board.image.length);
-      }).fail(function(){
-        alert('Learning Board not found');
-        // location.href = 'boards.html';
-      });
+      );
     }
     else{
       actList = new SortableListTemplate(new ActivityListTemplate([]));
@@ -106,13 +131,15 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
     $('#addTagModal').on('shown.bs.modal', function(e){
       var modal = $(this);
       var tag = modal.find('.modal-body select[name=tag]');
-      $.get(serv_addr + '/tag/getAll/', function(data){
-        data = $.map(data.tags, function(item){
-          return {
-            id: item.tag,
-            text: item.tag
+      util.get('/tag/', 
+        function(data){
+          data = $.map(data.tags, function(item){
+            return {
+              id: item.tag,
+              text: item.tag
+            }
           }
-        });
+        );
         tag.select2({
           placeholder: 'Enter or search tag',
           multiple: true,
@@ -128,12 +155,15 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
           for(var i = 0; i < tagArray.length; i++){
             var item = tagArray[i];
             (function(item){
-              $.post(serv_addr+'/tag/add/', {tag: item}, function(data){
-                if(tag_list.indexOf(data.pk) === -1){
-                  tag_list.push(data.pk);
-                  $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
+              util.post('/tag/add/', {tag: item}, 
+                function(data)
+                {
+                  if(tag_list.indexOf(data.pk) === -1){
+                    tag_list.push(data.pk);
+                    $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
+                  }
                 }
-              });
+              );
             })(item);
           }
         }
@@ -162,22 +192,21 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
         dataObject.activity_list = activity_list;
       }
       if(pk){
-        $.ajax({
-          url: serv_addr+'/lb/'+pk+'/', 
-          type: "PUT",
-          success: function(res)
-            {
-              alert('Board saved');
-            },
-          data: dataObject,
-        });
+        util.put('/lb/'+pk+'/', dataObject,
+          function(res)
+          {
+            alert('Board saved');
+          }
+        );
       }else{
-        dataObject['author_id'] = localStorage['user_id'];
-        $.post(serv_addr+'/lb/', dataObject, function(res)
-        {
-          console.log(res);
-          location.href = 'board_edit.html?' + data.pk;
-        })
+        dataObject.author = user.getId();
+        console.log(dataObject);
+        util.post('/lb/', dataObject, 
+          function(res)
+          {
+            location.href = 'board_edit.html?' + res.data.learningboard.id;
+          }
+        );
       }
     })
 
@@ -188,11 +217,13 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
       if(!pk) return false;
       var r = confirm('Are you sure to delete the board?');
       if(r){
-        $.post(serv_addr+'/lb/delete/'+pk+'/', function(data)
-        {
-          alert('Board deleted');
-          location.href = 'boards.html';
-        })
+        util.post('/lb/delete/'+pk+'/', 
+          function(data)
+          {
+            alert('Board deleted');
+            location.href = 'boards.html';
+          }
+        );
       }
     })
 
@@ -201,12 +232,14 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
     {
       e.preventDefault();
       if(!pk) return false;
-      $.post(serv_addr+'/lb/publish/'+pk+'/', {publish: true}, function(data)
-      {
-        $('.publishBoardBtn').parent().addClass('hidden');
-        $('.unpublishBoardBtn').parent().removeClass('hidden');
-        alert('Board published');
-      })
+      util.post('/lb/publish/'+pk+'/', {publish: true}, 
+        function(data)
+        {
+          $('.publishBoardBtn').parent().addClass('hidden');
+          $('.unpublishBoardBtn').parent().removeClass('hidden');
+          alert('Board published');
+        }
+      );
     })
 
     // unpublish board
@@ -214,12 +247,14 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
     {
       e.preventDefault();
       if(!pk) return false;
-      $.post(serv_addr+'/lb/publish/'+pk+'/', {publish: false}, function(data)
-      {
-        $('.publishBoardBtn').parent().removeClass('hidden');
-        $('.unpublishBoardBtn').parent().addClass('hidden');
-        alert('Board unpublished');
-      })
+      util.post('/lb/publish/'+pk+'/', {publish: false}, 
+        function(data)
+        {
+          $('.publishBoardBtn').parent().removeClass('hidden');
+          $('.unpublishBoardBtn').parent().addClass('hidden');
+          alert('Board unpublished');
+        }
+      );
     })
 
     // preview board
@@ -255,133 +290,98 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
       }
       if(dataObject.id){ // edit existing activity
         dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.id+']').parents('.activity'));
-        $.post(serv_addr+'/activity/edit/'+dataObject.id+'/', dataObject, function(data)
-        {
-          // clear form data
-          CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
-          initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
-          initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), true, null);
-          $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
-          var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
-          var index = $('.activityList .activity').index(prevDom);
-          actList.updateActivity(data.result, index);
-          $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
-            $(this).text('');
-          });
-          $this.parent()[0].reset();
-          $this.parent().find('input[name=id]').val('');
-        });
+        util.post('/activity/'+dataObject.id+'/', dataObject,
+          function(res)
+          {
+            var act = res.data.activity;
+            // clear form data
+            CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
+            initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
+            initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), true, null);
+            $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
+            var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
+            var index = $('.activityList .activity').index(prevDom);
+
+            actList.updateActivity(new ActivityTemplate(act), index);
+
+            $this.parent()
+            .find('.result_msg')
+            .text('Activity edited!')
+            .delay(1000)
+            .fadeOut('fast', function(){
+              $(this).text('');
+            });
+            $this.parent()[0].reset();
+            $this.parent().find('input[name=id]').val('');
+          }
+        );
       }else{ // add new activity
         dataObject.order = $('.activityList .activity').size();
-        dataObject.author_id = localStorage.user_id;
-        $.post(serv_addr+'/activity/', dataObject, function(res)
-        {
-          var act = res.data.activity;
-          activity_list.push(act.id);
+        dataObject.author = user.getId();
+        dataObject.learningboard = pk;
+        util.post('/activity/', dataObject,
+          function(res)
+          {
+            console.log(res);
+            var act = res.data.activity;
+            // clear form data
+            CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
+            initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
+            initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), true, null);
+            $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
 
-          // clear form data
-          CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
-          initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
-          initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), true, null);
-          $('.activityList .noActivity').hide();
-          actList.addActivity(new ActivityTemplate(new Activity(act)));
-          $this.parent().find('.result_msg').text('Activity added!').delay(1000).fadeOut('fast', function(){
-            $(this).text('');
-          });
-          $this.parent()[0].reset();
-        });
+            index = actList.model.length;
+
+            actList.addActivity(new ActivityTemplate(act, index));
+            $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
+              $(this).text('');
+            });
+            $this.parent()[0].reset();
+            $this.parent().find('input[name=id]').val('');
+          }
+        );
       }
     });
     /*
-    // sort activity
-    $('.activityList').sortable({
-      cancel: '.noActivity',
-      opacity: 0.95,
-      cursor: 'move'
-    });
-    $('.activityList').on('sortupdate', function(e, ui){
-      var order = {};
-      $('.activityList .activity').each(function(i){
-        var newIndexForRender = parseInt(i) + 1;
-        $(this).find('h4').text(newIndexForRender < 10 ? '0' + newIndexForRender : newIndexForRender);
-        order[$(this).find('.control').data('id')] = i;
-      });
-      $.post(serv_addr+'/activity/orderchange/', order);
-    });
-
-    // lock sort
-    $('.sortLockMode').on('click', function(e){
-      if($(this).hasClass('active')){
-        $(this).removeClass('active').find('span').text('Lock');
-        $('.activityList').sortable('enable');
-      }else{
-        $(this).addClass('active').find('span').text('Unlock');
-        $('.activityList').sortable('disable');
-      }
-    });
-
-    // unpublish activity
-    $(document).on('click', '.activity span.glyphicon-floppy-remove', function(e){
-      var $this = $(this).parents('div.activity');
-      var $thisBtn = $(this);
-      var id = $(this).parents('div.control').data('id');
-      $.post(serv_addr+'/activity/unpublish/'+id+'/', function(data)
-      {
-        $this.addClass('unpublish');
-        $thisBtn.parent().addClass('hidden');
-        $thisBtn.parent().next().removeClass('hidden');
-      });
-    });
-
-    // publish activity
-    $(document).on('click', '.activity span.glyphicon-floppy-saved', function(e){
-      var $this = $(this).parents('div.activity');
-      var $thisBtn = $(this);
-      var id = $(this).parents('div.control').data('id');
-      $.post(serv_addr+'/activity/publish/'+id+'/', function(data)
-      {
-        $this.removeClass('unpublish');
-        $thisBtn.parent().addClass('hidden');
-        $thisBtn.parent().prev().removeClass('hidden');
-      });
-    });
-
     */
     // edit activity
     $(document).on('click', '.activity span.glyphicon-pencil', function(e){
       var $this = $(this).parents('div.activity');
       var id = $(this).parents('div.control').data('id');
-      $.get(serv_addr+'/activity/'+id+'/', function(data)
-      {
-        $('#collapseAddActivity').collapse('show');
-        $('#activityTab a[href="#'+data.type+'"]').tab('show');
-        var targetForm = $('#collapseAddActivity #' + data.type);
-        targetForm.find('.addActivityForm input[name=id]').val(data.id);
-        targetForm.find('input[name=title]').val(data.title);
-        targetForm.find('textarea[name=description]').val(data.description);
-        CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);
-        data = JSON.parse(data.data);
-        for(var key in data){
-          targetForm.find('[name="'+key+'"]').val(data[key]);
-          if(key == 'text_image'){
-            initImageInput($('#text_image_placeholder'), targetForm.find('.addActivityForm textarea[name=text_image]'), data[key] ? data[key] : 'https://placehold.it/300x200');
-          }
-          if(key == 'audio_image'){
-            initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), false, JSON.parse(data[key]));
-          }
-          if(key == 'audio_audio[]'){
-            for(var i = 0; i < data[key].length; i++){
-              var instance = addAudioGroup();
-              instance.find('textarea[name="audio_audio[]"]').val(data[key][i]);
-              instance.find('div.lbRecorder').html(`
-                <audio controls>
-                  <source src="${data[key][i]}" type="audio/mpeg">
-                </audio>`).removeClass('hidden');
+      util.get('/activity/'+id+'/', 
+        function(res)
+        {
+          var data = res.data;
+          $('#collapseAddActivity').collapse('show');
+          $('#activityTab a[href="#'+data.type+'"]').tab('show');
+          var targetForm = $('#collapseAddActivity #' + data.type);
+          targetForm.find('.addActivityForm input[name=id]').val(data.id);
+          targetForm.find('input[name=title]').val(data.title);
+          targetForm.find('textarea[name=description]').val(data.description);
+          CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);
+          data = JSON.parse(data.data);
+          for(var key in data){
+            targetForm.find('[name="'+key+'"]').val(data[key]);
+            if(key == 'text_image'){
+              initImageInput($('#text_image_placeholder'), targetForm.find('.addActivityForm textarea[name=text_image]'), data[key] ? data[key] : 'https://placehold.it/300x200');
+            }
+            if(key == 'audio_image'){
+              initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), false, JSON.parse(data[key]));
+            }
+            if(key == 'audio_audio[]'){
+              for(var i = 0; i < data[key].length; i++){
+                var instance = addAudioGroup();
+                instance.find('textarea[name="audio_audio[]"]').val(data[key][i]);
+                instance.find('div.lbRecorder').html(`
+                  <audio controls>
+                    <source src="${data[key][i]}" type="audio/mpeg">
+                  </audio>`).removeClass('hidden');
+              }
             }
           }
+          $('html, body').animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
         }
-        $('html, body').animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
-      });
+      );
     });
 
     // remove activity
@@ -390,21 +390,23 @@ define(['util', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/A
       var r = confirm('Are you sure to delete this activity?');
       if(r){
         var id = $(this).parents('div.control').data('id');
-        $.post(serv_addr+'/activity/delete/'+id+'/', function(data)
-        {
-          activity_list.splice(activity_list.indexOf(parseInt(id)), 1);
-          $this.fadeOut('slow', function(){
-            $this.remove();
-            if($('.activityList .activity').length < 1){
-              $('.activityList .noActivity').fadeIn('fast');
-            }else{
-              $('.activityList .activity').each(function(i){
-                i = i + 1;
-                $(this).find('h4').text(i < 10 ? '0' + i : i);
-              });
-            }
-          });
-        });
+        util.post('/activity/delete/'+id+'/', 
+          function(data)
+          {
+            activity_list.splice(activity_list.indexOf(parseInt(id)), 1);
+            $this.fadeOut('slow', function(){
+              $this.remove();
+              if($('.activityList .activity').length < 1){
+                $('.activityList .noActivity').fadeIn('fast');
+              }else{
+                $('.activityList .activity').each(function(i){
+                  i = i + 1;
+                  $(this).find('h4').text(i < 10 ? '0' + i : i);
+                });
+              }
+            });
+          }
+        );
       }
     });
   });

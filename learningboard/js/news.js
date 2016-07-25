@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(function(){
   if(!localStorage.user_id){
     alert('Login required!');
     location.href = 'login.html';

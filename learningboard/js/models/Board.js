@@ -1,8 +1,14 @@
-define(function () {
+define(['mdls/Activity'], function (Activity) {
   
   var Board = function(board)
   {
-    this.board = board;
+    $.extend(this, board);
+    var actvs = board.activities;
+    var len = actvs.length;
+    for (var i = 0; i < len; ++i)
+    {
+      actvs[i] = new Activity(actvs[i]);
+    }
   };
   // Board Mixin, for different templates of learning boards
   // extend this Prototype everytime you create a new view for the object
@@ -11,7 +17,7 @@ define(function () {
 
     getLevelName: function()
     {
-        switch (this.board.level)
+        switch (this.level)
         {
             case 0: return "beginner";
             case 1: return "intermediate";
@@ -21,7 +27,7 @@ define(function () {
 
     getStatusName: function()
     {
-      switch (this.board.status)
+      switch (this.status)
       {
         case 0: return "unpublished";
         case 1: return "published";
@@ -30,7 +36,8 @@ define(function () {
 
     published: function()
     {
-      return this.board.status === 1;
+      console.log(this);
+      return this.status === 1;
     }
 
   });

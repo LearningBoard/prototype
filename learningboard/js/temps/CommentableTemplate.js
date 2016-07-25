@@ -5,8 +5,6 @@ define(function () {
     $.extend(this, template);
     $.extend(template.__proto__);
 
-    console.log(this);
-
     var cmt_field = `
       <div class="comment">
         <span class="glyphicon glyphicon-heart"></span> 0

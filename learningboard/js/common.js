@@ -7,9 +7,11 @@
 //directory.
 requirejs.config({
   baseUrl: 'js/',
+  waitSeconds: 30,
   paths: {
     temps: 'temps/',
-    jquery: 'lib/jquery-1.12.4.min',
+    mdls: 'models/',
+    jquery: 'lib/jquery-2.2.4.min',
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
     bootstrap: 'lib/bootstrap.min',
     util: 'lib/util',
@@ -124,12 +126,5 @@ define(['jquery', 'bootstrap'], function() {
     });
     return o;
   };
-
-  var serv_addr = "http://localhost:1337";
-
-  return {
-    serv_addr: serv_addr,
-    media_addr: serv_addr + '/media',
-  }
-
+  
 });
