@@ -125,7 +125,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
           function(res) {
             var data = res.data;
             console.log(res);
-            if (data.ok)
+            if (res.success)
             {
               model.following_num -= 1;
               model.following = false;

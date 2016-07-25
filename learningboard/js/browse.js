@@ -1,17 +1,17 @@
-define(['temps/BoardBriefTemplate', 'isotope'], function (BoardBriefTemplate) {
+define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBriefTemplate) {
   $(document).ready(function()
   {
-    var serv_addr = require("js/common").serv_addr;
-    $.get(serv_addr+'/lb/', function(res)
-    {
-      var data = res.data;
-      var bl = data.learningboard;
-      for (var i = 0; i < bl.length; ++i)
-      {
-        var bt = new BoardBriefTemplate(bl[i]);
-        bt.display($("#boardList"));
+    util.get('/lb/', 
+      function(res) {
+        var data = res.data;
+        var bl = data.learningboard;
+        for (var i = 0; i < bl.length; ++i)
+        {
+          var bt = new BoardBriefTemplate(bl[i]);
+          bt.display($("#boardList"));
+        }
       }
-    });
+    );
     $('#boardList').isotope({
       itemSelector: '.col-md-3',
       layoutMode: 'fitRows'

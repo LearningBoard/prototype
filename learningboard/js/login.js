@@ -4,7 +4,7 @@ define(['util', 'mdls/User'], function(util, user) {
   $(function()
   {
     // redirect if logged in
-    if(!user.hasToken()) location.href = 'index.html';
+    if(user.hasToken()) location.href = 'index.html';
 
     // switch to register mode
     $('.login_text a').on('click', function()
@@ -47,7 +47,7 @@ define(['util', 'mdls/User'], function(util, user) {
           var data = res.data;
           user.setToken(data.token)
           user.set(data.user);
-          // location.href = 'index.html';
+          location.href = 'index.html';
         }, 
         function(xhr, status)
         {
@@ -68,6 +68,9 @@ define(['util', 'mdls/User'], function(util, user) {
         function(res)
         {
           var data = res.data;
+          console.log(res);
+          user.setToken(data.token);
+          user.set(data.user);
           // location.href = "index.html";
         },
         function(xhr, status, data)

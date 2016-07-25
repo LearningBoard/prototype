@@ -30,10 +30,11 @@ requirejs.config({
   }
 });
 
-define(['jquery', 'bootstrap'], function() {
-  $(function(){
+define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
+  $(function() {
     // dump the nav bar to body
-    if(!location.href.includes('board_edit.html')){
+    if(!location.href.includes('board_edit.html'))
+    {
       $('body').prepend(`
         <nav class="navbar navbar-default navbar-fixed-top top-navbar">
           <div class="container">
@@ -77,25 +78,30 @@ define(['jquery', 'bootstrap'], function() {
               </ul>
             </div>
           </div>
-        </nav>`);
+        </nav>`
+      );
     }
     // display login/logout
-    if(localStorage['user_id']){
+    if(user.hasToken())
+    {
       $('.navbar-nav .login').addClass('hidden');
       $('.navbar-nav .logout').removeClass('hidden');
-    }else{
+    }
+    else
+    {
       $('.navbar-nav .login').removeClass('hidden');
       $('.navbar-nav .logout').addClass('hidden');
     }
     // logout
-    $('.navbar-nav .logout').on('click', function(e){
-      e.preventDefault();
-      // clear all localStorage
-      Object.keys(localStorage).map(function(key){
-        localStorage.removeItem(key);
-      });
-      location.reload();
-    });
+    $('.navbar-nav .logout')
+    .on(
+      'click', 
+      function(e)
+      {
+        e.preventDefault();
+        user.clear();
+      }
+    );
   });
 
   // polyfill
@@ -106,7 +112,8 @@ define(['jquery', 'bootstrap'], function() {
     navigator.msGetUserMedia
   );
 
-  $.getCSS = function(url){
+  $.getCSS = function(url)
+  {
     $('head').append($('<link rel="stylesheet" type="text/css" />').attr('href', url));
   };
 
@@ -114,17 +121,20 @@ define(['jquery', 'bootstrap'], function() {
   {
     var o = {};
     var a = this.serializeArray();
-    $.each(a, function() {
-      if (o[this.name] !== undefined) {
-        if (!o[this.name].push) {
-          o[this.name] = [o[this.name]];
-        }
-        o[this.name].push(this.value || '');
-      } else {
-        o[this.name] = this.value || '';
+    $.each(a, 
+      function() 
+      {
+        if (o[this.name] !== undefined) 
+        {
+          if (!o[this.name].push) 
+            o[this.name] = [o[this.name]];
+
+          o[this.name].push(this.value || '');
+        } 
+        else 
+          o[this.name] = this.value || '';
       }
-    });
+    );
     return o;
   };
-  
 });

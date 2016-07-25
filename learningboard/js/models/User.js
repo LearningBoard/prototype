@@ -33,6 +33,19 @@ define(function() {
     is_staff: function()
     {
       return true;
+    },
+
+    clear: function() 
+    {
+      // clear all localStorage
+      Object.keys(localStorage)
+      .map(
+        function(key)
+        {
+          localStorage.removeItem(key);
+        }
+      );
+      location.reload();
     }
   }
 });

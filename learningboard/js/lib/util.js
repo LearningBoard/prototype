@@ -3,7 +3,7 @@ define(['mdls/User'], function(user) {
   var serv_addr = "http://localhost:1337";
   
   var default_error_func = function(res) {
-    console.log(res)
+    console.log(res);
   }
 
   function ajax(type, args)
@@ -24,8 +24,10 @@ define(['mdls/User'], function(user) {
 
     if (error_func === undefined)
       error_func = default_error_func;
-
-    var token = user.getToken();
+    
+    var token;
+    if (user.hasToken())
+      token = user.getToken();
 
     settings = {
       url: serv_addr+url, 
@@ -41,7 +43,7 @@ define(['mdls/User'], function(user) {
      settings.headers = {"Authorization": token};
     }
 
-    $.ajax(settings);
+    return $.ajax(settings);
   }
 
 
@@ -64,17 +66,17 @@ define(['mdls/User'], function(user) {
 
     post: function()
     {
-      ajax('POST', arguments);
+      return ajax('POST', arguments);
     },
 
     get: function()
     {
-      ajax('GET', arguments)
+      return ajax('GET', arguments);
     },
 
     put: function()
     {
-      ajax('PUT', arguments)
+      return ajax('PUT', arguments);
     },
 
     err404: function()
