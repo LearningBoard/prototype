@@ -11,6 +11,7 @@ requirejs.config({
   paths: {
     temps: 'temps/',
     mdls: 'models/',
+    test: "test/",
     jquery: 'lib/jquery-2.2.4.min',
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
     bootstrap: 'lib/bootstrap.min',
@@ -31,6 +32,7 @@ requirejs.config({
 });
 
 define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
+  var public_list = ['index.html', 'login.html']
   $(function() {
     // dump the nav bar to body
     if(!location.href.includes('board_edit.html'))
@@ -89,6 +91,21 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
     }
     else
     {
+      var public = false;
+      for (var i = 0; i < public_list.length; ++i)
+      {
+        if (location.href.indexOf(public_list[i]) > -1)
+        {
+          public = true;
+          break;
+        }
+      }
+      if (!public)
+      {
+        alert("please login first");
+        location.href = "login.html";
+      }
+
       $('.navbar-nav .login').removeClass('hidden');
       $('.navbar-nav .logout').addClass('hidden');
     }

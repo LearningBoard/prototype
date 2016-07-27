@@ -120,24 +120,40 @@ body > .body_container {
   padding: 8px 0;
 }
 
+div.img-button {
+  position: relative;
+}
+
+div.img-button:hover img {
+  opacity: 50%;
+}
+
+div.img-button:hover div {
+  display: block;
+}
+
+div.img-button.thumbnail {
+  border: 0 none;
+  box-shadow: none;
+}
+
 .boardControlBtn {
+  top: 7px;
+  position: absolute;
   font-weight: bold;
   padding: 2px 5px;
   border: 2px solid #EEE;
   background-color: #00BFFF;
+  display: inline;
   opacity: 0.82;
 }
 
 .boardEditButton {
-  position: absolute;
-  top: 15px;
-  left: 30px;
+  left: 100px;
 }
 
 .boardSendNewsButton {
-  position: absolute;
-  top: 15px;
-  left: 75px;
+  left: 137px;
 }
 
 .boardEditButton a, .boardSendNewsButton a {
@@ -147,7 +163,7 @@ body > .body_container {
 
 /* board edit */
 .panel-group .panel-heading {
-  background-color: #337AB7;
+  background-color: #4BC8F1;
   color: #FFF;
 }
 
@@ -352,6 +368,11 @@ body > .body_container {
   .board_status > div {
     border: none;
   }
+}
+
+.board-brief-temp {
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
 /*

@@ -70,6 +70,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           $('form.addBoardForm input[name=title]')
           .val(board.title)
           .trigger('keydown');
+          $("div[name=curated_by] span[name=name]").html(board.author.username);
           $('form.addBoardForm textarea[name=description]')
           .val(board.description);
           $('form.addBoardForm input[name=contentLevel][value='+board.level+']')
@@ -91,11 +92,11 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});
-          initCoverImage(board.image_url ? serv_addr + board.image_url: board.image.length);
+          initCoverImage(board.image_url ? serv_addr + board.image_url: "img/placeholder-no-image.png");
         },
         function(){
           alert('Learning Board not found');
-          // location.href = 'boards.html';
+          location.href = 'boards.html';
         }
       );
     }
@@ -186,10 +187,10 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         dataObject.cover_img = cover_img;
       }
       if(tag_list){
-        dataObject.tag_list = tag_list;
+        dataObject.tags = tag_list;
       }
       if(activity_list){
-        dataObject.activity_list = activity_list;
+        dataObject.activities = activity_list;
       }
       if(pk){
         util.put('/lb/'+pk+'/', dataObject,
@@ -204,6 +205,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         util.post('/lb/', dataObject, 
           function(res)
           {
+            console.log(res);
             location.href = 'board_edit.html?' + res.data.learningboard.id;
           }
         );
@@ -217,7 +219,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       if(!pk) return false;
       var r = confirm('Are you sure to delete the board?');
       if(r){
-        util.post('/lb/delete/'+pk+'/', 
+        util.delete('/lb/'+pk+'/', 
           function(data)
           {
             alert('Board deleted');
@@ -262,7 +264,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     {
       e.preventDefault();
       if(!pk) return false;
-      window.open('board_view.html?' + pk,'_blank');
+      window.open('board_preview.html?' + pk,'_blank');
     });
 
     // add activity collapse
@@ -391,7 +393,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       var r = confirm('Are you sure to delete this activity?');
       if(r){
         var id = $(this).parents('div.control').data('id');
-        util.post('/activity/delete/'+id+'/', 
+        util.delete('/activity/'+id+'/', 
           function(data)
           {
             activity_list.splice(activity_list.indexOf(parseInt(id)), 1);

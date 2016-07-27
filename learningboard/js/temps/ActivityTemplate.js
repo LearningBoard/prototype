@@ -13,7 +13,8 @@
     if(activity){
       this.model = new Activity(activity);
     }
-    var html;
+    var html = '';
+    var $html, $dif;
     var activityControl;
 
     if(localStorage.is_staff && location.href.includes('board_edit.html')){
@@ -55,22 +56,28 @@
         </ul>
       </div>`;
     }
+    $html = $(`
+      <div class="activity ${this.model.published() ? '' : 'unpublish'}">
+        <h2 class="index">${this.index < 10 ? '0' + this.index : this.index}</h2>
+        <p class="title lead">${this.model['title']}</p>
+        <p class="text-muted">
+          Posted date: ${new Date(this.model.createdAt).toDateString()}<br/>
+          Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
+        </p><br/>
+        <div id="dif"></div>
+        ${activityControl}
+      </div>
+    `);
+    $dif = $html.find("#dif");
     switch(this.model['type'])
     {
       case 'video':
         // handle different links
-        html = `
-        <div class="activity ${this.model.published() ? '' : 'unpublish'}">
-          <h2 class="index">${this.index < 10 ? '0' + this.index : this.index}</h2>
-          <p class="title lead">${this.model['title']}</p>
-          <p class="text-muted">
-            Posted date: ${new Date(this.model['post_time']).toDateString()}
-            Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
-          </p>
+        $dif.append(`
           <div class="row">
             <div class="col-md-12">
               <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="${this.model.video_link}" allowfullscreen></iframe>
+                <iframe class="embed-responsive-item" src="${this.model.src_link}" allowfullscreen></iframe>
               </div>
             </div>
             <div class="col-md-12">
@@ -78,90 +85,48 @@
             </div>
           </div>
           ${activityControl}
-        </div>`;
+        `);
         break;
       case 'text':
-        html = `
-        <div class="activity ${this.published() ? '' : 'unpublish'}">
-          <h2 class="index">${this.index < 10 ? '0' + this.index : this.index}</h2>
-          <p class="title lead">${this.model['title']}</p>
-          <p class="text-muted">
-            Posted date: ${new Date(this.model['post_time']).toDateString()}
-            Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
-          </p>
+      console.log(this.model);
+        $dif.append(`
           <div class="row">
-            ${this.model['text_image'] ? `<div class="col-md-12"><img src="${this.model['text_image']}" class="img-responsive activity-image"></div>` : ''}
+            ${this.model['text_image'] ? `<div class="col-md-12"><img src="${this.model.src_link}" class="img-responsive activity-image"></div>` : ''}
             <div class="col-md-12">
               <div class="description">${this.model['description']}</div>
             </div>
           </div>
-          ${activityControl}
-        </div>`;
+        `);
         break;
       case 'code':
-        // handle different links
-        if(this.model['code_link']){
-          if(this.model['code_link'].match(/jsfiddle\.net/) != null){
-            this.model['code_link'] = this.model['code_link'] + 'embedded/';
-          }else if(this.model['code_link'].match(/plnkr\.co/) != null){
-            this.model['code_link'] = 'https://embed.plnkr.co/' + this.model['code_link'].replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
-          }
-        }
-        html = `
-        <div class="activity ${this.published()? '' : 'unpublish'}">
-          <h2 class="index">${this.index < 10 ? '0' + this.index : this.index}</h2>
-          <p class="title lead">${this.model['title']}</p>
-          <p class="text-muted">
-            Posted date: ${new Date(this.model['post_time']).toDateString()}
-            Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
-          </p>
+        $dif.append(`
           <div class="row">
             <div class="col-md-12">
               <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="${this.model['code_link']}" allowfullscreen></iframe>
+                <iframe class="embed-responsive-item" src="${this.model.src_link}" allowfullscreen></iframe>
               </div>
               <div class="description">${this.model['description']}</div>
             </div>
           </div>
-          ${activityControl}
-        </div>`;
+        `);
         break;
       case 'file':
         // handle different links
         console.log(this.model);
-        if(this.model['file_link']){
-          if(this.model['file_link'].match(/drive\.google\.com/) !== null && this.model['file_link'].match(/id=(.*)/) !== null){
-            this.model['file_link'] = 'https://drive.google.com/embeddedfolderview?id=' + this.model['file_link'].match(/id=(.*)/)[1] + '#list';
-          }
-        }
-        html = `
-        <div class="activity ${this.published()? '' : 'unpublish'}">
-          <h2>${this.index < 10 ? '0' + this.index : this.index}</h2>
-          <p class="title lead">${this.model['title']}</p>
-          <p class="text-muted">
-            Posted date: ${new Date(this.model['post_time']).toDateString()}
-            Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
-          </p>
+        $dif.append(`
           <div class="row">
             <div class="col-md-12">
               <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="${this.model['file_link']}" allowfullscreen></iframe>
+                <iframe class="embed-responsive-item" src="${this.model.src_link}" allowfullscreen></iframe>
               </div>
-              <div class="description">${this.model['description']}</div>
+              <div class="description">${this.model.description}</div>
             </div>
           </div>
-          ${activityControl}
-        </div>`;
+        `);
         break;
       case 'audio':
+        break;
         html = `
-        <div class="activity ${this.published()? '' : 'unpublish'}">
-          <h2>${this.index < 10 ? '0' + this.index : this.index}</h2>
-          <p class="title lead">${this.model['title']}</p>
-          <p class="text-muted">
-            Posted date: ${new Date(this.model['post_time']).toDateString()}
-            Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
-          </p>
           <div class="row">
             <div class="col-md-12">
               <span class="glyphicon glyphicon-menu-left audio_left"></span>`;
@@ -177,7 +142,9 @@
         html += `
               <span class="glyphicon glyphicon-menu-right audio_right"></span>
             </div>
-            <div class="col-md-12 text-center">`;
+            <div class="col-md-12 text-center">
+        `;
+        console.log(this.model);
         if(!this.model['audio_audio[]'].push){
           this.model['audio_audio[]'] = [ this.model['audio_audio[]'] ];
         }
@@ -187,14 +154,13 @@
                 <source src="${this.model['audio_audio[]'][i]}" type="audio/mpeg">
               </audio>`;
         }
-        html +=
-        `   </div>
+        html += `   
+          </div>
             <div class="col-md-12">
               <div class="description">${this.model['description']}</div>
             </div>
           </div>
-          ${activityControl}
-        </div>`;
+        `;
         if(this.model['audio_audio[]'].length > 1){
           html += `
           <script>
@@ -228,13 +194,13 @@
         }
         break;
       default:
-        html = `
+        $html = `
         <div class="activity">
           <h4>${this.index < 10 ? '0' + this.index : this.index}</h4>
           <p><i>Error occur when rendering activity</i></p>
         </div>`;
     }
-    Template.call(this, $(html));
+    Template.call(this, $html);
   };
 
   ActivityTemplate.prototype.updateIndex = function(index)

@@ -1,9 +1,13 @@
 define(['mdls/Activity'], function (Activity) {
+  "use strict";
   
   var Board = function(board)
   {
     $.extend(this, board);
-    var actvs = board.activities;
+    var actvs;
+    if (board.activities)
+      actvs = board.activities;
+    else actvs = [];
     var len = actvs.length;
     for (var i = 0; i < len; ++i)
     {
@@ -27,10 +31,10 @@ define(['mdls/Activity'], function (Activity) {
 
     getStatusName: function()
     {
-      switch (this.status)
+      switch (this.publish)
       {
-        case 0: return "unpublished";
-        case 1: return "published";
+        case false: return "unpublished";
+        case true: return "published";
       };
     },
 

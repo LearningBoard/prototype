@@ -7,12 +7,26 @@ define(function() {
 
     getId: function()
     {
-      return JSON.parse(localStorage.user).id;
+      try
+      {
+        return JSON.parse(localStorage.user).id;
+      }
+      catch(e)
+      {
+        return false;
+      }
     },
 
     getInfo: function()
     {
-      return JSON.parse(localStorage.user);
+      try
+      {
+        return JSON.parse(localStorage.user);
+      }
+      catch(e)
+      {
+        return {};
+      }
     },
 
     setToken: function(token)
@@ -32,7 +46,22 @@ define(function() {
 
     is_staff: function()
     {
-      return true;
+      try
+      {
+        var user = JSON.parse(localStorage.user);
+      }
+      catch(e)
+      {
+        return false;
+      }
+      if (user.roles)
+      {
+        var length = user.roles.length;
+        var roles = user.roles;
+        for (var i = 0; i < length; ++i)
+          if (roles[i].name === "admin") return true;
+      }
+      return false;
     },
 
     clear: function() 

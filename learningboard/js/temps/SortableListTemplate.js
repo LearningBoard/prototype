@@ -1,4 +1,4 @@
-define(["jquery_ui"], function(ui) {
+define(["jquery_ui", "util"], function(ui, util) {
 
   var SortableListTemplate = function(listTemplate)
   {
@@ -15,7 +15,7 @@ define(["jquery_ui"], function(ui) {
       </p>`
     );
     $container.sortable({
-      cancel: '.noActivity',
+      cancel: '.noElement',
       opacity: 0.95,
       cursor: 'move'
     });
@@ -46,9 +46,10 @@ define(["jquery_ui"], function(ui) {
       var order = {};
       for (var i = 0; i < _templateList.length; ++i)
       {
-        order[_templateList[i].activity.id] = i;
+        order[_templateList[i].model.id] = i;
       }
-      $.post(serv_addr+'/activity/orderchange/', order);
+      console.log(order);
+      util.post('/lb/activityorder/', order);
     });
 
     var enabled = true;

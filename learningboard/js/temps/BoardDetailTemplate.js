@@ -90,10 +90,11 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
       </div>
     `;
 
-    Template.call(this, $(html));
-
-    var $template = this.$template;
+    var $template = $(html);
     var $followBtn = $template.find(".followBtn");
+
+    Template.call(this, $template);
+    this.$followBtn = $followBtn;
 
     $followBtn.hover(
       function(){if(model.following) $(this).html(unfollow_html);},
