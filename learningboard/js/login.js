@@ -7,8 +7,9 @@ define(['util', 'mdls/User'], function(util, user) {
     if(user.hasToken()) location.href = 'index.html';
 
     // switch to register mode
-    $('.login_text a').on('click', function()
+    $('.login_text a').on('click', function(e)
     {
+      e.preventDefault();
       $('button.loginBtn, .login_text')
       .addClass('hidden')
       .attr('type', 'button');
@@ -21,8 +22,9 @@ define(['util', 'mdls/User'], function(util, user) {
     });
 
     // switch to login mode
-    $('.register_text a').on('click', function()
+    $('.register_text a').on('click', function(e)
     {
+      e.preventDefault();
       $('button.loginBtn, .login_text')
       .removeClass('hidden')
       .attr('type', 'submit');
@@ -30,25 +32,25 @@ define(['util', 'mdls/User'], function(util, user) {
       $('button.registerBtn, .register_text')
       .addClass('hidden')
       .attr('type', 'button');
-      
+
       $('.page-header h1').text('Login');
     });
 
     // login submit
-    $("button.loginBtn").on("click", function(e) 
+    $("button.loginBtn").on("click", function(e)
     {
       // trigger html5 validation
       if($('form.loginForm')[0].checkValidity()) e.preventDefault();
       else return;
       var o = $("form.loginForm").serializeObject();
-      util.post('/auth/local/', o, 
+      util.post('/auth/local/', o,
         function(res, status, xhr)
         {
           var data = res.data;
           user.setToken(data.token)
           user.set(data.user);
           location.href = 'index.html';
-        }, 
+        },
         function(xhr, status)
         {
           if (xhr.status === 403) alert('Username or password not correct');
@@ -63,8 +65,10 @@ define(['util', 'mdls/User'], function(util, user) {
       if($('form.loginForm')[0].checkValidity()) e.preventDefault();
       else return;
       var o = $('form.loginForm').serializeObject();
+      o.username = o.identifier;
+      delete o.identifier;
       console.log(o);
-      util.post('/register/', o, 
+      util.post('/register/', o,
         function(res)
         {
           var data = res.data;

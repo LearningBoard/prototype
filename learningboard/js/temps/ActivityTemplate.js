@@ -1,4 +1,4 @@
- define(['mdls/Activity', 'temps/Template'], function(Activity, Template) {
+ define(['mdls/User', 'mdls/Activity', 'temps/Template'], function(User, Activity, Template) {
   "use strict";
 
   var ActivityTemplate = function(activity, index)
@@ -17,7 +17,7 @@
     var $html, $dif;
     var activityControl;
 
-    if(localStorage.is_staff && location.href.includes('board_edit.html')){
+    if(User.is_staff() && location.href.includes('board_edit.html')){
       activityControl = `
       <div class="control" data-id="${this.model.id}">
         <ul>
@@ -154,7 +154,7 @@
                 <source src="${this.model['audio_audio[]'][i]}" type="audio/mpeg">
               </audio>`;
         }
-        html += `   
+        html += `
           </div>
             <div class="col-md-12">
               <div class="description">${this.model['description']}</div>
