@@ -14,7 +14,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   $(document).ready(function(){
     // load category data
     var actTempList = [];
-    util.get('/category/', 
+    util.get('/category/',
       function(res)
       {
         var data = res.data;
@@ -48,13 +48,18 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     // assign value to field when editing the board
     if(/\?\d+/.test(location.search)){
       pk = location.search.replace('?', '');
-      util.get('/lb/'+pk+'/', 
+      util.get('/lb/'+pk+'/',
         function(res){
           // get the info of the board with pk
           var board = res.data.learningboard;
           if(board.publish == 1){
             $('.publishBoardBtn').parent().addClass('hidden');
             $('.unpublishBoardBtn').parent().removeClass('hidden');
+          }
+          if(board.activities){
+            board.activities.map(function(item){
+              activity_list.push(item.id);
+            });
           }
           if(board.tags){
             board.tags.map(function(item){
@@ -73,13 +78,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           $("div[name=curated_by] span[name=name]").html(board.author.username);
           $('form.addBoardForm textarea[name=description]')
           .val(board.description);
-          $('form.addBoardForm input[name=contentLevel][value='+board.level+']')
+          $('form.addBoardForm input[name=level][value='+board.level+']')
           .prop('checked', true);
           if(board.activities && board.activities.length > 0){
             $('.activityListContainer .noActivity').hide();
             var activities = board.activities;
             var length = activities.length;
-            var actTemps = util.arrayMapping(activities, 
+            var actTemps = util.arrayMapping(activities,
               function(activity, index) {
               return new ActivityTemplate(activity, index);
             });
@@ -132,7 +137,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $('#addTagModal').on('shown.bs.modal', function(e){
       var modal = $(this);
       var tag = modal.find('.modal-body select[name=tag]');
-      util.get('/tag/', 
+      util.get('/tag/',
         function(data){
           data = $.map(data.tags, function(item){
             return {
@@ -156,7 +161,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           for(var i = 0; i < tagArray.length; i++){
             var item = tagArray[i];
             (function(item){
-              util.post('/tag/add/', {tag: item}, 
+              util.post('/tag/add/', {tag: item},
                 function(data)
                 {
                   if(tag_list.indexOf(data.pk) === -1){
@@ -202,7 +207,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       }else{
         dataObject.author = user.getId();
         console.log(dataObject);
-        util.post('/lb/', dataObject, 
+        util.post('/lb/', dataObject,
           function(res)
           {
             console.log(res);
@@ -219,7 +224,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       if(!pk) return false;
       var r = confirm('Are you sure to delete the board?');
       if(r){
-        util.delete('/lb/'+pk+'/', 
+        util.delete('/lb/'+pk+'/',
           function(data)
           {
             alert('Board deleted');
@@ -234,7 +239,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     {
       e.preventDefault();
       if(!pk) return false;
-      util.post('/lb/publish/'+pk+'/', {publish: true}, 
+      util.post('/lb/publish/'+pk+'/', {publish: true},
         function(data)
         {
           $('.publishBoardBtn').parent().addClass('hidden');
@@ -249,7 +254,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     {
       e.preventDefault();
       if(!pk) return false;
-      util.post('/lb/publish/'+pk+'/', {publish: false}, 
+      util.post('/lb/publish/'+pk+'/', {publish: false},
         function(data)
         {
           $('.publishBoardBtn').parent().removeClass('hidden');
@@ -351,7 +356,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $(document).on('click', '.activity span.glyphicon-pencil', function(e){
       var $this = $(this).parents('div.activity');
       var id = $(this).parents('div.control').data('id');
-      util.get('/activity/'+id+'/', 
+      util.get('/activity/'+id+'/',
         function(res)
         {
           var data = res.data;
