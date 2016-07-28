@@ -24,12 +24,22 @@ define(function() {
       case "text":
       this.src_link = this.data.text_image;
 
-      case "file":
-      var file_link = this.data.file_link;
-      if(file_link){
-        console.log(file_link);
-        if(file_link.match(/drive\.google\.com/) !== null && file_link.match(/id=(.*)/) !== null){
-          this.src_link = 'https://drive.google.com/embeddedfolderview?id=' + file_link.match(/id=(.*)/)[1] + '#list';
+      case "folder":
+      var folder_link = this.data.folder_link;
+      if(folder_link){
+        if(folder_link.match(/drive\.google\.com/) !== null)
+        {
+          var emb = 'https://drive.google.com/embeddedfolderview?id=';
+          if (folder_link.match(/id=(.*)/) !== null)
+          {
+            this.src_link = emb 
+            + folder_link.match(/id=(.*)/)[1] + '#list';
+          }
+          else if (folder_link.match(/\/folders\//) !== null)
+          {
+            this.src_link = emb 
+            + folder_link.match(/\/folders\/(.*)/)[1] + '#list';
+          }
         }
       }
       break;
@@ -42,7 +52,8 @@ define(function() {
         if(code_link.match(/jsfiddle\.net/) != null){
           this.src_link = code_link + 'embedded/';
         }else if(code_link.match(/plnkr\.co/) != null){
-          this.src_link = 'https://embed.plnkr.co/' + code_link.replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
+          this.src_link = 'https://embed.plnkr.co/' 
+          + code_link.replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
         }
       }
     }

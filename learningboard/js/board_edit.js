@@ -1,9 +1,9 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'jquery_ui', 'fileinput'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ui, fi) {
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'jquery_ui', 'fileinput', "./lib/GoogleDriveFilePicker"], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ui, fi, fp) {
 
   var pk;
   var cover_img = 'empty';
   var tag_list = [];
-  var activity_list = [];
+  var actIdList = [];
   var activity_index = 0;
   var actList;
   var serv_addr = util.serv_addr;
@@ -189,8 +189,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       if(tag_list){
         dataObject.tags = tag_list;
       }
-      if(activity_list){
-        dataObject.activities = activity_list;
+      if(actIdList){
+        dataObject.activities = actIdList;
       }
       if(pk){
         util.put('/lb/'+pk+'/', dataObject,
@@ -326,7 +326,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           {
             console.log(res);
             var act = res.data.activity;
-            activity_list.push(act.id);
+            actIdList.push(act.id);
             // clear form data
             CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
             initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
@@ -382,7 +382,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
               }
             }
           }
-          $('html, body').animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
+          $('html, body')
+          .animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
         }
       );
     });
@@ -391,26 +392,27 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $(document).on('click', '.activity span.glyphicon-remove', function(e){
       var $this = $(this).parents('div.activity');
       var r = confirm('Are you sure to delete this activity?');
-      if(r){
-        var id = $(this).parents('div.control').data('id');
-        util.delete('/activity/'+id+'/', 
-          function(data)
-          {
-            activity_list.splice(activity_list.indexOf(parseInt(id)), 1);
-            $this.fadeOut('slow', function(){
-              $this.remove();
-              if($('.activityList .activity').length < 1){
-                $('.activityList .noActivity').fadeIn('fast');
-              }else{
-                $('.activityList .activity').each(function(i){
-                  i = i + 1;
-                  $(this).find('h4').text(i < 10 ? '0' + i : i);
-                });
-              }
-            });
-          }
-        );
-      }
+      if(!r) return;
+      var id = $(this).parents('div.control').data('id');
+      util.delete(
+        '/activity/'+id+'/', 
+        function(data)
+        {
+          actIdList.splice(actIdList.indexOf(parseInt(id)), 1);
+          actList.removeActivityById(id);
+          $this.fadeOut('slow', function(){
+            $this.remove();
+            if($('.activityList .activity').length < 1){
+              $('.activityList .noActivity').fadeIn('fast');
+            }else{
+              $('.activityList .activity').each(function(i){
+                i = i + 1;
+                $(this).find('h4').text(i < 10 ? '0' + i : i);
+              });
+            }
+          });
+        }
+      );
     });
   });
 
@@ -589,4 +591,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     });
   }
 
+  function gFilePick()
+  {
+    
+    fp.pick(function(data){console.log(data)});
+  }
+
+  console.log($("#gdrive"));
+  $("#gdrive").on("click", gFilePick);
 });

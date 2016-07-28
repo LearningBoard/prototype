@@ -70,6 +70,10 @@ body > .body_container {
   margin-top: 8px;
 }
 
+.navbar-fixed-top {
+  z-index: 100;
+}
+
 .navbar-form {
   padding: 0;
   margin: 0;

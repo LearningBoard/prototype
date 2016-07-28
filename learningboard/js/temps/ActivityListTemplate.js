@@ -48,6 +48,29 @@ define(['util', 'temps/ListTemplate'], function(util, ListTemplate){
     .replaceWith($(act.$template));
   }
 
+  ActivityListTemplate.prototype.removeActivityAt = function(index)
+  {
+
+  }
+
+  ActivityListTemplate.prototype.removeActivityById = function(id)
+  {
+    var length = this._templateList.length;
+    for (var i = 0; i < length; ++i)
+    {
+      if (this._templateList[i].model.id === id)
+      {
+        this._templateList.splice(i, 1);
+        this.model.splice(i, 1);
+        length--;
+        for (var j = i; j < length; ++j)
+        {
+          this._templateList[j].updateIndex(j);
+        }
+      }
+    }
+  }
+
   $.extend(ActivityListTemplate.prototype, ListTemplate.prototype);
 
   return ActivityListTemplate;

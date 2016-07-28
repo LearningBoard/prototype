@@ -125,9 +125,10 @@
                     <li role="presentation" class="active"><a href="#video" aria-controls="video" role="tab" data-toggle="tab">Video</a></li>
                     <li role="presentation"><a href="#text" aria-controls="text" role="tab" data-toggle="tab">Text</a></li>
                     <li role="presentation"><a href="#code" aria-controls="code" role="tab" data-toggle="tab">Code</a></li>
-                    <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">Folder</a></li>
+                    <li role="presentation"><a href="#folder" aria-controls="folder" role="tab" data-toggle="tab">Folder</a></li>
                     <li role="presentation"><a href="#audio" aria-controls="audio" role="tab" data-toggle="tab">Audio</a></li>
                     <li role="presentation"><a href="#pdf" aria-controls="pdf" role="tab" data-toggle="tab">PDF</a></li>
+                    <li role="presentation"><a href="#gdrive" aria-controls="gdrive" role="tab" data-toggle="tab">Google Drive</a></li>
                   </ul>
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="video">
@@ -188,22 +189,22 @@
                         <span class="result_msg"></span>
                       </form>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="file">
+                    <div role="tabpanel" class="tab-pane" id="folder">
                       <form class="addActivityForm">
                         <input type="hidden" name="id" value="">
-                        <input type="hidden" name="type" value="file">
+                        <input type="hidden" name="type" value="folder">
                         <div class="form-group">
-                          <label for="file_title">Title</label>
-                          <input type="text" class="form-control" id="file_title" name="title" placeholder="activity title" required>
+                          <label for="folder_title">Title</label>
+                          <input type="text" class="form-control" id="folder_title" name="title" placeholder="activity title" required>
                         </div>
                         <div class="form-group">
-                          <label for="file_link">Folder Link</label>
-                          <input type="url" class="form-control" id="file_link" name="file_link" placeholder="folder link (support Google Drive folder)" pattern=".*drive.google.com/.*" required>
+                          <label for="folder_link">Folder Link</label>
+                          <input type="url" class="form-control" id="folder_link" name="folder_link" placeholder="folder link (support Google Drive folder)" pattern=".*drive.google.com/.*" required>
                           See how to <a href="https://support.google.com/drive/answer/2494822?co=GENIE.Platform%3DDesktop&hl=en" target="_blank">share using a link</a> with Google Drive
                         </div>
                         <div class="form-group">
-                          <label for="file_description">Description</label>
-                          <textarea class="form-control" id="file_description" name="description" rows="3" placeholder="Description"></textarea>
+                          <label for="folder_description">Description</label>
+                          <textarea class="form-control" id="folder_description" name="description" rows="3" placeholder="Description"></textarea>
                         </div>
                         <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
                         <span class="result_msg"></span>
@@ -244,6 +245,22 @@
                           <label for="pdf_link">File Link</label>
                           <input type="url" class="form-control" id="pdf_link" name="pdf_link" placeholder="file link (support Google Drive .pdf file)" pattern=".*drive.google.com/.*" required>
                           See how to <a href="https://support.google.com/drive/answer/2494822?co=GENIE.Platform%3DDesktop&hl=en" target="_blank">share using a link</a> with Google Drive
+                        </div>
+                        <div class="form-group">
+                          <label for="pdf_description">Description</label>
+                          <textarea class="form-control" id="pdf_description" name="description" rows="3" placeholder="Description"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
+                        <span class="result_msg"></span>
+                      </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="gdrive">
+                      <form class="addActivityForm">
+                        <input type="hidden" name="id" value="">
+                        <input type="hidden" name="type" value="gdrive">
+                        <div class="form-group">
+                          <label for="pdf_title">Title</label>
+                          <input type="text" class="form-control" id="pdf_title" name="title" placeholder="activity title" required>
                         </div>
                         <div class="form-group">
                           <label for="pdf_description">Description</label>

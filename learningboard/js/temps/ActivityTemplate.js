@@ -31,7 +31,7 @@
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
           </li>
           <li>
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-remove" name="removeBtn" aria-hidden="true"></span>
           </li>
         </ul>
       </div>`;
@@ -42,16 +42,16 @@
       <div class="control" data-id="${this.model.id}">
         <ul class="text-muted">
           <li>
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            Re Add
-          </li>
-          <li>
             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
             Share
           </li>
           <li class="markAsComplete">
             <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
             Mark as complete
+          </li>
+          <li>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            Delete
           </li>
         </ul>
       </div>`;
@@ -110,7 +110,7 @@
           </div>
         `);
         break;
-      case 'file':
+      case 'folder':
         // handle different links
         console.log(this.model);
         $dif.append(`
