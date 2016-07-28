@@ -603,5 +603,5 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   }
 
   console.log($("#gdrive"));
-  $("#gdrive").on("click", gFilePick);
+  $("#uglyBtn").on("click", gFilePick);
 });
