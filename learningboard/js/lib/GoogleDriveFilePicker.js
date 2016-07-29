@@ -14,20 +14,14 @@ define(["https://apis.google.com/js/api.js"], function() {
   var pickerCallback;
 
   var 
-  onApiLoad = function() {
-      gapi.load('auth', {'callback': onAuthApiLoad});
-      gapi.load('picker', {'callback': onPickerApiLoad});
-  },
-  // Use the API Loader script to load google.picker and gapi.auth.
-
-  onAuthApiLoad = function() {
+  doAuth = function() {
     window.gapi.auth.authorize(
-        {
-          'client_id': clientId,
-          'scope': scope,
-          'immediate': false
-        },
-        handleAuthResult);
+      {
+        'client_id': clientId,
+        'scope': scope,
+        'immediate': false
+      },
+      handleAuthResult);
   },
 
   onPickerApiLoad = function() {
@@ -65,7 +59,18 @@ define(["https://apis.google.com/js/api.js"], function() {
   var filePicker = {
     pick: function(callback) {
       pickerCallback = callback;
-      onApiLoad();
+      if (gapi.auth && gapi.auth.getToken())
+      {
+        oauthToken = gapi.auth.getToken().access_token;
+        gapi.load('picker', {'callback': onPickerApiLoad});
+      }
+      else
+      {
+        gapi.load('auth', {'callback': doAuth});
+        gapi.load('picker', {'callback': onPickerApiLoad});
+      }
+  // Use the API Loader script to load google.picker and gapi.auth.
+
     }
   }
 

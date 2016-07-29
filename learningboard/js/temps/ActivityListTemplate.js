@@ -1,5 +1,10 @@
-define(['util', 'temps/ListTemplate'], function(util, ListTemplate){
+define(['util', "jquery_ui", 'temps/ListTemplate'], function(util, ui, ListTemplate){
   "use strict";
+
+  var noActHtml = `
+  <p class="text-center noActivity">
+    <i>Currently there are no activity in this board</i>
+  </p>`;
 
   var ActivityListTemplate = function(actTemps)
   {
@@ -21,11 +26,7 @@ define(['util', 'temps/ListTemplate'], function(util, ListTemplate){
     if (actTemps.length === 0)
     {
       $container
-      .append(`
-        <p class="text-center noActivity">
-          <i>Currently there are no activity in this board</i>
-        </p>`
-      );
+      .append(noActHtml);
     }
     ListTemplate.call(this, _templateList, $template, $container);
   }
@@ -60,7 +61,19 @@ define(['util', 'temps/ListTemplate'], function(util, ListTemplate){
     {
       if (this._templateList[i].model.id === id)
       {
+        var $tmp = this._templateList[i].$template;
+        console.log($tmp);
+        $tmp.fadeOut('slow', function(){
+          $tmp.remove();
+          if($('.activityList .activity').length < 1){
+            $('.activityList .noActivity').fadeIn('fast');
+          }
+        });
         this._templateList.splice(i, 1);
+        if (this._templateList.length === 0)
+        {
+          this.$_container.append(noActHtml);
+        }
         this.model.splice(i, 1);
         length--;
         for (var j = i; j < length; ++j)

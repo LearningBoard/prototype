@@ -58,7 +58,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           }
           if(board.activities){
             board.activities.map(function(item){
-              activity_list.push(item.id);
+              actIdList.push(item.id);
             });
           }
           if(board.tags){
@@ -405,17 +405,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         {
           actIdList.splice(actIdList.indexOf(parseInt(id)), 1);
           actList.removeActivityById(id);
-          $this.fadeOut('slow', function(){
-            $this.remove();
-            if($('.activityList .activity').length < 1){
-              $('.activityList .noActivity').fadeIn('fast');
-            }else{
-              $('.activityList .activity').each(function(i){
-                i = i + 1;
-                $(this).find('h4').text(i < 10 ? '0' + i : i);
-              });
-            }
-          });
         }
       );
     });
