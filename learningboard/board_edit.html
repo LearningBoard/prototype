@@ -258,7 +258,10 @@
                       <form class="addActivityForm">
                         <input type="hidden" name="id" value="">
                         <input type="hidden" name="type" value="gdrive">
-                        <button id="uglyBtn">Add</button>
+                        <div class="fileList"></div>
+                        <div class="form-group">
+                          <a id="addFileBtn" class="btn btn-default addFileBtn" style="margin-top: 5px; margin-bottom: 20px; float: right">Add File</a>
+                        </div>
                         <div class="form-group">
                           <label for="pdf_title">Title</label>
                           <input type="text" class="form-control" id="pdf_title" name="title" placeholder="activity title" required>
@@ -277,6 +280,9 @@
             </div>
           </div>
           <div class="activityListContainer">
+            <p class="text-right">
+              <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled</button>
+            </p>
           </div>
         </div>
       </div>

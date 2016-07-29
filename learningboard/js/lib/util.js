@@ -51,6 +51,11 @@ define(['mdls/User'], function(user) {
 
   return {
 
+    urls: {
+      serv_addr: serv_addr,
+      actOrder: "/lb/activityorder/"
+    },
+
     serv_addr: serv_addr,
     media_addr: serv_addr + '/media',
 

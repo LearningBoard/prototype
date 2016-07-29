@@ -1,19 +1,18 @@
 define(["jquery_ui", "util"], function(ui, util) {
 
-  var SortableListTemplate = function(listTemplate)
+  var SortableListTemplate = function(listTemplate, order_url)
   {
     $.extend(this, listTemplate);
     $.extend(this, listTemplate.__proto__);
 
+    this.sortingEnabled = true;
+    this.order_url = order_url;
+
+    console.log(this);
+    var $container = this.$_container;
     var $template = this.$template;
     var _templateList = this._templateList;
-    var $container = this.$_container;
 
-    $template.prepend(`
-      <p class="text-right">
-        <button type="button" class="btn btn-default btn-sm sortLockMode">Sorting Enabled</button>
-      </p>`
-    );
     $container.sortable({
       cancel: '.noElement',
       opacity: 0.95,
@@ -43,35 +42,37 @@ define(["jquery_ui", "util"], function(ui, util) {
       }
       _templateList[endIndex] = target;
       target.updateIndex(endIndex);
-      var order = {};
-      for (var i = 0; i < _templateList.length; ++i)
-      {
-        order[_templateList[i].model.id] = i;
-      }
-      console.log(order);
-      util.post('/lb/activityorder/', order);
+      this.saveOrder();
     });
+  }
 
-    var enabled = true;
-    $template.find(".sortLockMode").on("click", function()
+  SortableListTemplate.prototype.saveOrder = function()
+  {
+    var order = {};
+    for (var i = 0; i < _templateList.length; ++i)
     {
-      if (enabled)
-      {
-        $container.sortable("disable");
-        $(this).text("Sorting Disabled");
-        enabled = false;
-      }
-      else
-      {
-        enabled = true;
-        $container.sortable("enable");
-        $(this).text("Sorting Enabled");
-      }
-    });
-    if (listTemplate.empty())
-    {
-      $template.find(".sortLockMode").addClass("hidden");
+      order[_templateList[i].model.id] = i;
     }
+    console.log(order);
+    util.post(order_url, order);
+  }
+
+  SortableListTemplate.prototype.setSortingEnabled = function(enabled)
+  {
+    this.sortingEnabled = enabled;
+    if (this.sortingEnabled)
+    {
+      this.$_container.sortable("enable");
+    }
+    else
+    {
+      this.$_container.sortable("disable");
+    }
+  }
+
+  SortableListTemplate.prototype.toggleSortingEnabled = function()
+  {
+    this.setSortingEnabled(!this.sortingEnabled);
   }
 
   return SortableListTemplate;

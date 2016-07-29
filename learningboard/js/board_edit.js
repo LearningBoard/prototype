@@ -88,12 +88,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
               function(activity, index) {
               return new ActivityTemplate(activity, index);
             });
-            actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
+            actList = new SortableListTemplate(new ActivityListTemplate(actTemps), util.urls.actOrder);
             actList.display($(".activityListContainer"));
           }
           else
           {
-            actList = new SortableListTemplate(new ActivityListTemplate([]));
+            actList = new SortableListTemplate(new ActivityListTemplate([]), util.urls.actOrder);
             actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});
@@ -106,7 +106,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       );
     }
     else{
-      actList = new SortableListTemplate(new ActivityListTemplate([]));
+      actList = new SortableListTemplate(new ActivityListTemplate([]), util.urls.actOrder);
       actList.display($(".activityListContainer"));
     }
 
@@ -585,6 +585,11 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     });
   }
 
+  $(".sortLockMode").on("click", function() {
+    actList.toggleSortingEnabled();
+    $(this).html(actList.sortingEnabled? "Sorting Enabled": "Sorting Disabled"); 
+  }) 
+
   function gFilePick()
   {
     
@@ -592,5 +597,5 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   }
 
   console.log($("#gdrive"));
-  $("#uglyBtn").on("click", gFilePick);
+  $("#addFileBtn").on("click", gFilePick);
 });
