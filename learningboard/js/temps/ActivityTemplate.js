@@ -1,4 +1,4 @@
- define(['mdls/User', 'mdls/Activity', 'temps/Template'], function(User, Activity, Template) {
+define(['mdls/User', 'mdls/Activity', 'temps/Template', 'activities/ActivityAdapter', 'activities/VideoAdapter', 'activities/TextAdapter', 'activities/CodeAdapter', 'activities/AudioAdapter', 'activities/GDriveAdapter'], function(User, Activity, Template, ActivityAdapter, VideoAdapter, TextAdapter, CodeAdapter, AudioAdapter, GDriveAdapter) {
   "use strict";
 
   var ActivityTemplate = function(activity, index)
@@ -69,137 +69,26 @@
       </div>
     `);
     $dif = $html.find("#dif");
+    var adapter = new ActivityAdapter();
     switch(this.model['type'])
     {
       case 'video':
-        // handle different links
-        $dif.append(`
-          <div class="row">
-            <div class="col-md-12">
-              <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="${this.model.src_link}" allowfullscreen></iframe>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="description">${this.model['description']}</div>
-            </div>
-          </div>
-          ${activityControl}
-        `);
+        adapter = new VideoAdapter();
         break;
       case 'text':
-      console.log(this.model);
-        $dif.append(`
-          <div class="row">
-            ${this.model['text_image'] ? `<div class="col-md-12"><img src="${this.model.src_link}" class="img-responsive activity-image"></div>` : ''}
-            <div class="col-md-12">
-              <div class="description">${this.model['description']}</div>
-            </div>
-          </div>
-        `);
+        adapter = new TextAdapter();
         break;
       case 'code':
-        $dif.append(`
-          <div class="row">
-            <div class="col-md-12">
-              <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="${this.model.src_link}" allowfullscreen></iframe>
-              </div>
-              <div class="description">${this.model['description']}</div>
-            </div>
-          </div>
-        `);
-        break;
-      case 'folder':
-        // handle different links
-        console.log(this.model);
-        $dif.append(`
-          <div class="row">
-            <div class="col-md-12">
-              <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="${this.model.src_link}" allowfullscreen></iframe>
-              </div>
-              <div class="description">${this.model.description}</div>
-            </div>
-          </div>
-        `);
+        adapter = new CodeAdapter();
         break;
       case 'audio':
+        adapter = new AudioAdapter();
         break;
-        html = `
-          <div class="row">
-            <div class="col-md-12">
-              <span class="glyphicon glyphicon-menu-left audio_left"></span>`;
-        try {
-          this.model['audio_image'] = JSON.parse(this.model['audio_image']);
-        } catch (e) {
-          this.model['audio_image'] = [];
-        }
-        for(var i = 0; i < this.model['audio_image'].length; i++){
-          html += `
-              <img data-index="${i}" src="${media_addr + '/' + this.model['audio_image'][i]}" class="img-responsive ${i === 0 ? '' : 'hidden'} activity-image">`;
-        }
-        html += `
-              <span class="glyphicon glyphicon-menu-right audio_right"></span>
-            </div>
-            <div class="col-md-12 text-center">
-        `;
-        console.log(this.model);
-        if(!this.model['audio_audio[]'].push){
-          this.model['audio_audio[]'] = [ this.model['audio_audio[]'] ];
-        }
-        for(var i = 0; i < this.model['audio_audio[]'].length; i++){
-          html += `
-              <audio controls data-index="${i}" class="${i === 0 ? '' : 'hidden'}">
-                <source src="${this.model['audio_audio[]'][i]}" type="audio/mpeg">
-              </audio>`;
-        }
-        html += `
-          </div>
-            <div class="col-md-12">
-              <div class="description">${this.model['description']}</div>
-            </div>
-          </div>
-        `;
-        if(this.model['audio_audio[]'].length > 1){
-          html += `
-          <script>
-          $(document).off('click', '.audio_left').on('click', '.audio_left', function(e){
-            var currentImg = $(this).parent().find('img:visible');
-            if(currentImg.data('index') != 0){
-              currentImg.prev().removeClass('hidden');
-              currentImg.addClass('hidden');
-            }
-            var currentAudio = $(this).parent().next().find('audio:visible');
-            if(currentAudio.data('index') != 0){
-              currentAudio.prev().removeClass('hidden');
-              currentAudio.addClass('hidden');
-            }
-          });
-          $(document).off('click', '.audio_right').on('click', '.audio_right', function(e){
-            var totalImg = $(this).parent().find('img').length;
-            var currentImg = $(this).parent().find('img:visible');
-            if(currentImg.data('index') < totalImg - 1){
-              currentImg.next().removeClass('hidden');
-              currentImg.addClass('hidden');
-            }
-            var totalAudio = $(this).parent().next().find('audio').length;
-            var currentAudio = $(this).parent().next().find('audio:visible');
-            if(currentAudio.data('index') < totalAudio - 1){
-              currentAudio.next().removeClass('hidden');
-              currentAudio.addClass('hidden');
-            }
-          });
-          </script>`;
-        }
+      case 'gdrive':
+        adapter = new GDriveAdapter();
         break;
-      default:
-        $html = `
-        <div class="activity">
-          <h4>${this.index < 10 ? '0' + this.index : this.index}</h4>
-          <p><i>Error occur when rendering activity</i></p>
-        </div>`;
     }
+    $dif.append(adapter.renderView(this.model));
     Template.call(this, $html);
   };
 

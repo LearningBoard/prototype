@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'jquery_ui', 'fileinput', "./lib/GoogleDriveFilePicker"], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ui, fi, fp) {
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'temps/ActivityTabTemplate', 'temps/ActivityFormTemplate', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ActivityTabTemplate, ActivityFormTemplate, ui, fi) {
 
   var pk;
   var cover_img = 'empty';
@@ -6,9 +6,9 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   var actIdList = [];
   var activity_index = 0;
   var actList;
+  var actAdapter = {};
   var serv_addr = util.serv_addr;
 
-  $.getScript('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js');
   $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
   $(document).ready(function(){
@@ -31,11 +31,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
     // reset data for new board
     if(location.search.includes('?new')){
-      $('form.addBoardForm input[name=title], form.addBoardForm textarea[name=description]')
-      .val('')
-      .trigger('keydown');
-
-      $('.tagList ul').text('');
+      $("div[class=curated_by] span").text(user.getInfo().username);
 
       $('.navbar-nav li:not(:first) a').css({
         color: '#CCC',
@@ -68,14 +64,14 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
               .append(`
                 <li data-id="${item.id}">
                   ${item.tag} <span>x</span>
-                </li> `
+                </li>`
               );
             });
           }
           $('form.addBoardForm input[name=title]')
           .val(board.title)
           .trigger('keydown');
-          $("div[name=curated_by] span[name=name]").html(board.author.username);
+          $("div[class=curated_by] span").text(board.author.username);
           $('form.addBoardForm textarea[name=description]')
           .val(board.description);
           $('form.addBoardForm input[name=level][value='+board.level+']')
@@ -110,14 +106,20 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       actList.display($(".activityListContainer"));
     }
 
-    // init WYSIWYG
-    initCkeditor();
-
-    // init image input
-    initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
-
-    // init audio activity
-    initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), true, null);
+    // render add/edit activity form
+    require(['activities/VideoAdapter', 'activities/TextAdapter', 'activities/CodeAdapter', 'activities/AudioAdapter', 'activities/GDriveAdapter'], function(){
+      for(var i = 0; i < arguments.length; i++) {
+        var adapter = new arguments[i];
+        actAdapter[adapter.type] = adapter;
+        var tab = new ActivityTabTemplate(adapter);
+        tab.display($('#activityTab'));
+        var form = new ActivityFormTemplate(adapter);
+        form.display($('#activityTab').parent().find('.tab-content'));
+        adapter.beforeCreate();
+      }
+      // init WYSIWYG
+      initCkeditor();
+    });
 
     // board title word count
     $('#boardTitle').on('keydown', function(e){
@@ -282,7 +284,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     });
 
     // add activity submit button
-    $('button.addActivityBtn').on('click', function(e){
+    $(document).on('click', 'button.addActivityBtn', function(e){
       // trigger html5 validation
       if($(this).parents('form.addActivityForm')[0].checkValidity()){
         e.preventDefault();
@@ -303,9 +305,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             var act = res.data.activity;
             // clear form data
             CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
-            initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
-            initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), true, null);
             $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
+            actAdapter[act.type].afterEdit(act);
             var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
             var index = $('.activityList .activity').index(prevDom);
 
@@ -334,9 +335,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             actIdList.push(act.id);
             // clear form data
             CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
-            initImageInput($('#text_image_placeholder'), $('#text .addActivityForm textarea[name=text_image]'), 'https://placehold.it/300x200');
-            initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), true, null);
             $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
+            actAdapter[act.type].afterCreate(act);
 
             index = actList.model.length;
 
@@ -359,7 +359,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       util.get('/activity/'+id+'/',
         function(res)
         {
-          var data = res.data;
+          var data = res.data.activity;
           $('#collapseAddActivity').collapse('show');
           $('#activityTab a[href="#'+data.type+'"]').tab('show');
           var targetForm = $('#collapseAddActivity #' + data.type);
@@ -367,25 +367,10 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           targetForm.find('input[name=title]').val(data.title);
           targetForm.find('textarea[name=description]').val(data.description);
           CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);
-          data = JSON.parse(data.data);
-          for(var key in data){
+          actAdapter[data.type].beforeEdit(data);
+          data = data.data;
+          for(var key in data.data){
             targetForm.find('[name="'+key+'"]').val(data[key]);
-            if(key == 'text_image'){
-              initImageInput($('#text_image_placeholder'), targetForm.find('.addActivityForm textarea[name=text_image]'), data[key] ? data[key] : 'https://placehold.it/300x200');
-            }
-            if(key == 'audio_image'){
-              initAudioActivity($('#audio_image_placeholder'), $('#audio .addActivityForm textarea[name=audio_image]'), false, JSON.parse(data[key]));
-            }
-            if(key == 'audio_audio[]'){
-              for(var i = 0; i < data[key].length; i++){
-                var instance = addAudioGroup();
-                instance.find('textarea[name="audio_audio[]"]').val(data[key][i]);
-                instance.find('div.lbRecorder').html(`
-                  <audio controls>
-                    <source src="${data[key][i]}" type="audio/mpeg">
-                  </audio>`).removeClass('hidden');
-              }
-            }
           }
           $('html, body')
           .animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
@@ -400,7 +385,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       if(!r) return;
       var id = $(this).parents('div.control').data('id');
       util.delete(
-        '/activity/'+id+'/', 
+        '/activity/'+id+'/',
         function(data)
         {
           actIdList.splice(actIdList.indexOf(parseInt(id)), 1);
@@ -436,75 +421,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     })(instance);
   }
 
-  function initImageInput(inputEle, targetEle, url){
-    inputEle.fileinput('destroy');
-    var instance = inputEle.fileinput({
-      overwriteInitial: true,
-      showClose: false,
-      showCaption: false,
-      showBrowse: false,
-      browseOnZoneClick: true,
-      removeLabel: 'Remove cover image',
-      removeClass: 'btn btn-default btn-block btn-xs',
-      defaultPreviewContent: `<div align="center"><img src="${url}" alt="Your Avatar" width="300" class="img-responsive">
-      <h6 class="text-muted text-center">Click to select cover image</h6></div>`,
-      layoutTemplates: {main2: '{preview} {remove}'},
-      allowedFileExtensions: ['jpg', 'png', 'gif']
-    });
-    (function(instance){
-      instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
-        targetEle.val(reader.result);
-      });
-      instance.off('filecleared').on('filecleared', function(e){
-        initImageInput(inputEle, targetEle, 'https://placehold.it/300x200');
-        targetEle.val('');
-      });
-    })(instance);
-  }
-
-  function initAudioActivity(inputEle, targetEle, clear, url){
-    if(clear) $('.audio_group').text('');
-    var options = {
-      uploadUrl: serv_addr+'/media/upload/',
-      uploadAsync: false,
-      showClose: false,
-      showCaption: false,
-      showBrowse: false,
-      showRemove: false,
-      showUpload: false,
-      browseOnZoneClick: true,
-      overwriteInitial: false,
-      layoutTemplates: {
-        footer: '<div class="file-thumbnail-footer">{actions}</div>'
-      }
-    };
-    if(url){
-      url = url.map(function(value){
-        return media_addr + '/' + value;
-      });
-      $.extend(options, {initialPreview: url, initialPreviewAsData: true});
-    }
-    inputEle.fileinput('destroy');
-    var instance = inputEle.fileinput(options);
-    (function(instance){
-      instance.off('filebatchselected').on('filebatchselected', function(e, file, previewId, index, reader){
-        inputEle.fileinput('upload');
-      });
-      instance.off('filebatchuploadsuccess').on('filebatchuploadsuccess', function(e, data, previewId, index){
-        var previous = [];
-        if(targetEle.val().length > 0){
-          previous = JSON.parse(targetEle.val());
-        }
-        previous.push(data.response.uploaded);
-        targetEle.val(JSON.stringify(previous));
-        addAudioGroup();
-      });
-      instance.off('filesuccessremove').on('filesuccessremove', function(e, key){
-        // delete targetEle array
-      });
-    })(instance);
-  }
-
   function initCkeditor(){
     $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
       $('#collapseAddActivity [name=description]').each(function(){
@@ -519,83 +435,4 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       });
     });
   }
-
-  function addAudioGroup(){
-    var instance = $(`<div class="recorder">
-      <button type="button" class="btn btn-default audioRecorderControl">Record</button>
-      <textarea name="audio_audio[]" class="hidden"></textarea>
-      <div class="lbRecorder"></div>
-    </div>`);
-    $('.audio_group').append(instance);
-    initRecorder(instance.find('button.audioRecorderControl'), instance.find('div.lbRecorder'), instance.find('textarea[name="audio_audio[]"]'));
-    return instance;
-  }
-
-  function initRecorder(controlEle, playerEle, targetEle){
-    $.getScript('js/WebAudioRecorder.min.js', function(){
-      (function(controlEle, playerEle, targetEle){
-        var init = false;
-        var recording = false;
-        var audioContext, input, recorder;
-        controlEle.on('click', function(){
-          if(!init){
-            navigator.getUserMedia({audio: true}, function(stream){
-              audioContext = new AudioContext();
-              input = audioContext.createMediaStreamSource(stream);
-              recorder = new WebAudioRecorder(input, {
-                workerDir: 'js/',
-                encoding: 'mp3',
-                options: {
-                  encodeAfterRecord: true
-                }
-              });
-              recorder.onComplete = function(rec, blob){
-                var reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = function(){
-                  targetEle.val(reader.result);
-                  playerEle.html(`<audio controls>
-                    <source src="${URL.createObjectURL(blob)}" type="audio/mpeg">
-                  </audio>`).removeClass('hidden');
-                }
-              };
-              record(recorder);
-              init = true;
-            }, function(e){
-              alert('Could not provide recording feature. Please make sure you have connected the microphone to this device.');
-            });
-          }else{
-            record(recorder);
-          }
-        });
-        var record = function(recorder){
-          if(recording){
-            recorder.finishRecording();
-            controlEle.text('Record');
-            recording = false;
-          }else{
-            recorder.startRecording();
-            controlEle.text('Stop');
-            targetEle.val('');
-            playerEle.text('').addClass('hidden');
-            recording = true;
-          }
-        }
-      })(controlEle, playerEle, targetEle);
-    });
-  }
-
-  $(".sortLockMode").on("click", function() {
-    actList.toggleSortingEnabled();
-    $(this).html(actList.sortingEnabled? "Sorting Enabled": "Sorting Disabled"); 
-  }) 
-
-  function gFilePick()
-  {
-    
-    fp.pick(function(data){console.log(data)});
-  }
-
-  console.log($("#gdrive"));
-  $("#addFileBtn").on("click", gFilePick);
 });
