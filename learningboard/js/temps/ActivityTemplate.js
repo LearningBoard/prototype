@@ -1,4 +1,4 @@
- define(['mdls/User', 'mdls/Activity', 'temps/Template'], function(User, Activity, Template) {
+ define(['mdls/User', 'mdls/Activity', 'temps/Template', 'temps/ListElement'], function(User, Activity, Template, ListElement) {
   "use strict";
 
   var ActivityTemplate = function(activity, index)
@@ -8,7 +8,7 @@
 
     if (index === undefined) throw "hehe";
     this.model = new Activity(activity);
-    this.index = ++index;
+    ListElement.call(this, ++index);
 
     if(activity){
       this.model = new Activity(activity);
@@ -193,12 +193,15 @@
           </script>`;
         }
         break;
+      case "gdrive": 
+        break;
+
       default:
-        $html = `
+        $html = $(`
         <div class="activity">
           <h4>${this.index < 10 ? '0' + this.index : this.index}</h4>
           <p><i>Error occur when rendering activity</i></p>
-        </div>`;
+        </div>`);
     }
     Template.call(this, $html);
   };
@@ -209,7 +212,7 @@
     this.$template.find(".index").html(index < 10 ? '0' + index : index);
   }
 
-  $.extend(ActivityTemplate.prototype, Template.prototype);
+  $.extend(ActivityTemplate.prototype, Template.prototype, ListElement.prototype);
 
   return ActivityTemplate;
 });

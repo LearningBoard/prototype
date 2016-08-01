@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'jquery_ui', 'fileinput', "./lib/GoogleDriveFilePicker"], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ui, fi, fp) {
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'temps/GFileListTemplate', 'temps/GFileTemplate', 'jquery_ui', 'fileinput', "./lib/GoogleDriveFilePicker"], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, GFileListTemplate, GFileTemplate, ui, fi, fp) {
 
   var pk;
   var cover_img = 'empty';
@@ -93,7 +93,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           }
           else
           {
-            actList = new SortableListTemplate(new ActivityListTemplate([]), util.urls.actOrder);
+            actList = new SortableListTemplate(new ActivityListTemplate(), util.urls.actOrder);
             actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});
@@ -106,7 +106,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       );
     }
     else{
-      actList = new SortableListTemplate(new ActivityListTemplate([]), util.urls.actOrder);
+      actList = new SortableListTemplate(new ActivityListTemplate(), util.urls.actOrder);
       actList.display($(".activityListContainer"));
     }
 
@@ -309,7 +309,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
             var index = $('.activityList .activity').index(prevDom);
 
-            actList.updateActivity(new ActivityTemplate(act), index);
+            actList.updateElementAt(new ActivityTemplate(act), index);
 
             $this.parent()
             .find('.result_msg')
@@ -340,7 +340,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
             index = actList.model.length;
 
-            actList.addActivity(new ActivityTemplate(act, index));
+            actList.addElement(new ActivityTemplate(act, index));
             $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
               $(this).text('');
             });
@@ -404,7 +404,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         function(data)
         {
           actIdList.splice(actIdList.indexOf(parseInt(id)), 1);
-          actList.removeActivityById(id);
+          actList.removeElementBy({id: id}, {fadeOut: true});
         }
       );
     });
@@ -590,12 +590,21 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $(this).html(actList.sortingEnabled? "Sorting Enabled": "Sorting Disabled"); 
   }) 
 
+  console.log($("#gdrive"));
+  var file_list = new SortableListTemplate(new GFileListTemplate(), util.urls.gFileOrder);
+  file_list.display($("div.fileListContainer"));
+
   function gFilePick()
   {
-    
-    fp.pick(function(data){console.log(data)});
+    fp.pick(function(data){
+      console.log(data)
+      var length = data.docs.length;
+      for (var i = 0; i < length; ++i)
+      {
+        file_list.addElement(new GFileTemplate(data.docs[i]));
+      }
+    });
   }
-
-  console.log($("#gdrive"));
   $("#addFileBtn").on("click", gFilePick);
+
 });

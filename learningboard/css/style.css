@@ -379,16 +379,23 @@ div.img-button.thumbnail {
   padding-right: 3px;
 }
 
-.fileList {
+.fileList.sortableList {
   margin-top: 10px;
   width: 100%;
   min-height: 100px;
   padding: 10px;
   border: 2px dashed #EEE;
 }
-/*
-.btn-primary {
-  background-color: #00BFFF;
-  border-color: #00BFFF;
+
+.fileIcon {
+  width: 50px;
+  height: 50px;
 }
-*/
+
+.fileDisplay {
+  float: left;
+}
+
+.noElement {
+  color: #888888;
+}

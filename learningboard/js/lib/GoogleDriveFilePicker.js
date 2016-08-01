@@ -58,7 +58,7 @@ define(["https://apis.google.com/js/api.js"], function() {
 
   var filePicker = {
     pick: function(callback) {
-      pickerCallback = callback;
+      pickerCallback = function(data) {if (data.action === "picked") {callback(data);}};
       if (gapi.auth && gapi.auth.getToken())
       {
         oauthToken = gapi.auth.getToken().access_token;

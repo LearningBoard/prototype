@@ -8,10 +8,9 @@ define(["jquery_ui", "util"], function(ui, util) {
     this.sortingEnabled = true;
     this.order_url = order_url;
 
-    console.log(this);
-    var $container = this.$_container;
+    var $container = this.$container;
     var $template = this.$template;
-    var _templateList = this._templateList;
+    var templateList = this.templateList;
 
     $container.sortable({
       cancel: '.noElement',
@@ -26,21 +25,21 @@ define(["jquery_ui", "util"], function(ui, util) {
     });
     $template.on('sortupdate', function(e, ui)
     {
-      var target = _templateList[startIndex];
+      var target = templateList[startIndex];
       endIndex = ui.item.index();
       for (var i = startIndex; i > endIndex; --i)
       {
         // startIndex > endIndex
-        _templateList[i] = _templateList[i-1];
-        _templateList[i].updateIndex(i);
+        templateList[i] = templateList[i-1];
+        templateList[i].updateIndex(i);
       }
       for (var i = startIndex; i < endIndex; ++i)
       {
         // endIndex > startIndex
-        _templateList[i] = _templateList[i+1];
-        _templateList[i].updateIndex(i);
+        templateList[i] = templateList[i+1];
+        templateList[i].updateIndex(i);
       }
-      _templateList[endIndex] = target;
+      templateList[endIndex] = target;
       target.updateIndex(endIndex);
       this.saveOrder();
     });
@@ -49,11 +48,10 @@ define(["jquery_ui", "util"], function(ui, util) {
   SortableListTemplate.prototype.saveOrder = function()
   {
     var order = {};
-    for (var i = 0; i < _templateList.length; ++i)
+    for (var i = 0; i < templateList.length; ++i)
     {
-      order[_templateList[i].model.id] = i;
+      order[templateList[i].model.id] = i;
     }
-    console.log(order);
     util.post(order_url, order);
   }
 
@@ -62,11 +60,11 @@ define(["jquery_ui", "util"], function(ui, util) {
     this.sortingEnabled = enabled;
     if (this.sortingEnabled)
     {
-      this.$_container.sortable("enable");
+      this.$container.sortable("enable");
     }
     else
     {
-      this.$_container.sortable("disable");
+      this.$container.sortable("disable");
     }
   }
 

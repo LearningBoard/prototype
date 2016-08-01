@@ -53,7 +53,8 @@ define(['mdls/User'], function(user) {
 
     urls: {
       serv_addr: serv_addr,
-      actOrder: "/lb/activityorder/"
+      actOrder: "/lb/activityorder/",
+      gFileOrder: "/gfileorder/"
     },
 
     serv_addr: serv_addr,
@@ -100,6 +101,11 @@ define(['mdls/User'], function(user) {
     {
       return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     },
+
+    strTrunc: function(str, length)
+    {
+      return (str.length > length) ? str.substr(0,length-1)+'&hellip;' : str
+    }
     
   }
 });
