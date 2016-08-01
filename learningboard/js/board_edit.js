@@ -6,7 +6,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   var actIdList = [];
   var activity_index = 0;
   var actList;
-  var actAdapter = {};
+  var actFormTemp = {};
   var serv_addr = util.serv_addr;
 
   $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
@@ -110,15 +110,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     require(['activities/VideoAdapter', 'activities/TextAdapter', 'activities/CodeAdapter', 'activities/AudioAdapter', 'activities/GDriveAdapter'], function(){
       for(var i = 0; i < arguments.length; i++) {
         var adapter = new arguments[i];
-        actAdapter[adapter.type] = adapter;
         var tab = new ActivityTabTemplate(adapter);
         tab.display($('#activityTab'));
         var form = new ActivityFormTemplate(adapter);
         form.display($('#activityTab').parent().find('.tab-content'));
-        adapter.beforeCreate();
+        form.beforeCreate();
+        actFormTemp[adapter.type] = form;
       }
-      // init WYSIWYG
-      initCkeditor();
     });
 
     // board title word count
@@ -306,7 +304,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             // clear form data
             CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
             $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
-            actAdapter[act.type].afterEdit(act);
+            actFormTemp[act.type].afterEdit(act);
             var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
             var index = $('.activityList .activity').index(prevDom);
 
@@ -336,7 +334,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             // clear form data
             CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
             $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
-            actAdapter[act.type].afterCreate(act);
+            actFormTemp[act.type].afterCreate(act);
 
             index = actList.model.length;
 
@@ -367,7 +365,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           targetForm.find('input[name=title]').val(data.title);
           targetForm.find('textarea[name=description]').val(data.description);
           CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);
-          actAdapter[data.type].beforeEdit(data);
+          actFormTemp[data.type].beforeEdit(data);
           data = data.data;
           for(var key in data.data){
             targetForm.find('[name="'+key+'"]').val(data[key]);
@@ -420,25 +418,5 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       });
     })(instance);
   }
-
-  function initCkeditor(){
-    $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
-      $('#collapseAddActivity [name=description]').each(function(){
-        var editor = CKEDITOR.replace($(this).attr('id'), {
-          language: 'en'
-        });
-        (function(editor){
-          editor.on('change', function(e){
-            $('#' + e.editor.name).val(e.editor.getData());
-          });
-        })(editor);
-      });
-    });
-  }
   
-  $(".sortLockMode").on("click", function() {
-    actList.toggleSortingEnabled();
-    $(this).html(actList.sortingEnabled? "Sorting Enabled": "Sorting Disabled"); 
-  }) 
-
 });

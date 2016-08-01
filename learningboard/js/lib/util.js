@@ -1,4 +1,5 @@
 define(['mdls/User'], function(user) {
+  "use strict";
 
   var serv_addr = "http://localhost:1337";
   
@@ -29,7 +30,7 @@ define(['mdls/User'], function(user) {
     if (user.hasToken())
       token = user.getToken();
 
-    settings = {
+    var settings = {
       url: serv_addr+url, 
       data: dataObject, 
       dataType: "json",

@@ -24,10 +24,9 @@ define(['util', 'activities/ActivityAdapter', 'temps/SortableListTemplate', 'tem
     file_list.display($temp.find("div.fileListContainer"));
     console.log($temp);
 
-    $temp.find("#addFileBtn").on("click", _gFilePick);
     return $temp;
   };
-  
+
   var _gFilePick = function()
   {
     fp.pick(function(data){
@@ -39,6 +38,11 @@ define(['util', 'activities/ActivityAdapter', 'temps/SortableListTemplate', 'tem
       }
     });
   }
+  
+  GDriveAdapter.prototype.beforeCreate = function(template) {
+    template.find('#addFileBtn').off('click').on('click', _gFilePick);
+    ActivityAdapter.prototype.beforeCreate.call(this, template);
+  };
 
   GDriveAdapter.prototype.beforeCreate = function() {
     console.log($('#gdrive'));

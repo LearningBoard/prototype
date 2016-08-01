@@ -88,28 +88,33 @@ define(['activities/ActivityAdapter', 'util', 'fileinput'], function(ActivityAda
     return html;
   };
 
-  AudioAdapter.prototype.beforeCreate = function() {
+  AudioAdapter.prototype.beforeCreate = function(template) {
     _initAudioActivity(
-      $(`#${this.type}_image_placeholder`),
-      $(`textarea[name=${this.type}_image]`),
+      template,
+      template.find(`#${this.type}_image_placeholder`),
+      template.find(`textarea[name=${this.type}_image]`),
       true,
       null
     );
+    ActivityAdapter.prototype.beforeCreate.call(this, template);
   };
 
-  AudioAdapter.prototype.afterCreate = function(modelData) {
+  AudioAdapter.prototype.afterCreate = function(template, modelData) {
     _initAudioActivity(
-      $(`#${this.type}_image_placeholder`),
-      $(`textarea[name=${this.type}_image]`),
+      template,
+      template.find(`#${this.type}_image_placeholder`),
+      template.find(`textarea[name=${this.type}_image]`),
       true,
       null
     );
+    ActivityAdapter.prototype.afterCreate.call(this, template, modelData);
   };
 
-  AudioAdapter.prototype.beforeEdit = function(modelData) {
+  AudioAdapter.prototype.beforeEdit = function(template, modelData) {
     _initAudioActivity(
-      $(`#${this.type}_image_placeholder`),
-      $(`textarea[name=${this.type}_image]`),
+      template,
+      template.find(`#${this.type}_image_placeholder`),
+      template.find(`textarea[name=${this.type}_image]`),
       false,
       modelData[`${this.type}_image`]
     );
@@ -121,19 +126,22 @@ define(['activities/ActivityAdapter', 'util', 'fileinput'], function(ActivityAda
           <source src="${data[key][i]}" type="audio/mpeg">
         </audio>`).removeClass('hidden');
     }
+    ActivityAdapter.prototype.beforeEdit.call(this, template, modelData);
   };
 
-  AudioAdapter.prototype.afterEdit = function(modelData) {
+  AudioAdapter.prototype.afterEdit = function(template, modelData) {
     _initAudioActivity(
-      $(`#${this.type}_image_placeholder`),
-      $(`textarea[name=${this.type}_image]`),
+      template,
+      template.find(`#${this.type}_image_placeholder`),
+      template.find(`textarea[name=${this.type}_image]`),
       true,
       null
     );
+    ActivityAdapter.prototype.afterEdit.call(this, template, modelData);
   };
 
-  var _initAudioActivity = function(inputEle, targetEle, clear, url) {
-    if (clear) $('.addActivityForm .audio_group').text('Please upload at least one image before recording');
+  var _initAudioActivity = function(template, inputEle, targetEle, clear, url) {
+    if (clear) template.find('.audio_group').text('Please upload at least one image before recording');
     inputEle.fileinput('destroy');
     var options = {
       showClose: false,
@@ -165,7 +173,7 @@ define(['activities/ActivityAdapter', 'util', 'fileinput'], function(ActivityAda
           }
           previous.push(res.data.file);
           targetEle.val(JSON.stringify(previous));
-          _addAudioGroup();
+          _addAudioGroup(template);
         });
       });
       instance.off('filesuccessremove').on('filesuccessremove', function(e, key) {
@@ -228,13 +236,13 @@ define(['activities/ActivityAdapter', 'util', 'fileinput'], function(ActivityAda
     });
   };
 
-  var _addAudioGroup = function() {
+  var _addAudioGroup = function(template) {
     var instance = $(`<div class="recorder">
       <button type="button" class="btn btn-default audioRecorderControl">Record</button>
       <textarea name="audio_audio[]" class="hidden"></textarea>
       <div class="lbRecorder"></div>
     </div>`);
-    $('.addActivityForm .audio_group').append(instance);
+    template.find('.audio_group').append(instance);
     _initRecorder(
       instance.find('button.audioRecorderControl'),
       instance.find('div.lbRecorder'),

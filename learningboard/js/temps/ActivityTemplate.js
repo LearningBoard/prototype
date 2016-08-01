@@ -1,4 +1,4 @@
-define(['mdls/User', 'mdls/Activity', 'temps/Template', 'temps/ListElement', 'activities/ActivityAdapter', 'activities/VideoAdapter', 'activities/TextAdapter', 'activities/CodeAdapter', 'activities/AudioAdapter', 'activities/GDriveAdapter'], function(User, Activity, Template, ListElement, ActivityAdapter, VideoAdapter, TextAdapter, CodeAdapter, AudioAdapter, GDriveAdapter) {
+define(['mdls/User', 'mdls/Activity', 'temps/Template', 'temps/ListElement', 'activities/ActivityAdapter', 'activities/VideoAdapter', 'activities/TextAdapter', 'activities/CodeAdapter', 'activities/AudioAdapter', 'activities/GDriveAdapter', 'lib/ViewDispatcher'], function(User, Activity, Template, ListElement, ActivityAdapter, VideoAdapter, TextAdapter, CodeAdapter, AudioAdapter, GDriveAdapter, ViewDispatcher) {
   "use strict";
 
   var ActivityTemplate = function(activity, index)
@@ -64,37 +64,25 @@ define(['mdls/User', 'mdls/Activity', 'temps/Template', 'temps/ListElement', 'ac
           Posted date: ${new Date(this.model.createdAt).toDateString()}<br/>
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p><br/>
-        <div id="dif"></div>
+        <div class="row">
+          <div class="col-md-12">
+            <div name="dif"> </div>
+          </div>
+          <div class="col-md-12">
+            <div class="description">${this.model.description}</div>
+          </div>
+        </div>
         ${activityControl}
       </div>
     `);
-    $dif = $html.find("#dif");
-    var adapter = new ActivityAdapter();
-    switch(this.model['type'])
-    {
-      case 'video':
-        adapter = new VideoAdapter();
-        break;
-      case 'text':
-        adapter = new TextAdapter();
-        break;
-      case 'code':
-        adapter = new CodeAdapter();
-        break;
-      case 'audio':
-        adapter = new AudioAdapter();
-        break;
-      case 'gdrive':
-        adapter = new GDriveAdapter();
-        break;
-      default:
-        $html = $(`
-        <div class="activity">
-          <h4>${this.index < 10 ? '0' + this.index : this.index}</h4>
-          <p><i>Error occur when rendering activity</i></p>
-        </div>`);
-    }
-    $dif.append(adapter.renderView(this.model));
+    $dif = $html.find("[name='dif']");
+    console.log(ViewDispatcher);
+    var TheTemplate = ViewDispatcher.activities.getView(this.model.type);
+    console.log(TheTemplate);
+    var theTemp = new TheTemplate(this.model.data);
+    console.log(theTemp);
+    theTemp.display($dif);
+
     Template.call(this, $html);
   };
 

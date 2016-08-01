@@ -24,36 +24,40 @@ define(['activities/ActivityAdapter', 'util', 'fileinput'], function(ActivityAda
     </div>`;
   };
 
-  TextAdapter.prototype.beforeCreate = function() {
+  TextAdapter.prototype.beforeCreate = function(template) {
     _initImageInput(
-      $(`#${this.type}_image_placeholder`),
-      $(`textarea[name=${this.type}_image]`),
+      template.find(`#${this.type}_image_placeholder`),
+      template.find(`textarea[name=${this.type}_image]`),
       'https://placehold.it/300x200'
     );
+    ActivityAdapter.prototype.beforeCreate.call(this, template);
   };
 
-  TextAdapter.prototype.afterCreate = function(modelData) {
+  TextAdapter.prototype.afterCreate = function(template, modelData) {
     _initImageInput(
-      $(`#${this.type}_image_placeholder`),
-      $(`textarea[name=${this.type}_image]`),
+      template.find(`#${this.type}_image_placeholder`),
+      template.find(`textarea[name=${this.type}_image]`),
       'https://placehold.it/300x200'
     );
+    ActivityAdapter.prototype.afterCreate.call(this, template, modelData);
   };
 
-  TextAdapter.prototype.beforeEdit = function(modelData) {
+  TextAdapter.prototype.beforeEdit = function(template, modelData) {
     _initImageInput(
-      $(`#${this.type}_image_placeholder`),
-      $(`textarea[name=${this.type}_image]`),
+      template.find(`#${this.type}_image_placeholder`),
+      template.find(`textarea[name=${this.type}_image]`),
       modelData.data[`${this.type}_image`] ? modelData.data[`${this.type}_image`] : 'https://placehold.it/300x200'
     );
+    ActivityAdapter.prototype.beforeEdit.call(this, template, modelData);
   };
 
-  TextAdapter.prototype.afterEdit = function(modelData) {
+  TextAdapter.prototype.afterEdit = function(template, modelData) {
     _initImageInput(
-      $(`#${this.type}_image_placeholder`),
-      $(`textarea[name=${this.type}_image]`),
+      template.find(`#${this.type}_image_placeholder`),
+      template.find(`textarea[name=${this.type}_image]`),
       'https://placehold.it/300x200'
     );
+    ActivityAdapter.prototype.afterEdit.call(this, template, modelData);
   };
 
   var _initImageInput = function (inputEle, targetEle, url) {

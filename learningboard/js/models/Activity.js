@@ -2,6 +2,8 @@ define(function() {
   var Activity = function(activity)
   {
     $.extend(this, activity);
+    
+    /*
     switch (this.type)
     {
       case "video":
@@ -57,6 +59,7 @@ define(function() {
         }
       }
     }
+    */
   };
 
   Activity.prototype = {
