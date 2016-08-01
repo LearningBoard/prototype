@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'temps/ActivityTabTemplate', 'temps/ActivityFormTemplate', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ActivityTabTemplate, ActivityFormTemplate, ui, fi) {
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'temps/ActivityTabTemplate', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ActivityTabTemplate, ui, fi) {
 
   var pk;
   var cover_img = 'empty';
@@ -107,15 +107,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     }
 
     // render add/edit activity form
-    require(['activities/VideoAdapter', 'activities/TextAdapter', 'activities/CodeAdapter', 'activities/AudioAdapter', 'activities/GDriveAdapter'], function(){
+    require(['temps/activities/VideoFormTemplate', 'temps/activities/TextFormTemplate', 'temps/activities/CodeFormTemplate', 'temps/activities/AudioFormTemplate', 'temps/activities/GDriveFormTemplate'], function(){
       for(var i = 0; i < arguments.length; i++) {
-        var adapter = new arguments[i];
-        var tab = new ActivityTabTemplate(adapter);
-        tab.display($('#activityTab'));
-        var form = new ActivityFormTemplate(adapter);
+        var form = new arguments[i];
         form.display($('#activityTab').parent().find('.tab-content'));
-        form.beforeCreate();
-        actFormTemp[adapter.type] = form;
+        var tab = new ActivityTabTemplate(form.name, form.type);
+        tab.display($('#activityTab'));
+        actFormTemp[form.type] = form;
       }
     });
 
@@ -297,14 +295,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       }
       if(dataObject.id){ // edit existing activity
         dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.id+']').parents('.activity'));
-        util.post('/activity/'+dataObject.id+'/', dataObject,
+        util.put('/activity/'+dataObject.id+'/', dataObject,
           function(res)
           {
             var act = res.data.activity;
             // clear form data
             CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
             $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
-            actFormTemp[act.type].afterEdit(act);
             var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
             var index = $('.activityList .activity').index(prevDom);
 
@@ -334,7 +331,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             // clear form data
             CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
             $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
-            actFormTemp[act.type].afterCreate(act);
 
             index = actList.model.length;
 
@@ -365,7 +361,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           targetForm.find('input[name=title]').val(data.title);
           targetForm.find('textarea[name=description]').val(data.description);
           CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);
-          actFormTemp[data.type].beforeEdit(data);
           data = data.data;
           for(var key in data.data){
             targetForm.find('[name="'+key+'"]').val(data[key]);
