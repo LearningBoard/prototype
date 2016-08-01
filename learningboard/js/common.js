@@ -17,6 +17,7 @@ requirejs.config({
     bootstrap: 'lib/bootstrap.min',
     util: 'lib/util',
     fileinput: 'https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min',
+    select2: 'https://cdn.jsdelivr.net/select2/4.0.3/js/select2.min',
     isotope: "https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min"
   },
   shim: {
@@ -112,7 +113,7 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
     // logout
     $('.navbar-nav .logout')
     .on(
-      'click', 
+      'click',
       function(e)
       {
         e.preventDefault();
@@ -138,17 +139,17 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
   {
     var o = {};
     var a = this.serializeArray();
-    $.each(a, 
-      function() 
+    $.each(a,
+      function()
       {
-        if (o[this.name] !== undefined) 
+        if (o[this.name] !== undefined)
         {
-          if (!o[this.name].push) 
+          if (!o[this.name].push)
             o[this.name] = [o[this.name]];
 
           o[this.name].push(this.value || '');
-        } 
-        else 
+        }
+        else
           o[this.name] = this.value || '';
       }
     );
