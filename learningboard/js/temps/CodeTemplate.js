@@ -7,11 +7,11 @@ define(['temps/Template', 'models/Code'], function(Template, Code) {
 
     // handle different links
     if(link){
-      if(code_link.match(/jsfiddle\.net/) != null){
+      if(link.match(/jsfiddle\.net/) != null){
         link = link + 'embedded/';
-      }else if(code_link.match(/plnkr\.co/) != null){
+      }else if(link.match(/plnkr\.co/) != null){
         link = 'https://embed.plnkr.co/' 
-        + code_link.replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
+        + link.replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
       }
     }
 
