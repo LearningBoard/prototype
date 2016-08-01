@@ -22,19 +22,37 @@ define(function(){
   };
 
   // Actions to perform before creating new activity
-  ActivityAdapter.prototype.beforeCreate = function() {
+  ActivityAdapter.prototype.beforeCreate = function(template) {
+    _initCkeditor(template);
   };
 
   // Actions to perform after created new activity
-  ActivityAdapter.prototype.afterCreate = function(modelData) {
+  ActivityAdapter.prototype.afterCreate = function(template, modelData) {
+    _initCkeditor(template);
   };
 
   // Actions to perform before editing activity
-  ActivityAdapter.prototype.beforeEdit = function(modelData) {
+  ActivityAdapter.prototype.beforeEdit = function(template, modelData) {
+    _initCkeditor(template);
   };
 
   // Actions to perform after edited activity
-  ActivityAdapter.prototype.afterEdit = function(modelData) {
+  ActivityAdapter.prototype.afterEdit = function(template, modelData) {
+    _initCkeditor(template);
+  };
+
+  var _initCkeditor = function (template){
+    $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
+      var target = template.find('[name=description]');
+      var editor = CKEDITOR.replace(target.attr('id'), {
+        language: 'en'
+      });
+      (function(editor){
+        editor.on('change', function(e){
+          template.find('#' + e.editor.name).val(e.editor.getData());
+        });
+      })(editor);
+    });
   };
 
   return ActivityAdapter;

@@ -16,9 +16,10 @@ define(['activities/ActivityAdapter', 'lib/GoogleDriveFilePicker'], function(Act
     </div>`;
   };
 
-  GDriveAdapter.prototype.beforeCreate = function() {
-    console.log($('#gdrive'));
-    $('#addFileBtn').off('click').on('click', _gFilePick);
+  GDriveAdapter.prototype.beforeCreate = function(template) {
+    console.log(template);
+    template.find('#addFileBtn').off('click').on('click', _gFilePick);
+    ActivityAdapter.prototype.beforeCreate.call(this, template);
   };
 
   var _gFilePick = function() {
