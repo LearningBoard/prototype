@@ -5,7 +5,7 @@ define(['temps/Template', 'models/Audio'], function(Template, Audio) {
     this.model = new Audio(audio);
     var link = this.model.audio_link;
 
-    $html = $(`
+    var $html = $(`
       <div class="embed-responsive embed-responsive-16by9">
         Audio has not been finished yet.
       </div>

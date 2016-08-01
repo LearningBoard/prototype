@@ -6,13 +6,17 @@ define(['temps/Template', 'mdls/Text'], function(Template, Text) {
     this.model = new Text(text);
 
     var link = this.model.text_image;
-    if (!link) {link = "img/placeholser-no-image.png"}
-    $html = $(`
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="${link}" allowfullscreen></iframe>
-      </div>
+    if (link === '') link = "img/placeholder-no-image.png";
+    console.log(link);
+
+    var $html = $(`
+      <img src="${link}" allowfullscreen></img>
     `);
+
+    Template.call(this, $html);
   }
 
   $.extend(TextTemplate.prototype, Template.prototype)
+
+  return TextTemplate;
 });
