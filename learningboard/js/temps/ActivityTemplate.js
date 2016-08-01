@@ -1,5 +1,6 @@
-define(['mdls/User', 'mdls/Activity', 'temps/Template', 'temps/ListElement', 'activities/ActivityAdapter', 'activities/VideoAdapter', 'activities/TextAdapter', 'activities/CodeAdapter', 'activities/AudioAdapter', 'activities/GDriveAdapter', 'lib/ViewDispatcher'], function(User, Activity, Template, ListElement, ActivityAdapter, VideoAdapter, TextAdapter, CodeAdapter, AudioAdapter, GDriveAdapter, ViewDispatcher) {
-  "use strict";
+define(['mdls/User', 'mdls/Activity', 'temps/Template', 'temps/ListElement',
+'lib/ViewDispatcher'], function(User, Activity, Template, ListElement,
+ViewDispatcher) {"use strict";
 
   var ActivityTemplate = function(activity, index)
   {

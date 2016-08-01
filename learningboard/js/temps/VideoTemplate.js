@@ -13,7 +13,7 @@ define(['temps/Template', 'models/Video'], function(Template, Video) {
         link = 'https://player.vimeo.com/video/' + link.match(/vimeo\.com\/(.*)/)[1];
       }
     }
-    $html = $(`
+    var $html = $(`
       <div class="embed-responsive embed-responsive-16by9">
         <iframe class="embed-responsive-item" src="${link}" allowfullscreen></iframe>
       </div>
@@ -22,4 +22,6 @@ define(['temps/Template', 'models/Video'], function(Template, Video) {
   }
 
   $.extend(VideoTemplate.prototype, Template.prototype)
+
+  return VideoTemplate;
 });

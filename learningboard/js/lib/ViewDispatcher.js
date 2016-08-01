@@ -8,6 +8,7 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
     activities: {
       getTypes: function() {return actTypes.slice()},
       getView: function(type) { 
+        console.log(type);
         switch(type)
         {
           case 'video':
@@ -29,6 +30,7 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
             tmp = DefaultActivityTemplate;
             break;
         }
+        console.log(tmp);
         return tmp;
       },
 
