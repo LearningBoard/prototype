@@ -1,4 +1,4 @@
-define(['temps/Template.js'], function() {
+define(['temps/Template'], function(Template) {
   "use strict";
 
   var DefaultActivityTemplate = function() {
@@ -8,4 +8,4 @@ define(['temps/Template.js'], function() {
 
   return DefaultActivityTemplate;
 
-})
+});

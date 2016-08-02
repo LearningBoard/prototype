@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTemplate', 'temps/ActivityTabTemplate', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTemplate, ActivityTabTemplate, ui, fi) {
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTabTemplate', 'lib/ViewDispatcher', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTabTemplate, ViewDispatcher, ui, fi) {
 
   var pk;
   var cover_img = 'empty';
@@ -106,14 +106,16 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     })
 
     // render add/edit activity form
-    require(['temps/activities/VideoFormTemplate', 'temps/activities/TextFormTemplate', 'temps/activities/CodeFormTemplate', 'temps/activities/AudioFormTemplate', 'temps/activities/GDriveFormTemplate'], function(){
-      for(var i = 0; i < arguments.length; i++) {
-        var form = new arguments[i];
+    var actTypes = ViewDispatcher.activities.getTypes();
+    actTypes.forEach(function(act){
+      ViewDispatcher.activities.getCreateFormView(act).then(function(form){
         form.display($('#activityTab').parent().find('.tab-content'));
         var tab = new ActivityTabTemplate(form.name, form.type);
         tab.display($('#activityTab'));
         actFormTemp[form.type] = form;
-      }
+      }).catch(function(e){
+        throw e;
+      });
     });
 
     // board title word count
@@ -287,9 +289,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       var $this = $(this);
 
       var dataObject = $(this).parents('form.addActivityForm').serializeObject();
-      if(pk){
-        dataObject.pk = pk;
-      }
       if(dataObject.id){ // edit existing activity
         dataObject.order = actList.indexOf({id: dataObject.id});
         util.put('/activity/'+dataObject.id+'/', dataObject,
@@ -297,12 +296,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           {
             var act = res.data.activity;
             // clear form data
-            CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
-            $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
-            var prevDom = $('.activityList .activity [data-id='+dataObject.activity_id+']').parents('.activity');
+            actFormTemp[act.type].reset();
+
+            var prevDom = $('.activityList .activity [data-id='+act.id+']').parents('.activity');
             var index = $('.activityList .activity').index(prevDom);
 
-            actList.updateElementAt(new ActivityTemplate(act), index);
+            actList.updateElementAt(new ActivityTemplate(act, index), index);
 
             $this.parent()
             .find('.result_msg')
@@ -311,8 +310,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             .fadeOut('fast', function(){
               $(this).text('');
             });
-            $this.parent()[0].reset();
-            $this.parent().find('input[name=id]').val('');
           }
         );
       }else{ // add new activity
@@ -328,8 +325,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             console.log(res);
             var act = res.data.activity;
             // clear form data
-            CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
-            $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
+            actFormTemp[act.type].reset();
 
             index = actList.length;
 
@@ -337,8 +333,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
               $(this).text('');
             });
-            $this.parent()[0].reset();
-            $this.parent().find('input[name=id]').val('');
           }
         );
       }
@@ -360,9 +354,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           targetForm.find('input[name=title]').val(data.title);
           targetForm.find('textarea[name=description]').val(data.description);
           CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);
-          data = data.data;
           for(var key in data.data){
-            targetForm.find('[name="'+key+'"]').val(data[key]);
+            targetForm.find('[name="'+key+'"]').val(data.data[key]);
           }
           $('html, body')
           .animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
@@ -411,5 +404,5 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       });
     })(instance);
   }
-  
+
 });

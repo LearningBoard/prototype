@@ -1,13 +1,29 @@
-define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temps/AudioTemplate', 'temps/GDriveTemplate'],function(VideoTemplate, TextTemplate, CodeTemplate, AudioTemplate, GDriveTemplate) {
+define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temps/AudioTemplate', 'temps/GDriveTemplate'], function(VideoTemplate, TextTemplate, CodeTemplate, AudioTemplate, GDriveTemplate) {
   "use strict";
 
   var tmp;
-  var actTypes = ["video", "text", "code", "audio", "gdrive"];
+  var actTypes = {
+    'video': {
+      createFormView: 'temps/activities/VideoFormTemplate'
+    },
+    'text': {
+      createFormView: 'temps/activities/TextFormTemplate'
+    },
+    'code': {
+      createFormView: 'temps/activities/CodeFormTemplate'
+    },
+    'audio': {
+      createFormView: 'temps/activities/AudioFormTemplate'
+    },
+    'gdrive': {
+      createFormView: 'temps/activities/GDriveFormTemplate'
+    }
+  };
 
   var expo = {
     activities: {
-      getTypes: function() {return actTypes.slice()},
-      getView: function(type) { 
+      getTypes: function() {return Object.keys(actTypes)},
+      getView: function(type) {
         console.log(type);
         switch(type)
         {
@@ -34,29 +50,17 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
         return tmp;
       },
 
-      getCreateFormView: function () {
-        switch(type)
-        {
-          case 'video':
-            tmp = new VideoFormTemplate();
-            break;
-          case 'text':
-            tmp = new TextFormTemplate();
-            break;
-          case 'code':
-            tmp = new CodeFormTemplate();
-            break;
-          case 'audio':
-            tmp = new AudioFormTemplate();
-            break;
-          case 'gdrive':
-            tmp = new GDriveFormTemplate();
-            break;
-          default:
-            tmp = new DefaultActivityTemplate();
-            break;
-        }
-        return tmp;
+      getCreateFormView: function (type) {
+        return new Promise(function(resolve, reject) {
+          try {
+            require([actTypes[type].createFormView], function(){
+              tmp = new arguments[0]();
+              resolve(tmp);
+            });
+          } catch (e) {
+            reject(e);
+          }
+        });
       }
     }
   };
