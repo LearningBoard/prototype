@@ -16,6 +16,17 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     );
   };
 
+  $.extend(TextFormTemplate.prototype, ActivityFormTemplate.prototype);
+
+  TextFormTemplate.prototype.reset = function() {
+    _initImageInput(
+      this.$template.find(`#${this.type}_image_placeholder`),
+      this.$template.find(`textarea[name=${this.type}_image]`),
+      'https://placehold.it/300x200'
+    );
+    ActivityFormTemplate.prototype.reset.call(this);
+  };
+
   var _initImageInput = function (inputEle, targetEle, url) {
     inputEle.fileinput('destroy');
     var instance = inputEle.fileinput({
@@ -47,6 +58,5 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     })(instance);
   };
 
-  $.extend(TextFormTemplate.prototype, ActivityFormTemplate.prototype);
   return TextFormTemplate;
 });

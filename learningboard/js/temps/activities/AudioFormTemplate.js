@@ -41,6 +41,19 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     }
   };
 
+  $.extend(AudioFormTemplate.prototype, ActivityFormTemplate.prototype);
+
+  AudioFormTemplate.prototype.reset = function() {
+    _initAudioActivity(
+      this.$template,
+      this.$template.find(`#${this.type}_image_placeholder`),
+      this.$template.find(`textarea[name=${this.type}_image]`),
+      true,
+      null
+    );
+    ActivityFormTemplate.prototype.reset.call(this);
+  };
+
   var _initAudioActivity = function(template, inputEle, targetEle, clear, url) {
     if (clear) template.find('.audio_group').text('Please upload at least one image before recording');
     inputEle.fileinput('destroy');
@@ -152,6 +165,5 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     return instance;
   };
 
-  $.extend(AudioFormTemplate.prototype, ActivityFormTemplate.prototype);
   return AudioFormTemplate;
 });

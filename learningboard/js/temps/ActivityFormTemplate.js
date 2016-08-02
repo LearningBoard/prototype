@@ -33,6 +33,13 @@ define(['./Template'], function (Template) {
     _initCkeditor(this.$template);
   };
 
+  ActivityFormTemplate.prototype.reset = function() {
+    var editorName = this.$template.find('[name=description]').attr('id');
+    CKEDITOR.instances[editorName].setData('');
+    this.$template.find('[name=id]').val('');
+    this.$template.find('form')[0].reset();
+  };
+
   var _initCkeditor = function(template) {
     $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
       var target = template.find('[name=description]');
