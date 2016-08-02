@@ -1,4 +1,5 @@
 define(['util', 'temps/ListTemplate'], function(util, ListTemplate) {
+  "use strict";
 
   var noFileHtml = `
   <p class="text-center noElement">
@@ -6,7 +7,7 @@ define(['util', 'temps/ListTemplate'], function(util, ListTemplate) {
   </p>`;
 
   var GFileListTemplate = function(gFileTemps) {
-    if (gFileTemps === undefined) gFileTemps = [];
+    if (gFileTemps === undefined) var gFileTemps = [];
 
     this.model = util.arrayMapping(gFileTemps, function(ele){return ele.model});
     var $template = $(`
@@ -18,7 +19,7 @@ define(['util', 'temps/ListTemplate'], function(util, ListTemplate) {
     ListTemplate.call(this, templateList, $template, $template.children(".fileList"));
     if (this.length === 0) this.$container.append(noFileHtml);
 
-    for (var i = 0; i < length; ++i)
+    for (var i = 0; i < this.length; ++i)
     {
       this.$container.append(templateList[i].$template);
     }

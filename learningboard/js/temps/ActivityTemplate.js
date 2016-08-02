@@ -77,11 +77,8 @@ ViewDispatcher) {"use strict";
       </div>
     `);
     $dif = $html.find("[name='dif']");
-    console.log(ViewDispatcher);
     var TheTemplate = ViewDispatcher.activities.getView(this.model.type);
-    console.log(TheTemplate);
     var theTemp = new TheTemplate(this.model.data);
-    console.log(theTemp);
     theTemp.display($dif);
 
     Template.call(this, $html);

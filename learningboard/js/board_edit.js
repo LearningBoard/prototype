@@ -3,7 +3,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   var pk;
   var cover_img = 'empty';
   var tag_list = [];
-  var actIdList = [];
   var activity_index = 0;
   var actList;
   var actFormTemp = {};
@@ -11,7 +10,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
   $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
-  $(document).ready(function(){
+  $(function(){
     // load category data
     var actTempList = [];
     util.get('/category/',
@@ -51,11 +50,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           if(board.publish == 1){
             $('.publishBoardBtn').parent().addClass('hidden');
             $('.unpublishBoardBtn').parent().removeClass('hidden');
-          }
-          if(board.activities){
-            board.activities.map(function(item){
-              actIdList.push(item.id);
-            });
           }
           if(board.tags){
             board.tags.map(function(item){
@@ -105,6 +99,11 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       actList = new SortableListTemplate(new ActivityListTemplate(), util.urls.actOrder);
       actList.display($(".activityListContainer"));
     }
+    $(".btn.sortLockMode").on("click", function() {
+      actList.toggleSortingEnabled();
+      if (actList.sortingEnabled) {$(this).html("Sorting Enabled");} 
+      else {$(this).html("Sorting Disabled");} 
+    })
 
     // render add/edit activity form
     require(['temps/activities/VideoFormTemplate', 'temps/activities/TextFormTemplate', 'temps/activities/CodeFormTemplate', 'temps/activities/AudioFormTemplate', 'temps/activities/GDriveFormTemplate'], function(){
@@ -192,9 +191,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       if(tag_list){
         dataObject.tags = tag_list;
       }
-      if(actIdList){
-        dataObject.activities = actIdList;
-      }
+      dataObject.activities = actList.getIdList();
       if(pk){
         util.put('/lb/'+pk+'/', dataObject,
           function(res)
@@ -294,7 +291,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         dataObject.pk = pk;
       }
       if(dataObject.id){ // edit existing activity
-        dataObject.order = $('.activityList .activity').index($('.control[data-id='+dataObject.id+']').parents('.activity'));
+        dataObject.order = actList.indexOf({id: dataObject.id});
         util.put('/activity/'+dataObject.id+'/', dataObject,
           function(res)
           {
@@ -319,20 +316,22 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           }
         );
       }else{ // add new activity
-        dataObject.order = $('.activityList .activity').size();
+        console.log("new");
+        dataObject.order = actList.length+1;
+        console.log(actList.length);
         dataObject.author = user.getId();
         dataObject.learningboard = pk;
+        console.log(dataObject);
         util.post('/activity/', dataObject,
           function(res)
           {
             console.log(res);
             var act = res.data.activity;
-            actIdList.push(act.id);
             // clear form data
             CKEDITOR.instances[$this.parents('form.addActivityForm').find('textarea[name=description]').attr('id')].setData('');
             $(this).parents('form.addActivityForm').find('input[name=activity_id]').val('');
 
-            index = actList.model.length;
+            index = actList.length;
 
             actList.addElement(new ActivityTemplate(act, index));
             $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
@@ -381,7 +380,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         '/activity/'+id+'/',
         function(data)
         {
-          actIdList.splice(actIdList.indexOf(parseInt(id)), 1);
           actList.removeElementBy({id: id}, {fadeOut: true});
         }
       );

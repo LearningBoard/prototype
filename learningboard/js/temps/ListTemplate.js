@@ -44,6 +44,8 @@ define(function() {
       this.$container.children(".noElement").remove();
     }
     ele.display(this.$container);
+    console.log("pushing");
+    console.log(this.getIdList());
   }
 
   ListTemplate.prototype.updateElementAt = function(new_ele, index)
@@ -56,7 +58,6 @@ define(function() {
   {
     if (settings === undefined) settings = {};
     var $tmp = this.templateList[index].$template;
-    console.log($tmp);
     if (settings.fadeOut)
     {
       $tmp.fadeOut('slow', function(){
@@ -71,9 +72,9 @@ define(function() {
 
     this.length--;
     for (var ii = index; ii < this.length; ++ii)
-    {
       this.templateList[ii].updateIndex(ii);
-    }
+    console.log("removing");
+    console.log(this.getIdList());
   }
 
   function match(obj, condition)
@@ -97,6 +98,40 @@ define(function() {
     }
   }
 
+  ListTemplate.prototype.getIdList = function() 
+  {
+    return this.templateList.map(function(ele) {return ele.model.id});
+  }
+
   return ListTemplate;
+
+  /**
+   * @param {(function|Object)} filter - condition(s) of the wanted element
+   * @param {int} num - number of the occurence of the wanted element
+   */
+  ListTemplate.prototype.indexOf = function(filter, num)
+  {
+    var length = model.length;
+    if (typeof(filter) === "function")
+    {
+      for (var ii = 0; ii < length; ii++)
+      {
+        if (filter(model[ii]) && --num) return ii;
+      }
+      return -1;
+    }
+
+    else 
+    {
+      for (var ii = 0; ii < length; ii++)
+      {
+        for (var key in filter)
+        {
+          if (this.model[ii][key] === filter[key] && --num)
+            return ii;
+        }
+      }      
+    }
+  }
   
 });

@@ -41,7 +41,7 @@ define(['util', 'mdls/GFile', 'temps/Template', 'temps/ListElement'], function(u
     </div>
     `;
     Template.call(this, $(html));
-    listElement.call(this, index);
+    ListElement.call(this, index);
   }
 
   $.extend(GFileTemplate.prototype, Template.prototype, ListElement.prototype);
