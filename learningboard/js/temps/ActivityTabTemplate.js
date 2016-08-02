@@ -3,7 +3,7 @@ define(['./Template'], function (Template) {
 
   var ActivityTabTemplate = function(name, type) {
     var html = `
-    <li role="presentation">
+    <li role="presentation" data-type="${type}">
       <a data-toggle="tab" role="tab" aria-controls="${type}" href="#${type}">
         ${name}
       </a>

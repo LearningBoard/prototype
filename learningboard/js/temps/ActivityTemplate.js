@@ -77,9 +77,9 @@ ViewDispatcher) {"use strict";
       </div>
     `);
     $dif = $html.find("[name='dif']");
-    var TheTemplate = ViewDispatcher.activities.getView(this.model.type);
-    var theTemp = new TheTemplate(this.model.data);
-    theTemp.display($dif);
+    var Resource = ViewDispatcher.activities.getView(this.model.type);
+    var rsc = new Resource(this.model.data);
+    rsc.display($dif);
 
     Template.call(this, $html);
   };

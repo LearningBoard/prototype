@@ -109,14 +109,15 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     var actTypes = ViewDispatcher.activities.getTypes();
     actTypes.forEach(function(act){
       ViewDispatcher.activities.getCreateFormView(act).then(function(form){
-        form.display($('#activityTab').parent().find('.tab-content'));
-        var tab = new ActivityTabTemplate(form.name, form.type);
+        form.display($('.activityForm'));
+        tab = new ActivityTabTemplate(form.name, form.type);
         tab.display($('#activityTab'));
         actFormTemp[form.type] = form;
       }).catch(function(e){
         throw e;
       });
     });
+
 
     // board title word count
     $('#boardTitle').on('keydown', function(e){
@@ -287,9 +288,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         return;
       }
       var $this = $(this);
+      console.log(actFormTemp);
 
-      var dataObject = $(this).parents('form.addActivityForm').serializeObject();
+      var dataObject = actFormTemp[$("#activityTab li.active").data("type")].serializeObject();
+      console.log(dataObject);
       if(dataObject.id){ // edit existing activity
+        console.log(actList);
         dataObject.order = actList.indexOf({id: dataObject.id});
         util.put('/activity/'+dataObject.id+'/', dataObject,
           function(res)

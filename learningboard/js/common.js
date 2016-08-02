@@ -155,4 +155,5 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
     );
     return o;
   };
+
 });

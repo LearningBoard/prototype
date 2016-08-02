@@ -54,6 +54,10 @@ define(['./Template'], function (Template) {
     });
   };
 
+  ActivityFormTemplate.prototype.serializeObject = function() {
+    return this.$template.find("form.addActivityForm").serializeObject();
+  }
+
   $.extend(ActivityFormTemplate.prototype, Template.prototype);
   return ActivityFormTemplate;
 });

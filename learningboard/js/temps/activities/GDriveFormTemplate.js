@@ -16,7 +16,6 @@ define(['util', '../ActivityFormTemplate', 'temps/SortableListTemplate', 'temps/
     this.fileListTemplate = fileListTemp;
     fileListTemp.display(this.$template.find(".fileList"));
 
-    console.log(this.$template);
     this.$template.find('#addFileBtn').off('click').on('click', _gFilePick);
   };
 
@@ -30,5 +29,11 @@ define(['util', '../ActivityFormTemplate', 'temps/SortableListTemplate', 'temps/
   };
 
   $.extend(GDriveFormTemplate.prototype, ActivityFormTemplate.prototype);
+
+  GDriveFormTemplate.prototype.serializeObject = function() {
+    var obj = ActivityFormTemplate.prototype.serializeObject.call(this);
+    obj["fileList"] = this.fileListTemplate.model;
+    return obj;
+  }
   return GDriveFormTemplate;
 });

@@ -399,3 +399,15 @@ div.img-button.thumbnail {
 .noElement {
   color: #888888;
 }
+
+.carouselButtons {
+  margin-left: 100px;
+  position: absolute;
+  bottom: 0px;
+}
+
+iframe.file {
+  width: 100%;
+  height: 500px;
+}
+
