@@ -12,7 +12,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     _initImageInput(
       this.$template.find(`#${this.type}_image_placeholder`),
       this.$template.find(`textarea[name=${this.type}_image]`),
-      'https://placehold.it/300x200'
+      'img/placeholder-no-image.png'
     );
   };
 
@@ -23,7 +23,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     _initImageInput(
       this.$template.find(`#${this.type}_image_placeholder`),
       this.$template.find(`textarea[name=${this.type}_image]`),
-      'https://placehold.it/300x200'
+      'img/placeholder-no-image.png'
     );
   };
 
@@ -33,14 +33,13 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       _initImageInput(
         this.$template.find(`#${this.type}_image_placeholder`),
         this.$template.find(`textarea[name=${this.type}_image]`),
-        act.data.text_image
+        util.media_addr + '/' + act.data.text_image
       );
     }
   };
 
   var _initImageInput = function (inputEle, targetEle, url) {
-    inputEle.fileinput('destroy');
-    var instance = inputEle.fileinput({
+    var instance = inputEle.fileinput('destroy').fileinput({
       showClose: false,
       showCaption: false,
       showBrowse: false,
@@ -63,7 +62,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
         });
       });
       instance.off('filecleared').on('filecleared', function(e) {
-        _initImageInput(inputEle, targetEle, 'https://placehold.it/300x200');
+        _initImageInput(inputEle, targetEle, 'img/placeholder-no-image.png');
         targetEle.val('');
       });
     })(instance);

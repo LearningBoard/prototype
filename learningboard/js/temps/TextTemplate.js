@@ -1,4 +1,4 @@
-define(['temps/Template', 'mdls/Text'], function(Template, Text) {
+define(['util', 'temps/Template', 'mdls/Text'], function(util, Template, Text) {
   "use strict";
 
   var TextTemplate = function(text) {
@@ -7,6 +7,7 @@ define(['temps/Template', 'mdls/Text'], function(Template, Text) {
 
     var link = this.model.text_image;
     if (link === '') link = "img/placeholder-no-image.png";
+    else link = util.media_addr + '/' + link;
 
     var $html = $(`
       <img src="${link}" class="img-responsive" />
