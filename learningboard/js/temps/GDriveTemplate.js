@@ -11,27 +11,16 @@ define(['mdls/GFile', 'temps/Template'], function(GFile, Template) {
     var $html = $("<div class='fileView'></div>");
     $html.append(`
       <div class="carousel slide" data-ride="carousel" style="width: 100%; height: 500px">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-          <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-          <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-          <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-        </ol>
-
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
-          <div class="item active">
-          </div>
-          <div class="item">
-          </div>
         </div>
 
         <!-- Controls -->
-        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+        <a class="left carousel-control" role="button" data-slide="prev">
           <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
           <span class="sr-only">Previous</span>
         </a>
-        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+        <a class="right carousel-control" role="button" data-slide="next">
           <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
         </a>
@@ -65,6 +54,10 @@ define(['mdls/GFile', 'temps/Template'], function(GFile, Template) {
 
       $html.find(".carousel .carousel-inner").append($iframeHtml);
     }
+    var $carousel = $html.find(".carousel.slide");
+    $carousel.carousel({interval: false}).carousel("cycle");
+    $carousel.find(".left").click(function() {$carousel.carousel("prev");});
+    $carousel.find(".right").click(function() {$carousel.carousel("next");});
     Template.call(this, $html)
   };
 
