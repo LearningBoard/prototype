@@ -19,12 +19,23 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
   $.extend(TextFormTemplate.prototype, ActivityFormTemplate.prototype);
 
   TextFormTemplate.prototype.reset = function() {
+    ActivityFormTemplate.prototype.reset.call(this);
     _initImageInput(
       this.$template.find(`#${this.type}_image_placeholder`),
       this.$template.find(`textarea[name=${this.type}_image]`),
       'https://placehold.it/300x200'
     );
-    ActivityFormTemplate.prototype.reset.call(this);
+  };
+
+  TextFormTemplate.prototype.setData = function(act) {
+    ActivityFormTemplate.prototype.setData.call(this, act);
+    if (act.data.text_image) {
+      _initImageInput(
+        this.$template.find(`#${this.type}_image_placeholder`),
+        this.$template.find(`textarea[name=${this.type}_image]`),
+        act.data.text_image
+      );
+    }
   };
 
   var _initImageInput = function (inputEle, targetEle, url) {

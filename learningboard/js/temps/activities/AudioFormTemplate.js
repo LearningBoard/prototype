@@ -44,6 +44,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
   $.extend(AudioFormTemplate.prototype, ActivityFormTemplate.prototype);
 
   AudioFormTemplate.prototype.reset = function() {
+    ActivityFormTemplate.prototype.reset.call(this);
     _initAudioActivity(
       this.$template,
       this.$template.find(`#${this.type}_image_placeholder`),
@@ -51,7 +52,6 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       true,
       null
     );
-    ActivityFormTemplate.prototype.reset.call(this);
   };
 
   var _initAudioActivity = function(template, inputEle, targetEle, clear, url) {

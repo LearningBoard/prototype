@@ -8,6 +8,18 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   var actFormTemp = {};
   var serv_addr = util.serv_addr;
 
+  var afterCreateActivityCallback = function(act) {
+    var index = actList.length;
+    actList.addElement(new ActivityTemplate(act, index));
+    $('#collapseAddActivity').collapse('hide');
+  };
+  var afterEditActivityCallback = function(act) {
+    var prevDom = $('.activityList .activity [data-id='+act.id+']').parents('.activity');
+    var index = $('.activityList .activity').index(prevDom);
+    actList.updateElementAt(new ActivityTemplate(act, index), index);
+    $('#collapseAddActivity').collapse('hide');
+  };
+
   $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
   $(function(){
@@ -101,16 +113,21 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     }
     $(".btn.sortLockMode").on("click", function() {
       actList.toggleSortingEnabled();
-      if (actList.sortingEnabled) {$(this).html("Sorting Enabled");} 
-      else {$(this).html("Sorting Disabled");} 
+      if (actList.sortingEnabled) {$(this).html("Sorting Enabled");}
+      else {$(this).html("Sorting Disabled");}
     })
 
     // render add/edit activity form
     var actTypes = ViewDispatcher.activities.getTypes();
     actTypes.forEach(function(act){
       ViewDispatcher.activities.getCreateFormView(act).then(function(form){
+        if (pk) {
+          form.setLearningBoardId(pk);
+        }
+        form.setAfterCreate(afterCreateActivityCallback);
+        form.setAfterEdit(afterEditActivityCallback);
         form.display($('.activityForm'));
-        tab = new ActivityTabTemplate(form.name, form.type);
+        var tab = new ActivityTabTemplate(form);
         tab.display($('#activityTab'));
         actFormTemp[form.type] = form;
       }).catch(function(e){
@@ -279,73 +296,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       $('#addActivityBox .panel-title a').text('+ Add/Edit Learning Activity');
     });
 
-    // add activity submit button
-    $(document).on('click', 'button.addActivityBtn', function(e){
-      // trigger html5 validation
-      if($(this).parents('form.addActivityForm')[0].checkValidity()){
-        e.preventDefault();
-      }else{
-        return;
-      }
-      var $this = $(this);
-      console.log(actFormTemp);
-
-      var dataObject = actFormTemp[$("#activityTab li.active").data("type")].serializeObject();
-      console.log(dataObject);
-      if(dataObject.id){ // edit existing activity
-        console.log(actList);
-        dataObject.order = actList.indexOf({id: dataObject.id});
-        util.put('/activity/'+dataObject.id+'/', dataObject,
-          function(res)
-          {
-            var act = res.data.activity;
-            // clear form data
-            actFormTemp[act.type].reset();
-
-            var prevDom = $('.activityList .activity [data-id='+act.id+']').parents('.activity');
-            var index = $('.activityList .activity').index(prevDom);
-
-            actList.updateElementAt(new ActivityTemplate(act, index), index);
-
-            $this.parent()
-            .find('.result_msg')
-            .text('Activity edited!')
-            .delay(1000)
-            .fadeOut('fast', function(){
-              $(this).text('');
-            });
-          }
-        );
-      }else{ // add new activity
-        console.log("new");
-        dataObject.order = actList.length+1;
-        console.log(actList.length);
-        dataObject.author = user.getId();
-        dataObject.learningboard = pk;
-        console.log(dataObject);
-        util.post('/activity/', dataObject,
-          function(res)
-          {
-            console.log(res);
-            var act = res.data.activity;
-            // clear form data
-            actFormTemp[act.type].reset();
-
-            index = actList.length;
-
-            actList.addElement(new ActivityTemplate(act, index));
-            $this.parent().find('.result_msg').text('Activity edited!').delay(1000).fadeOut('fast', function(){
-              $(this).text('');
-            });
-          }
-        );
-      }
-    });
-    /*
-    */
     // edit activity
     $(document).on('click', '.activity span.glyphicon-pencil', function(e){
-      var $this = $(this).parents('div.activity');
       var id = $(this).parents('div.control').data('id');
       util.get('/activity/'+id+'/',
         function(res)
@@ -353,14 +305,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           var data = res.data.activity;
           $('#collapseAddActivity').collapse('show');
           $('#activityTab a[href="#'+data.type+'"]').tab('show');
-          var targetForm = $('#collapseAddActivity #' + data.type);
-          targetForm.find('.addActivityForm input[name=id]').val(data.id);
-          targetForm.find('input[name=title]').val(data.title);
-          targetForm.find('textarea[name=description]').val(data.description);
-          CKEDITOR.instances[targetForm.find('textarea[name=description]').attr('id')].setData(data.description);
-          for(var key in data.data){
-            targetForm.find('[name="'+key+'"]').val(data.data[key]);
-          }
+          actFormTemp[data.type].setData(data);
           $('html, body')
           .animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
         }

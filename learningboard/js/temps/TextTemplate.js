@@ -9,7 +9,7 @@ define(['temps/Template', 'mdls/Text'], function(Template, Text) {
     if (link === '') link = "img/placeholder-no-image.png";
 
     var $html = $(`
-      <img src="${link}" allowfullscreen></img>
+      <img src="${link}" class="img-responsive" />
     `);
 
     Template.call(this, $html);
