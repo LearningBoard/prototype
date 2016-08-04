@@ -16,7 +16,9 @@ requirejs.config({
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
     bootstrap: 'lib/bootstrap.min',
     util: 'lib/util',
-    fileinput: 'https://raw.githubusercontent.com/kartik-v/bootstrap-fileinput/master/js/fileinput',
+    // fileinput: 'https://raw.githubusercontent.com/kartik-v/bootstrap-fileinput/master/js/fileinput',
+    fileinput: 'https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min',
+
     select2: 'https://cdn.jsdelivr.net/select2/4.0.3/js/select2.min',
     isotope: "https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min"
   },

@@ -53,10 +53,11 @@ define(function() {
     console.log(this.getIdList());
   }
 
-  ListTemplate.prototype.updateElementAt = function(new_ele, index)
+  ListTemplate.prototype.updateElementAt = function(model, index)
   {
-    this.model[index] = new_ele.model;
-    this.templateList[index].$template.replaceWith(new_ele.$template);
+    this.model[index] = model;
+
+    this.templateList[index].update(model);
   }
 
   ListTemplate.prototype.removeElementAt = function(index, settings)

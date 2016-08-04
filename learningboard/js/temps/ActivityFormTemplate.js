@@ -58,6 +58,7 @@ define(['util', './Template'], function (util, Template) {
           $this.reset();
 
           if (typeof $this.afterEditCallback === 'function') {
+            console.log("after edit callback");
             $this.afterEditCallback(act);
           }
 

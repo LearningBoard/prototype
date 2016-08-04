@@ -14,8 +14,9 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $('#collapseAddActivity').collapse('hide');
   };
   var afterEditActivityCallback = function(act) {
+    console.log(act);
     var index = actList.getIdList().indexOf(act.id);
-    actList.updateElementAt(new ActivityTemplate(act, index), index);
+    actList.updateElementAt(new Activity(act), index);
     $('#collapseAddActivity').collapse('hide');
   };
 

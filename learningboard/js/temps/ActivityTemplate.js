@@ -2,30 +2,19 @@ define(['mdls/User', 'mdls/Activity', 'temps/Template', 'temps/ListElement',
 'lib/ViewDispatcher'], function(User, Activity, Template, ListElement,
 ViewDispatcher) {"use strict";
 
-  var ActivityTemplate = function(activity, index)
+  var _get_html = function(model, index) 
   {
-    // index: for the order of display
-    // inherits Template
-
-    if (index === undefined) throw "hehe";
-    this.model = new Activity(activity);
-    ListElement.call(this, ++index);
-
-    if(activity){
-      this.model = new Activity(activity);
-    }
     var html = '';
     var $html, $dif;
     var activityControl;
-
     if(User.is_staff() && location.href.includes('board_edit.html')){
       activityControl = `
-      <div class="control" data-id="${this.model.id}">
+      <div class="control" data-id="${model.id}">
         <ul>
-          <li ${this.model['status'] == 0 ? 'class="hidden"' : ''}>
+          <li ${model.published() ? 'class="hidden"' : ''}>
             <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
           </li>
-          <li ${this.model['status'] == 0 ? '' : 'class="hidden"'}>
+          <li ${model.published() ? '' : 'class="hidden"'}>
             <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
           </li>
           <li>
@@ -40,7 +29,7 @@ ViewDispatcher) {"use strict";
     else
     {
       activityControl = `
-      <div class="control" data-id="${this.model.id}">
+      <div class="control" data-id="${model.id}">
         <ul class="text-muted">
           <li>
             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
@@ -57,12 +46,13 @@ ViewDispatcher) {"use strict";
         </ul>
       </div>`;
     }
+    index++;
     $html = $(`
-      <div class="activity ${this.model.published() ? '' : 'unpublish'}">
-        <h2 class="index">${this.index < 10 ? '0' + this.index : this.index}</h2>
-        <p class="title lead">${this.model['title']}</p>
+      <div class="activity ${model.published() ? '' : 'unpublish'}">
+        <h2 class="index">${index < 10 ? '0' + index : index}</h2>
+        <p class="title lead">${model['title']}</p>
         <p class="text-muted">
-          Posted date: ${new Date(this.model.createdAt).toDateString()}<br/>
+          Posted date: ${new Date(model.createdAt).toDateString()}<br/>
           Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
         </p><br/>
         <div class="row">
@@ -70,24 +60,47 @@ ViewDispatcher) {"use strict";
             <div name="dif"> </div>
           </div>
           <div class="col-md-12">
-            <div class="description">${this.model.description}</div>
+            <div class="description">${model.description}</div>
           </div>
         </div>
         ${activityControl}
       </div>
     `);
     $dif = $html.find("[name='dif']");
-    var Resource = ViewDispatcher.activities.getView(this.model.type);
-    var rsc = new Resource(this.model.data);
+    var Resource = ViewDispatcher.activities.getView(model.type);
+    var rsc = new Resource(model.data);
     rsc.display($dif);
+    return $html;
+  }
 
-    Template.call(this, $html);
+  var ActivityTemplate = function(activity, index)
+  {
+    // index: for the order of display
+    // inherits Template
+
+    this.model = new Activity(activity);
+    if (index !== undefined)
+      ListElement.call(this, index);
+
+    if(activity){
+      this.model = new Activity(activity);
+    }
+    Template.call(this, _get_html(this.model, index));
   };
 
   ActivityTemplate.prototype.updateIndex = function(index)
   {
-    this.index = index++;
+    this.index = index;
+    index++;
     this.$template.find(".index").html(index < 10 ? '0' + index : index);
+  }
+  ActivityTemplate.prototype.update = function(model, index) 
+  {
+    if (index === undefined) index = this.index;
+    this.model = model;
+    var new_html = _get_html(model, index);
+    this.$template.replaceWith(new_html);
+    this.$template = new_html;
   }
 
   $.extend(ActivityTemplate.prototype, Template.prototype, ListElement.prototype);
