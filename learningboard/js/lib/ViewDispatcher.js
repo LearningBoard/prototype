@@ -1,4 +1,4 @@
-define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temps/AudioTemplate', 'temps/GDriveTemplate'], function(VideoTemplate, TextTemplate, CodeTemplate, AudioTemplate, GDriveTemplate) {
+define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temps/AudioTemplate', 'temps/GDriveTemplate', 'temps/ODriveTemplate', 'temps/DefaultActivityTemplate'], function(VideoTemplate, TextTemplate, CodeTemplate, AudioTemplate, GDriveTemplate, ODriveTemplate, DefaultActivityTemplate) {
   "use strict";
 
   var tmp;
@@ -43,6 +43,9 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
             break;
           case 'gdrive':
             tmp = GDriveTemplate;
+            break;
+          case 'odrive':
+            tmp = ODriveTemplate;
             break;
           default:
             tmp = DefaultActivityTemplate;

@@ -8,6 +8,8 @@ define(function() {
 
   Template.prototype.display = function()
   {
+    if (this.$template === undefined) 
+      throw new TypeError("Required property $template is undefined");
     for (var i = 0; i < arguments.length; ++i)
       arguments[i].append(this.$template);
     this.displaying = true;

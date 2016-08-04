@@ -1,12 +1,11 @@
-define(['mdls/GFile', 'temps/Template'], function(GFile, Template) {
+define(['mdls/GFile', 'mdls/GDriveData', 'temps/Template'], function(GFile, GDriveData, Template) {
   "use strict";
 
   /**
    * @constructor
-   * @param {Array} gfiles - a list of google files
+   * @param {Array} data - activity data returned from backend
    */
   var GDriveTemplate = function(data) {
-    console.log(data);
 
     var $html = $("<div class='fileView'></div>");
     $html.append(`
@@ -26,7 +25,7 @@ define(['mdls/GFile', 'temps/Template'], function(GFile, Template) {
         </a>
     `);
     data.fileList = data.fileList.map(function(ele){return new GFile(ele);});
-    this.model = data;
+    this.model = new GDriveData(data);
 
     var fileList = this.model.fileList;
     var len = fileList.length;
