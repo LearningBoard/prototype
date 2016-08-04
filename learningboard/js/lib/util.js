@@ -54,12 +54,8 @@ define(['mdls/User'], function(user) {
 
     urls: {
       serv_addr: serv_addr,
-      actOrder: "/lb/activityorder/",
-      gFileOrder: "/gfileorder/"
+      media_addr: serv_addr + '/media'
     },
-
-    serv_addr: serv_addr,
-    media_addr: serv_addr + '/media',
 
     arrayMapping: function(list, mapping_func) 
     {

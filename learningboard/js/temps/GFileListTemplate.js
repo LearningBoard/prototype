@@ -1,9 +1,9 @@
-define(['util', 'temps/ListTemplate'], function(util, ListTemplate) {
+define(['util', 'jquery_ui', 'temps/ListTemplate'], function(util, jquery_ui, ListTemplate) {
   "use strict";
 
   var noFileHtml = `
-  <p class="text-center noElement">
-    <i>Please select your files</i>
+  <p class="text-center noElement" style="margin-top: 25px">
+    <i>Please select your file(s)</i>
   </p>`;
 
   var GFileListTemplate = function(gFileTemps) {
@@ -12,6 +12,7 @@ define(['util', 'temps/ListTemplate'], function(util, ListTemplate) {
     this.model = util.arrayMapping(gFileTemps, function(ele){return ele.model});
     var $template = $(`
     <div class="listFrame">
+      <div class="anchor file-trash"><span class="glyphicon glyphicon-trash file-trash-icon"></span></div>
       <div class="fileList"></div>
     </div>`);
     var templateList = gFileTemps.slice();
@@ -23,6 +24,16 @@ define(['util', 'temps/ListTemplate'], function(util, ListTemplate) {
     {
       this.$container.append(templateList[i].$template);
     }
+
+    var thisArg = this;
+    $template.find(".file-trash").droppable({
+      accept: ".fileDisplay",
+      drop: function(event, ui) {
+        ui.draggable.remove();
+      },
+      hoverClass: "file-trash-active"
+    });
+
   }
 
   $.extend(GFileListTemplate.prototype, ListTemplate.prototype);
@@ -42,7 +53,7 @@ define(['util', 'temps/ListTemplate'], function(util, ListTemplate) {
   GFileListTemplate.prototype.removeElementAt = function(index, settings) 
   {
     ListTemplate.prototype.removeElementAt.call(this, index, settings);
-    if (this.templateList.length < 1) this.$container.append(noActHtml);
+    if (this.templateList.length < 1) this.$container.append(noFileHtml);
   }
 
   return GFileListTemplate;

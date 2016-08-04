@@ -16,7 +16,7 @@ define(['temps/Template', 'models/Code'], function(Template, Code) {
     }
 
     var $html = $(`
-      <div class="embed-responsive embed-responsive-16by9">
+      <div class="embed-responsive embed-responsive-16by9 activity-code">
         <iframe class="embed-responsive-item" src="${link}" allowfullscreen></iframe>
       </div>
     `);

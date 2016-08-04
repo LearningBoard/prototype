@@ -6,7 +6,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   var activity_index = 0;
   var actList;
   var actFormTemp = {};
-  var serv_addr = util.serv_addr;
+  var serv_addr = util.urls.serv_addr;
 
   var afterCreateActivityCallback = function(act) {
     var index = actList.length;
@@ -90,12 +90,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
               function(activity, index) {
               return new ActivityTemplate(activity, index);
             });
-            actList = new SortableListTemplate(new ActivityListTemplate(actTemps), util.urls.actOrder);
+            actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
             actList.display($(".activityListContainer"));
           }
           else
           {
-            actList = new SortableListTemplate(new ActivityListTemplate(), util.urls.actOrder);
+            actList = new SortableListTemplate(new ActivityListTemplate());
             actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});
@@ -340,7 +340,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       defaultPreviewContent: `<img src="${url}" alt="Your Avatar" class="img-responsive">
       <h6 class="text-muted text-center">Click to select cover image</h6>`,
       layoutTemplates: {main2: '{preview} {remove}'},
-      allowedFileExtensions: ['jpg', 'png', 'gif']
+      allowedFileExtensions: ['jpeg', 'jpg', 'png', 'gif']
     });
     (function(instance){
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){

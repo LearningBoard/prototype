@@ -273,16 +273,6 @@ div.img-button.thumbnail {
   padding: 0 5px;
 }
 
-.activityList > .activity .activity-image {
-  max-width: 50%;
-  max-height: 50%;
-}
-
-.activityList > .activity .activity-video {
-  max-width: 50%;
-  max-height: 50%;
-}
-
 /* tag list */
 .tagList ul {
   list-style: none;
@@ -396,18 +386,60 @@ div.img-button.thumbnail {
   float: left;
 }
 
-.noElement {
-  color: #888888;
+.file-trash {
+  width: 40px; 
+  height: 40px; 
+  float: right;
+  opacity: .5;
 }
 
-.carouselButtons {
-  margin-left: 100px;
-  position: absolute;
-  bottom: 0px;
+.file-trash-icon {
+  right: 10px;
+  top: 10px;
+  font-size: 20px; 
+  float: right;
+}
+
+.file-trash-active {
+  opacity: .9;
+}
+
+.noElement {
+  opacity: .7;
+}
+
+.carousel-control {
+  width: 0;
+  opacity: initial;
+}
+
+.activity-img {
+  width: 65%;
+  height: 65%;
+  float: left;
+}
+
+.activity-video {
+  width: 85% !important;
+  height: 85% !important;
+}
+
+.activity-drive {
+  width: 85%;
+  height: 400px;
+}
+
+.activity-code {
+  width: 85%;
+  height: 400px;
 }
 
 iframe.file {
   width: 100%;
-  height: 500px;
+  height: 400px;
 }
 
+.addFileBtn {
+  margin-top: 5px; 
+  float: right;
+}

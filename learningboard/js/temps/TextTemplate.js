@@ -1,15 +1,20 @@
-define(['temps/Template', 'mdls/Text'], function(Template, Text) {
+define(['util', 'temps/Template', 'mdls/Text'], function(util, Template, Text) {
   "use strict";
 
   var TextTemplate = function(text) {
 
     this.model = new Text(text);
+    console.log(this.model);
 
-    var link = this.model.text_image;
-    if (link === '') link = "img/placeholder-no-image.png";
+    var link; 
+    if (this.model.text_image === '') link = "img/placeholder-no-image.png";
+    else link = util.urls.media_addr+'/'+this.model.text_image; 
 
+    console.log(link);
     var $html = $(`
-      <img src="${link}" class="img-responsive" />
+      <div class="clearfix">
+        <img src="${link}" class="img-responsive activity-img" />
+      </div>
     `);
 
     Template.call(this, $html);

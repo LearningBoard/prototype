@@ -28,6 +28,11 @@ define(function() {
     }
   };
 
+  ListTemplate.prototype.remove = function()
+  {
+    this.$template.remove();
+  }
+
   ListTemplate.prototype.empty = function()
   {
     return this.length === 0;
@@ -57,16 +62,20 @@ define(function() {
   ListTemplate.prototype.removeElementAt = function(index, settings)
   {
     if (settings === undefined) settings = {};
-    var $tmp = this.templateList[index].$template;
-    if (settings.fadeOut)
+    if (this.templateList[index] !== undefined)
     {
-      $tmp.fadeOut('slow', function(){
+      var $tmp = this.templateList[index].$template;
+      if (settings.fadeOut)
+      {
+        $tmp.fadeOut('slow', function(){
+          $tmp.remove();
+        });
+      }
+      else {
         $tmp.remove();
-      });
+      }
     }
-    else {
-      $tmp.remove();
-    }
+
     this.templateList.splice(index, 1);
     this.model.splice(index, 1);
 

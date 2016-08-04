@@ -13,5 +13,10 @@ define(function() {
     this.displaying = true;
   };
 
+  Template.prototype.remove = function() 
+  {
+    this.$template.remove();
+  }
+
   return Template;
 })

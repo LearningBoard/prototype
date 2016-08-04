@@ -1,19 +1,19 @@
-define(["jquery_ui", "util"], function(ui, util) {
+define(["jquery_ui", "util"], function(jquery_ui, util) {
 
-  var SortableListTemplate = function(listTemplate, order_url)
+  var SortableListTemplate = function(listTemplate)
   {
     $.extend(this, listTemplate);
     $.extend(this, listTemplate.__proto__);
 
     this.sortingEnabled = true;
-    this.order_url = order_url;
 
     var $container = this.$container;
     var $template = this.$template;
     var templateList = this.templateList;
+    var model = this.model;
 
     $container.sortable({
-      cancel: '.noElement',
+      cancel: '.noElement, .anchor',
       opacity: 0.95,
       cursor: 'move'
     });
@@ -23,36 +23,36 @@ define(["jquery_ui", "util"], function(ui, util) {
     {
       startIndex = ui.item.index();
     });
+
+    var thisArg = this;
     $template.on('sortupdate', function(e, ui)
     {
       var target = templateList[startIndex];
       endIndex = ui.item.index();
-      for (var i = startIndex; i > endIndex; --i)
+      if (endIndex === -1) 
+      {
+          // the target is removed
+        thisArg.removeElementAt(startIndex);
+        return;
+      }
+      for (var ii = startIndex; ii > endIndex; --ii)
       {
         // startIndex > endIndex
-        templateList[i] = templateList[i-1];
-        templateList[i].updateIndex(i);
+        templateList[ii] = templateList[ii-1];
+        model[ii] = model[ii-1];
+        templateList[ii].updateIndex(ii);
       }
-      for (var i = startIndex; i < endIndex; ++i)
+      for (var ii = startIndex; ii < endIndex; ++ii)
       {
         // endIndex > startIndex
-        templateList[i] = templateList[i+1];
-        templateList[i].updateIndex(i);
+        templateList[ii] = templateList[ii+1];
+        model[ii] = model[ii+1]
+        templateList[ii].updateIndex(ii);
       }
       templateList[endIndex] = target;
+      model[ii] = target.model;
       target.updateIndex(endIndex);
-      this.saveOrder();
     });
-  }
-
-  SortableListTemplate.prototype.saveOrder = function()
-  {
-    var order = {};
-    for (var i = 0; i < templateList.length; ++i)
-    {
-      order[templateList[i].model.id] = i;
-    }
-    util.post(order_url, order);
   }
 
   SortableListTemplate.prototype.setSortingEnabled = function(enabled)

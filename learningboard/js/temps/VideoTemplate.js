@@ -15,7 +15,7 @@ define(['temps/Template', 'models/Video'], function(Template, Video) {
     }
     var $html = $(`
       <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="${link}" allowfullscreen></iframe>
+        <iframe class="activity-video embed-responsive-item" src="${link}" allowfullscreen></iframe>
       </div>
     `);
     Template.call(this, $html);

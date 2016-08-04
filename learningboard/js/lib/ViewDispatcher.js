@@ -17,6 +17,9 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
     },
     'gdrive': {
       createFormView: 'temps/activities/GDriveFormTemplate'
+    },
+    'odrive': {
+      createFormView: 'temps/activities/ODriveFormTemplate'
     }
   };
 

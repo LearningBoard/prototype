@@ -54,7 +54,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
         main2: '{preview} {remove}',
         actions: ''
       },
-      allowedFileExtensions: ['jpg', 'png', 'gif']
+      allowedFileExtensions: ['jpeg', 'jpg', 'png', 'gif']
     });
     (function(instance) {
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){

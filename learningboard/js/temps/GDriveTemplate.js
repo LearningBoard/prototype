@@ -10,7 +10,7 @@ define(['mdls/GFile', 'temps/Template'], function(GFile, Template) {
 
     var $html = $("<div class='fileView'></div>");
     $html.append(`
-      <div class="carousel slide" data-ride="carousel" style="width: 100%; height: 500px">
+      <div class="carousel slide activity-drive" id="myCarousel" data-ride="carousel" >
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
         </div>
