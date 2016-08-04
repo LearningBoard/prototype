@@ -1,6 +1,6 @@
-define(['mdls/User', 'mdls/Activity', 'temps/Template', 'temps/ListElement',
-'lib/ViewDispatcher'], function(User, Activity, Template, ListElement,
-ViewDispatcher) {"use strict";
+define(['mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
+'lib/ViewDispatcher'], function(User, Activity, ListElementTemplate,
+ ViewDispatcher) {"use strict";
 
   var _get_html = function(model, index) 
   {
@@ -73,19 +73,19 @@ ViewDispatcher) {"use strict";
     return $html;
   }
 
+  /**
+   * @constructor
+   * @param activity - the activity data
+   * @param index - for the order of displaying
+   */
   var ActivityTemplate = function(activity, index)
   {
-    // index: for the order of display
-    // inherits Template
-
     this.model = new Activity(activity);
-    if (index !== undefined)
-      ListElement.call(this, index);
 
     if(activity){
       this.model = new Activity(activity);
     }
-    Template.call(this, _get_html(this.model, index));
+    ListElementTemplate.call(this, _get_html(this.model, index), index);
   };
 
   ActivityTemplate.prototype.updateIndex = function(index)
@@ -94,16 +94,17 @@ ViewDispatcher) {"use strict";
     index++;
     this.$template.find(".index").html(index < 10 ? '0' + index : index);
   }
+
   ActivityTemplate.prototype.update = function(model, index) 
   {
     if (index === undefined) index = this.index;
-    this.model = model;
     var new_html = _get_html(model, index);
+    this.model = model;
     this.$template.replaceWith(new_html);
     this.$template = new_html;
   }
 
-  $.extend(ActivityTemplate.prototype, Template.prototype, ListElement.prototype);
+  $.extend(ActivityTemplate.prototype, ListElementTemplate.prototype);
 
   return ActivityTemplate;
 });

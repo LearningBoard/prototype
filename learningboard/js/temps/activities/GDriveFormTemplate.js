@@ -19,8 +19,21 @@ define(['util', '../ActivityFormTemplate', 'temps/SortableListTemplate', 'temps/
       fp.pick(function(data){
         console.log(data)
         var len = data.docs.length;
+        var idList = thisArg.fileListTemplate.getIdList();
         for (var ii = 0; ii < len; ++ii)
         {
+          var lenj = idList.length;
+          var flag = false;
+          console.log(idList);
+          console.log(idList[jj]);
+          console.log(data.docs[ii]);
+          for (var jj = 0; jj < lenj; ++jj)
+          {
+            if (idList[jj] === data.docs[ii].id)
+              flag = true;
+          }
+          if (flag) continue;
+
           thisArg.fileListTemplate.addElement(new GFileTemplate(data.docs[ii], ii));
         }
       });
@@ -48,6 +61,17 @@ define(['util', '../ActivityFormTemplate', 'temps/SortableListTemplate', 'temps/
     this.fileListTemplate.display(this.$template.find(".fileList"));
 
     return obj;
+  }
+
+  /**
+   * @override
+   */
+  GDriveFormTemplate.prototype.setData = function(act) {
+    ActivityFormTemplate.prototype.setData.call(this, act);
+    this.fileListTemplate.empty();
+    var len = act.data.fileList.length;
+    for (var ii = 0; ii < len; ++ii)
+      this.fileListTemplate.addElement(new GFileTemplate(act.data.fileList[ii]));
   }
 
   return GDriveFormTemplate;

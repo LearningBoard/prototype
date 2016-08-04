@@ -33,9 +33,14 @@ define(function() {
     this.$template.remove();
   }
 
-  ListTemplate.prototype.empty = function()
+  ListTemplate.prototype.isEmpty = function()
   {
     return this.length === 0;
+  }
+
+  ListTemplate.prototype.empty = function() 
+  {
+    while (this.length) this.removeElementAt(0);
   }
 
   ListTemplate.prototype.addElement = function(ele)

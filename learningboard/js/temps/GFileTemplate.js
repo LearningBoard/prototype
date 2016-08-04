@@ -1,4 +1,4 @@
-define(['util', 'mdls/GFile', 'temps/Template', 'temps/ListElement'], function(util, GFile, Template, ListElement) {
+define(['util', 'mdls/GFile', 'temps/ListElementTemplate'], function(util, GFile, ListElementTemplate) {
   "use strict";
 
   var GFileTemplate = function(fileObject, index)
@@ -40,11 +40,10 @@ define(['util', 'mdls/GFile', 'temps/Template', 'temps/ListElement'], function(u
       <p>${util.strTrunc(this.model.name, 8)}</p>
     </div>
     `;
-    Template.call(this, $(html));
-    ListElement.call(this, index);
+    ListElementTemplate.call(this, $(html), index);
   }
 
-  $.extend(GFileTemplate.prototype, Template.prototype, ListElement.prototype);
+  $.extend(GFileTemplate.prototype, ListElementTemplate.prototype);
 
   return GFileTemplate;
 });
