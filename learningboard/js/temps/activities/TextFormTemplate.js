@@ -51,7 +51,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       <h6 class="text-muted text-center">Click to select image</h6></div>`,
       layoutTemplates: {
         main2: '{preview} {remove}',
-        actions: ''
+        footer: ''
       },
       allowedFileTypes: ['image']
     });

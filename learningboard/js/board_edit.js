@@ -6,7 +6,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   var activity_index = 0;
   var actList;
   var actFormTemp = {};
-  var serv_addr = util.urls.serv_addr;
 
   var afterCreateActivityCallback = function(act) {
     var index = actList.length;
@@ -99,7 +98,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});
-          initCoverImage(board.coverImage ? util.media_addr + '/' + board.coverImage: "img/placeholder-no-image.png");
+          initCoverImage(board.coverImage ? util.urls.media_addr + '/' + board.coverImage: "img/placeholder-no-image.png");
         },
         function(){
           alert('Learning Board not found');
@@ -343,7 +342,10 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       removeClass: 'btn btn-default btn-block btn-xs',
       defaultPreviewContent: `<img src="${url}" alt="Cover Image" class="img-responsive">
       <h6 class="text-muted text-center">Click to select cover image</h6>`,
-      layoutTemplates: {main2: '{preview} {remove}'},
+      layoutTemplates: {
+        main2: '{preview} {remove}',
+        footer: ''
+      },
       allowedFileTypes: ['image']
     });
     (function(instance){
