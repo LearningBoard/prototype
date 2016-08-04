@@ -29,7 +29,7 @@ define(["jquery_ui", "util"], function(jquery_ui, util) {
     {
       var target = templateList[startIndex];
       endIndex = ui.item.index();
-      if (endIndex === -1) 
+      if (endIndex === -1)
       {
           // the target is removed
         thisArg.removeElementAt(startIndex);

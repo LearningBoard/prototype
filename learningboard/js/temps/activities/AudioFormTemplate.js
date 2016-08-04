@@ -1,4 +1,4 @@
-define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTemplate, util) {
+define(['../ActivityFormTemplate', 'util', 'mdls/User', 'fileinput'], function(ActivityFormTemplate, util, user) {
   'use strict';
 
   var AudioFormTemplate = function(data) {
@@ -58,6 +58,8 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     if (clear) template.find('.audio_group').text('Please upload at least one image before recording');
     inputEle.fileinput('destroy');
     var options = {
+      uploadUrl: util.serv_addr + '/media',
+      //uploadAsync: true,
       showClose: false,
       showCaption: false,
       showBrowse: false,
@@ -65,11 +67,6 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       showUpload: false,
       browseOnZoneClick: true,
       overwriteInitial: false,
-      defaultPreviewContent: `<div align="center"><img src="img/placeholder-no-image.png" alt="Image" width="300" class="img-responsive">
-      <h6 class="text-muted text-center">Click to select image</h6></div>`,
-      layoutTemplates: {
-        footer: '<div class="file-thumbnail-footer"><small><i>Remove</i></small></div>',
-      }
     };
     if (url) {
       url = url.map(function(value) {
@@ -80,18 +77,12 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     var instance = inputEle.fileinput(options);
     (function(instance) {
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader) {
-        util.post('/media', {data: reader.result}, function(res) {
-          var previous = [];
-          if(targetEle.val().length > 0){
-            previous = JSON.parse(targetEle.val());
-          }
-          previous.push(res.data.file);
-          targetEle.val(JSON.stringify(previous));
-          _addAudioGroup(template);
+        console.log(file, previewId, index, reader);
+        _addAudioGroup(template);
+        $(document).on('click', `#${previewId}`, function(e){
+          console.log('hi');
+          console.log($(this).parents('.file-preview-frame').attr('id'));
         });
-      });
-      instance.off('filesuccessremove').on('filesuccessremove', function(e, key) {
-        // TODO delete targetEle array
       });
     })(instance);
   };
