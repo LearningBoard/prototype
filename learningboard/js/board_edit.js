@@ -14,8 +14,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $('#collapseAddActivity').collapse('hide');
   };
   var afterEditActivityCallback = function(act) {
-    var prevDom = $('.activityList .activity [data-id='+act.id+']').parents('.activity');
-    var index = $('.activityList .activity').index(prevDom);
+    var index = actList.getIdList().indexOf(act.id);
     actList.updateElementAt(new ActivityTemplate(act, index), index);
     $('#collapseAddActivity').collapse('hide');
   };
@@ -50,10 +49,10 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       });
 
       initCoverImage('img/placeholder-no-image.png');
-    }
 
-    // assign value to field when editing the board
-    if(/\?\d+/.test(location.search)){
+      actList = new SortableListTemplate(new ActivityListTemplate(), util.urls.actOrder);
+      actList.display($(".activityListContainer"));
+    } else if(/\?\d+/.test(location.search)){ // assign value to field when editing the board
       pk = location.search.replace('?', '');
       util.get('/lb/'+pk+'/',
         function(res){
@@ -108,8 +107,9 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       );
     }
     else{
-      actList = new SortableListTemplate(new ActivityListTemplate(), util.urls.actOrder);
-      actList.display($(".activityListContainer"));
+      alert('Learning Board not found');
+      location.href = 'boards.html';
+      return false;
     }
     $(".btn.sortLockMode").on("click", function() {
       actList.toggleSortingEnabled();
@@ -156,7 +156,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       var tag = modal.find('.modal-body select[name=tag]');
       util.get('/tag/',
         function(data){
-          data = $.map(data.tags, function(item){
+          data = data.data.tag.map(function(item){
             return {
               id: item.tag,
               text: item.tag
@@ -178,12 +178,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           for(var i = 0; i < tagArray.length; i++){
             var item = tagArray[i];
             (function(item){
-              util.post('/tag/add/', {tag: item},
+              util.post('/tag', {tag: item},
                 function(data)
                 {
-                  if(tag_list.indexOf(data.pk) === -1){
-                    tag_list.push(data.pk);
-                    $('.tagList ul').append(`<li data-id="${data.pk}">${item} <span>x</span></li>`);
+                  var id = data.data.tag.id;
+                  if(tag_list.indexOf(id) === -1){
+                    tag_list.push(id);
+                    $('.tagList ul').append(`<li data-id="${id}">${item} <span>x</span></li>`);
                   }
                 }
               );
@@ -342,7 +343,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       defaultPreviewContent: `<img src="${url}" alt="Cover Image" class="img-responsive">
       <h6 class="text-muted text-center">Click to select cover image</h6>`,
       layoutTemplates: {main2: '{preview} {remove}'},
-      allowedFileExtensions: ['jpeg', 'jpg', 'png', 'gif']
+      allowedFileTypes: ['image']
     });
     (function(instance){
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
