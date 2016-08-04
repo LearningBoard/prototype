@@ -56,7 +56,7 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, B
       $('#addBoardBtn').removeClass('hidden');
     }
 
-    util.get("/lb/", 
+    util.get("/lb?user", 
       function(res)
       {
         var data = res.data;

@@ -106,7 +106,6 @@ define(['util', './Template'], function (util, Template) {
   ActivityFormTemplate.prototype.setData = function(act) {
     this.$template.find('[name=id]').val(act.id);
     this.$template.find('[name=title]').val(act.title);
-    this.$template.find('[name=description]').val(act.description);
     var editorName = this.$template.find('[name=description]').attr('id');
     CKEDITOR.instances[editorName].setData(act.description);
     for (var key in act.data) {
@@ -124,20 +123,18 @@ define(['util', './Template'], function (util, Template) {
 
   var _initCkeditor = function(template) {
     $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
-      var target = template.find('[name=description]');
-      var editor = CKEDITOR.replace(target.attr('id'), {
+      var editorName = template.find('[name=description]').attr('id');
+      CKEDITOR.replace(editorName, {
         language: 'en'
       });
-      (function(editor){
-        editor.on('change', function(e){
-          template.find('#' + e.editor.name).val(e.editor.getData());
-        });
-      })(editor);
     });
   };
 
   ActivityFormTemplate.prototype.serializeObject = function() {
-    return this.$template.find("form.addActivityForm").serializeObject();
+    var data = this.$template.find("form.addActivityForm").serializeObject();
+    var editorName = this.$template.find('[name=description]').attr('id');
+    data.description = CKEDITOR.instances[editorName].getData();
+    return data;
   }
 
   $.extend(ActivityFormTemplate.prototype, Template.prototype);

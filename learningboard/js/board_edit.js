@@ -1,7 +1,7 @@
 define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTabTemplate', 'lib/ViewDispatcher', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTabTemplate, ViewDispatcher, ui, fi) {
 
   var pk;
-  var cover_img = 'empty';
+  var cover_img;
   var tag_list = [];
   var activity_index = 0;
   var actList;
@@ -49,7 +49,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         cursor: 'not-allowed'
       });
 
-      initCoverImage('https://placehold.it/300x200');
+      initCoverImage('img/placeholder-no-image.png');
     }
 
     // assign value to field when editing the board
@@ -99,7 +99,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});
-          initCoverImage(board.image_url ? serv_addr + board.image_url: "img/placeholder-no-image.png");
+          initCoverImage(board.coverImage ? util.media_addr + '/' + board.coverImage: "img/placeholder-no-image.png");
         },
         function(){
           alert('Learning Board not found');
@@ -205,8 +205,10 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         return;
       }
       var dataObject = $('form.addBoardForm').serializeObject();
-      if(cover_img){
-        dataObject.cover_img = cover_img;
+      if (cover_img) {
+        dataObject.coverImage = cover_img;
+      } else {
+        dataObject.coverImage = null;
       }
       if(tag_list){
         dataObject.tags = tag_list;
@@ -329,7 +331,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   });
 
   function initCoverImage(url){
-    var instance = $('.uploadImage').fileinput({
+    var instance = $('.uploadImage').fileinput('destroy').fileinput({
       overwriteInitial: true,
       showClose: false,
       showCaption: false,
@@ -337,18 +339,19 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       browseOnZoneClick: true,
       removeLabel: 'Remove cover image',
       removeClass: 'btn btn-default btn-block btn-xs',
-      defaultPreviewContent: `<img src="${url}" alt="Your Avatar" class="img-responsive">
+      defaultPreviewContent: `<img src="${url}" alt="Cover Image" class="img-responsive">
       <h6 class="text-muted text-center">Click to select cover image</h6>`,
       layoutTemplates: {main2: '{preview} {remove}'},
       allowedFileExtensions: ['jpeg', 'jpg', 'png', 'gif']
     });
     (function(instance){
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
-        cover_img = reader.result;
+        util.post('/media', {data: reader.result}, function(res) {
+          cover_img = res.data.file;
+        });
       });
       instance.off('filecleared').on('filecleared', function(e){
-        instance.fileinput('destroy');
-        initCoverImage('https://placehold.it/300x200');
+        initCoverImage('img/placeholder-no-image.png');
         cover_img = undefined;
       });
     })(instance);

@@ -65,7 +65,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       showUpload: false,
       browseOnZoneClick: true,
       overwriteInitial: false,
-      defaultPreviewContent: `<div align="center"><img src="https://placehold.it/300x200" alt="Image" width="300" class="img-responsive">
+      defaultPreviewContent: `<div align="center"><img src="img/placeholder-no-image.png" alt="Image" width="300" class="img-responsive">
       <h6 class="text-muted text-center">Click to select image</h6></div>`,
       layoutTemplates: {
         footer: '<div class="file-thumbnail-footer"><small><i>Remove</i></small></div>',
