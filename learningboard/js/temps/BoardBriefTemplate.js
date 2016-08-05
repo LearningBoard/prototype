@@ -1,24 +1,26 @@
 // dependencies: Template.js, Board.js
-define(['util', 'mdls/User', 'mdls/Board', './Template'], function (util, user, Board, Template) 
+define(['util', 'mdls/User', 'mdls/Board', './Template'], function (util, user, Board, Template)
 {
-  var BoardBriefTemplate = function(board) 
+  var BoardBriefTemplate = function(board)
   {
     this.model = new Board(board);
     var serv_addr = util.serv_addr;
     var html = '\
-    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 board-brief-temp" data-id="'+this.model.id+'" >\
+    <div class="col-xs-12 col-sm-4 col-md-3 board-brief-temp" data-id="'+this.model.id+'" >\
       <div class="thumbnail">\
         <div class="img-button thumbnail">\
           <!-- <img src="'+serv_addr+this.model.image_url+'" alt="Cover Image"/> -->\
           <img src="https:placehold.it/300x200" alt="Cover Image"/> '
     if (user.is_staff()) {
       html += '\
-          <div class="boardControlBtn boardEditButton">\
-            <a href="board_edit.html?'+this.model.id+'">Edit</a>\
-          </div>\
-          <div class="boardControlBtn boardSendNewsButton">\
-            <a href="#" data-toggle="modal" data-target="#sendNewsModal">Send News</a>\
-          </div>\
+          <ul class="boardControlBtn">\
+            <li class="boardEditButton">\
+              <a href="board_edit.html?'+this.model.id+'">Edit</a>\
+            </li>\
+            <li class="boardSendNewsButton">\
+              <a href="#" data-toggle="modal" data-target="#sendNewsModal">Send News</a>\
+            </li>\
+          </ul>\
       ';
     }
     html += '\
@@ -56,17 +58,6 @@ define(['util', 'mdls/User', 'mdls/Board', './Template'], function (util, user, 
     var $tmp = this.$template
   }
 
-  BoardBriefTemplate.prototype.getLevelName = function(level) 
-  {
-    return "Beginner";
-  };
-
-  BoardBriefTemplate.prototype.getStatusName = function(level)
-  {
-    return "published";
-  };
-
   $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
   return BoardBriefTemplate;
 });
-

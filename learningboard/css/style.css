@@ -142,27 +142,23 @@ div.img-button.thumbnail {
 }
 
 .boardControlBtn {
-  top: 7px;
   position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.boardControlBtn li {
+  display: inline-block;
+}
+
+.boardControlBtn li a {
   font-weight: bold;
   padding: 2px 5px;
   border: 2px solid #EEE;
   background-color: #00BFFF;
-  display: inline;
-  opacity: 0.82;
-}
-
-.boardEditButton {
-  left: 100px;
-}
-
-.boardSendNewsButton {
-  left: 137px;
-}
-
-.boardEditButton a, .boardSendNewsButton a {
   color: #FFF;
   text-decoration: none;
+  opacity: 0.82;
 }
 
 /* board edit */
@@ -387,8 +383,8 @@ div.img-button.thumbnail {
 }
 
 .file-trash {
-  width: 40px; 
-  height: 40px; 
+  width: 40px;
+  height: 40px;
   float: right;
   opacity: .5;
 }
@@ -396,7 +392,7 @@ div.img-button.thumbnail {
 .file-trash-icon {
   right: 10px;
   top: 10px;
-  font-size: 20px; 
+  font-size: 20px;
   float: right;
 }
 
@@ -440,6 +436,6 @@ iframe.file {
 }
 
 .addFileBtn {
-  margin-top: 5px; 
+  margin-top: 5px;
   float: right;
 }
