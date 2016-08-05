@@ -119,22 +119,35 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
     // render add/edit activity form
     var actTypes = ViewDispatcher.activities.getTypes();
-    actTypes.forEach(function(act){
-      ViewDispatcher.activities.getCreateFormView(act).then(function(form){
-        if (pk) {
-          form.setLearningBoardId(pk);
-        }
-        form.setAfterCreate(afterCreateActivityCallback);
-        form.setAfterEdit(afterEditActivityCallback);
-        form.display($('.activityForm'));
-        var tab = new ActivityTabTemplate(form);
-        tab.display($('#activityTab'));
-        actFormTemp[form.type] = form;
-      }).catch(function(e){
-        throw e;
+    var actFormPromise = actTypes.reduce(function(array, act){
+      var promise = new Promise(function(resolve, reject) {
+        ViewDispatcher.activities.getCreateFormView(act).then(function(form) {
+          if (!form) return resolve();
+          if (pk) {
+            form.setLearningBoardId(pk);
+          }
+          form.setAfterCreate(afterCreateActivityCallback);
+          form.setAfterEdit(afterEditActivityCallback);
+          form.display($('.activityForm'));
+          actFormTemp[form.type] = form;
+          resolve(form);
+        }).catch(function(err) {
+          resolve();
+        });
       });
+      array.push(promise);
+      return array;
+    }, []);
+    Promise.all(actFormPromise).then(function(result) {
+      result.forEach(function(form) {
+        if (form) {
+          var tab = new ActivityTabTemplate(form);
+          tab.display($('#activityTab'));
+        }
+      });
+    }).catch(function(e){
+      throw e;
     });
-
 
     // board title word count
     $('#boardTitle').on('keydown', function(e){
