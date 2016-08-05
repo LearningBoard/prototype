@@ -1,8 +1,8 @@
-define(['mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
-'lib/ViewDispatcher'], function(User, Activity, ListElementTemplate,
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
+'lib/ViewDispatcher'], function(util, User, Activity, ListElementTemplate,
  ViewDispatcher) {"use strict";
 
-  var _get_html = function(model, index) 
+  var _get_html = function(model, index)
   {
     var html = '';
     var $html, $dif;
@@ -35,7 +35,7 @@ define(['mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
             Share
           </li>
-          <li class="markAsComplete">
+          <li class="markAsComplete ${model.completed ? 'text-success' : ''}">
             <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
             Mark as complete
           </li>
@@ -70,6 +70,18 @@ define(['mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
     var Resource = ViewDispatcher.activities.getView(model.type);
     var rsc = new Resource(model.data);
     rsc.display($dif);
+
+    // mark as complete button
+    $html.find('.markAsComplete').off('click').on('click', function() {
+      var $this = $(this);
+      util.post('/activity/complete/'+model.id, {complete: !model.completed},
+        function(res) {
+          $this.toggleClass('text-success');
+          model.completed = !model.completed;
+        }
+      );
+    });
+
     return $html;
   }
 
@@ -95,7 +107,7 @@ define(['mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
     this.$template.find(".index").html(index < 10 ? '0' + index : index);
   }
 
-  ActivityTemplate.prototype.update = function(model, index) 
+  ActivityTemplate.prototype.update = function(model, index)
   {
     if (index === undefined) index = this.index;
     var new_html = _get_html(model, index);

@@ -1,6 +1,6 @@
 define(['mdls/Activity'], function (Activity) {
   "use strict";
-  
+
   var Board = function(board)
   {
     $.extend(this, board);
@@ -36,6 +36,21 @@ define(['mdls/Activity'], function (Activity) {
         case false: return "unpublished";
         case true: return "published";
       };
+    },
+
+    getCompletedPercentage: function()
+    {
+      var count;
+      var count = this.activities.map(function(item) {
+        return item.completed;
+      }).reduce(function(prev, current) {
+        if (current) {
+          return prev + 1;
+        } else {
+          return prev;
+        }
+      }, 0);
+      return parseInt(count / this.activities.length * 100);
     },
 
     published: function()
