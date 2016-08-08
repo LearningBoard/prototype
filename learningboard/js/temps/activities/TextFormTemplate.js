@@ -33,7 +33,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       _initImageInput(
         this.$template.find(`#${this.type}_image_placeholder`),
         this.$template.find(`textarea[name=${this.type}_image]`),
-        util.media_addr + '/' + act.data.text_image
+        util.urls.media_addr + '/' + act.data.text_image
       );
     }
   };
@@ -47,7 +47,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       overwriteInitial: true,
       removeLabel: 'Remove image',
       removeClass: 'btn btn-default btn-block btn-xs',
-      defaultPreviewContent: `<div align="center"><img src="${url}" alt="Image" width="300" class="img-responsive">
+      defaultPreviewContent: `<div align="center"><img src="${url}" alt="Image" class="img-responsive">
       <h6 class="text-muted text-center">Click to select image</h6></div>`,
       layoutTemplates: {
         main2: '{preview} {remove}',

@@ -409,12 +409,6 @@ div.img-button.thumbnail {
   opacity: initial;
 }
 
-.activity-img {
-  width: 65%;
-  height: 65%;
-  float: left;
-}
-
 .activity-video {
   width: 85% !important;
   height: 85% !important;
