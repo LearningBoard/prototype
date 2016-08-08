@@ -9,7 +9,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
   var afterCreateActivityCallback = function(act) {
     var index = actList.length;
-    actList.addElement(new ActivityTemplate(act, index));
+    actList.addElement(new ActivityTemplate(act, index, null));
     $('#collapseAddActivity').collapse('hide');
   };
   var afterEditActivityCallback = function(act) {
@@ -87,7 +87,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             var length = activities.length;
             var actTemps = util.arrayMapping(activities,
               function(activity, index) {
-              return new ActivityTemplate(activity, index);
+              return new ActivityTemplate(activity, index, null);
             });
             actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
             actList.display($(".activityListContainer"));

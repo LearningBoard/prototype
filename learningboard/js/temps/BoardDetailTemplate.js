@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableTemplate', 'temps/ActivityTemplate', 'temps/ActivityListTemplate'], function (util, User, Board, Template, CommentableTemplate, ActivityTemplate, ActivityListTemplate) {
+define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate'], function (util, User, Board, Template, ActivityTemplate, ActivityListTemplate) {
   var BoardDetailTemplate = function(board)
   {
     /* this.variables:
@@ -7,13 +7,14 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
     */
 
     this.model = new Board(board);
+    var $this = this;
     var model = this.model;
     var follow_html = '<span class="glyphicon glyphicon-envelope"></span>&nbsp subscribe</button>';
     var unfollow_html = '<span class="glyphicon glyphicon-remove"></span>&nbsp unsubscribe';
     var following_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
     var html = `
       <div class="row">
-        <div class="col-md-8 col-lg-8">
+        <div class="col-md-8">
           <h3 class="title board_title">`+util.toTitle(model.title)+`</h3>
           <div class="row">
             <div class="col-md-1 col-sm-1 col-xs-1" style="width: 70px">
@@ -66,7 +67,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
           </div>`;
         html += `
         </div>
-        <div class="col-md-4 col-lg-4">
+        <div class="col-md-4">
           <h4>About This Board</h4>
           <div class="board_description">${model.description}</div>
           <h4>Tags</h4>
@@ -171,7 +172,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
 
     this.actTemps = util.arrayMapping(model.activities, function(ele, i)
     {
-      return new CommentableTemplate(new ActivityTemplate(ele, i));
+      return new ActivityTemplate(ele, i, $this);
     });
 
     var actList = new ActivityListTemplate(this.actTemps, false);
@@ -182,4 +183,4 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
 
   return BoardDetailTemplate;
 
-})
+});
