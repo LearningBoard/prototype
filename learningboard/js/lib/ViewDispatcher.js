@@ -56,14 +56,12 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
 
       getCreateFormView: function (type) {
         return new Promise(function(resolve, reject) {
-          try {
-            require([actTypes[type].createFormView], function(){
-              tmp = new arguments[0]();
-              resolve(tmp);
-            });
-          } catch (e) {
-            reject(e);
-          }
+          require([actTypes[type].createFormView], function(){
+            tmp = new arguments[0]();
+            resolve(tmp);
+          }, function(err) {
+            resolve();
+          });
         });
       }
     }

@@ -57,8 +57,8 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
           <br>
           <div class="row progressBox">
             <div class="progress">
-              <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                <span>60%</span>
+              <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="${model.getCompletedPercentage()}" aria-valuemin="0" aria-valuemax="100" style="width: ${model.getCompletedPercentage()}%;">
+                <span>${model.getCompletedPercentage()}%</span>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
       if(model.following)
       {
         util.post(
-          '/lb/follow/'+model.id, 
+          '/lb/follow/'+model.id,
           {follow: false},
           function(res) {
             var data = res.data;
@@ -139,9 +139,9 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
       else
       {
         util.post(
-          '/lb/follow/'+model.id, 
+          '/lb/follow/'+model.id,
           {follow: true},
-          function(res) 
+          function(res)
           {
             if (res.success)
             {
@@ -163,24 +163,6 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
       }else{
         $('.progress_endorsed').text(parseInt($('.progress_endorsed').text()) + 1);
         $(this).addClass('btn-primary');
-      }
-    });
-
-    // mark as complete button
-    $(document).on('click', '.markAsComplete', function(){
-      if($(this).attr('style')){
-        $(this).css('color', '');
-      }else{
-        $(this).css('color', 'green');
-      }
-    });
-
-    // like activity button
-    $(document).on('click', '.activity .comment .glyphicon-heart', function(e){
-      if($(this).attr('style')){
-        $(this).css('color', '');
-      }else{
-        $(this).css('color', 'red');
       }
     });
 
