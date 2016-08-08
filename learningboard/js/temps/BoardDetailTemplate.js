@@ -166,15 +166,6 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
       }
     });
 
-    // like activity button
-    $(document).on('click', '.activity .comment .glyphicon-heart', function(e){
-      if($(this).attr('style')){
-        $(this).css('color', '');
-      }else{
-        $(this).css('color', 'red');
-      }
-    });
-
     $actList = $template.find(".activityList");
     var length = model.activities.length;
 
