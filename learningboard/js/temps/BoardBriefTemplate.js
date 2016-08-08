@@ -6,7 +6,7 @@ define(['util', 'mdls/User', 'mdls/Board', './Template'], function (util, user, 
     this.model = new Board(board);
     var serv_addr = util.serv_addr;
     var html = '\
-    <div class="col-xs-12 col-sm-4 col-md-3 board-brief-temp" data-id="'+this.model.id+'" >\
+    <div class="col-xs-12 col-sm-4 col-md-3 board-brief-temp '+this.model.getLevelName()+'" data-id="'+this.model.id+'" >\
       <div class="thumbnail">\
         <div class="img-button thumbnail">\
           <!-- <img src="'+serv_addr+this.model.image_url+'" alt="Cover Image"/> -->\

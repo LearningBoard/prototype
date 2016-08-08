@@ -1,7 +1,11 @@
-define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBriefTemplate) {
+define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBriefTemplate, Isotope) {
   $(document).ready(function()
   {
-    util.get('/lb/', 
+    var grid = new Isotope($('#boardList')[0], {
+      itemSelector: '.board-brief-temp',
+      layoutMode: 'fitRows'
+    });
+    util.get('/lb/',
       function(res) {
         var data = res.data;
         var bl = data.learningboard;
@@ -9,49 +13,29 @@ define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBri
         {
           var bt = new BoardBriefTemplate(bl[i]);
           bt.display($("#boardList"));
+          grid.appended(bt.$template);
         }
       }
     );
-    $('#boardList').isotope({
-      itemSelector: '.col-md-3',
-      layoutMode: 'fitRows'
-    });
     $('#boardList').on('arrangeComplete', function(){
-      if($('#boardList .col-md-3:visible').length < 1){
+      if($('#boardList .board-brief-temp:visible').length < 1){
         alert('No result found');
-        $('.filter_showall').trigger('click');
+        $('.filter[data-filter="all"]').trigger('click');
       }
     });
-    $('.filter_showall').on('click', function(e){
+    $('.filter').on('click', function(e){
       e.preventDefault();
-      $(this).parent().find('button.btn-primary').removeClass('btn-primary');
+      $(this).siblings('button.btn-primary').removeClass('btn-primary');
       $(this).addClass('btn-primary');
-      $('#boardList').isotope({
-        filter: '*'
-      });
-    });
-    $('.filter_beginner').on('click', function(e){
-      e.preventDefault();
-      $(this).parent().find('button.btn-primary').removeClass('btn-primary');
-      $(this).addClass('btn-primary');
-      $('#boardList').isotope({
-        filter: '.col-md-3.beginner'
-      });
-    });
-    $('.filter_advanced').on('click', function(e){
-      e.preventDefault();
-      $(this).parent().find('button.btn-primary').removeClass('btn-primary');
-      $(this).addClass('btn-primary');
-      $('#boardList').isotope({
-        filter: '.col-md-3.advanced'
-      });
-    });
-    $('.filter_intermediate').on('click', function(e){
-      e.preventDefault();
-      $(this).parent().find('button.btn-primary').removeClass('btn-primary');
-      $(this).addClass('btn-primary');
-      $('#boardList').isotope({
-        filter: '.col-md-3.intermediate'
+      var selector;
+      switch($(this).data('filter')) {
+        case 0: selector = '.board-brief-temp.beginner'; break;
+        case 1: selector = '.board-brief-temp.intermediate'; break;
+        case 2: selector = '.board-brief-temp.advanced'; break;
+        default: selector = '';
+      }
+      grid.arrange({
+        filter: selector
       });
     });
   });

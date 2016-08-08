@@ -53,7 +53,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
         <p class="title lead">${model['title']}</p>
         <p class="text-muted">
           Posted date: ${new Date(model.createdAt).toDateString()}<br/>
-          Author/Publisher: <a href="#">Dr. Abel Sanchez</a>
+          Author/Publisher: <a href="#">${model.author.username}</a>
         </p><br/>
         <div class="row">
           <div class="col-md-12">
