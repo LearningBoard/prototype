@@ -1,4 +1,4 @@
-define(['util', '../ActivityFormTemplate', 'temps/SortableListTemplate', 'temps/GFileListTemplate', 'temps/GFileTemplate', 'lib/GoogleDriveFilePicker'], function(util, ActivityFormTemplate, SortableListTemplate, GFileListTemplate, GFileTemplate, fp){
+define(['util', '../ActivityFormTemplate', 'temps/SortableListTemplate', 'temps/GFileListTemplate', 'temps/GFileTemplate', 'lib/GDriveFilePicker'], function(util, ActivityFormTemplate, SortableListTemplate, GFileListTemplate, GFileTemplate, fp){
   'use strict';
 
   var GDriveFormTemplate = function() {
@@ -14,7 +14,7 @@ define(['util', '../ActivityFormTemplate', 'temps/SortableListTemplate', 'temps/
     this.fileListTemplate = new SortableListTemplate(new GFileListTemplate());
     this.fileListTemplate.display(this.$template.find(".fileList"));
     var thisArg = this;
-    this.$template.find('#addFileBtn').off('click').on('click', function() {
+    this.$template.find('.addFileBtn').off('click').on('click', function() {
       console.log(thisArg);
       fp.pick(function(data){
         console.log(data)

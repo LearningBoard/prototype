@@ -1,6 +1,29 @@
 define(['mdls/User'], function(user) {
   "use strict";
 
+  var icon_cdn = "http://cdn.webiconset.com/file-type-icons/images/icons/";
+
+  var file_exts = ['aac', 'ai', 'aiff', 'asp', 'avi', 'bmp', 'c', 'cpp', 'css',
+  'dat', 'dmg', 'doc', 'docx', 'dot', 'dotx', 'dwg', 'dxf', 'eps', 'exe', 'flv',
+  'gif', 'h', 'html', 'ics', 'iso', 'java', 'jpg', 'jpeg', 'key', 'm4v', 'mid', 'mov',
+  'mp3', 'mp4', 'mpg', 'odp', 'ods', 'odt', 'otp', 'ots', 'ott', 'pdf', 'php',
+  'png', 'pps', 'ppt', 'psd', 'py', 'qt', 'rar', 'rb', 'rtf', 'sql', 'tga',
+  'tgz', 'tiff', 'txt', 'wav', 'xls', 'xlsx', 'xml', 'yml', 'zip'];
+
+  file_exts.contain = function(ext) {return file_exts.indexOf(ext) > -1; }
+
+  file_exts.getURL = function(ext) 
+  {
+    var filename;
+    if (this.contain(ext)) 
+    {
+      if (ext === "jpeg") filename = "jpg"; 
+      else filename = ext;
+    }
+    else filename = "blank"; 
+    return icon_cdn + filename + ".png";
+  }
+
   var serv_addr = "http://localhost:1337";
   
   var default_error_func = function(res) {
@@ -56,6 +79,8 @@ define(['mdls/User'], function(user) {
       serv_addr: serv_addr,
       media_addr: serv_addr + '/media'
     },
+
+    file_exts: file_exts,
 
     arrayMapping: function(list, mapping_func) 
     {

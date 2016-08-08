@@ -1,5 +1,6 @@
-define(function() {
-  var ListTemplate = function(templateList, $template, $inner_container)
+define(["temps/Template"], function(Template) {
+  
+  var ListTemplate = function(templateList, $template, $inner_container, noElementHTML)
   {
     this.templateList = templateList;
     // a list of Template objects
@@ -7,10 +8,17 @@ define(function() {
     this.$container = ($inner_container === undefined? $template: $inner_container);
     // a jQuery html element which contains all children templates
 
-    this.$template = $template;
     this.length = templateList.length;
+    this.noElementHTML = noElementHTML === undefined? '': noElementHTML;
+
+    Template.call(this, $template);
   };
 
+  $.extend(ListTemplate.prototype, Template.prototype);
+
+  /**
+   * @override
+   */
   ListTemplate.prototype.display = function()
   {
     var outer_containers = arguments;
@@ -88,8 +96,8 @@ define(function() {
     this.length--;
     for (var ii = index; ii < this.length; ++ii)
       this.templateList[ii].updateIndex(ii);
-    console.log("removing");
-    console.log(this.getIdList());
+
+    if (this.length < 1) this.$container.append(this.noElementHTML);
   }
 
   function match(obj, condition)

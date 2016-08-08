@@ -24,29 +24,11 @@ define(['util', "jquery_ui", 'temps/ListTemplate'], function(util, ui, ListTempl
       </div>`
     );
     var $container = $template.find(".activityList");
-    ListTemplate.call(this, templateList, $template, $container);
+    ListTemplate.call(this, templateList, $template, $container, noActHtml);
     if (this.length === 0) $container.append(noActHtml);
   }
 
   $.extend(ActivityListTemplate.prototype, ListTemplate.prototype);
-
-  /**
-   * @override
-   */
-  ActivityListTemplate.prototype.removeElementBy = function(filter, settings) 
-  {
-    ListTemplate.prototype.removeElementBy.call(this, filter, settings);
-    if (this.templateList.length < 1) this.$container.append(noActHtml);
-  }
-
-  /**
-   * @override
-   */
-  ActivityListTemplate.prototype.removeElementAt = function(index, settings) 
-  {
-    ListTemplate.prototype.removeElementAt.call(this, index, settings);
-    if (this.templateList.length < 1) this.$container.append(noActHtml);
-  }
 
   return ActivityListTemplate;
 });

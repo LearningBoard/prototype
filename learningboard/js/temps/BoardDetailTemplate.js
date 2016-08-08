@@ -13,7 +13,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
     var following_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
     var html = `
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 col-lg-8">
           <h3 class="title board_title">`+util.toTitle(model.title)+`</h3>
           <div class="row">
             <div class="col-md-1 col-sm-1 col-xs-1" style="width: 70px">
@@ -66,7 +66,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
           </div>`;
         html += `
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-lg-4">
           <h4>About This Board</h4>
           <div class="board_description">${model.description}</div>
           <h4>Tags</h4>

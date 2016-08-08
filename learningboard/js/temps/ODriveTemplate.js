@@ -7,10 +7,11 @@ define(['mdls/ODriveData', 'temps/Template'], function(ODriveData, Template) {
    */
   var ODriveTemplate = function(data) {
     this.model = new ODriveData(data);
+    console.log(this.model);
 
     var $html = $("<div class='fileView'></div>");
     $html.append(`
-      <iframe src="${this.model.odrive_link}" width="${this.model.width}" height="${this.model.height}" frameborder="0" scrolling="no"></iframe>
+      <iframe src="${this.model.odrive_link}" width="100%" frameborder="0" scrolling="no" class="activity-odrive"></iframe>
     `);
 
     Template.call(this, $html);

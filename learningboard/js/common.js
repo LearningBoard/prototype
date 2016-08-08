@@ -12,6 +12,7 @@ requirejs.config({
     temps: 'temps/',
     mdls: 'models/',
     test: "test/",
+    OneDrive: "https://js.live.net/v7.0/OneDrive",
     jquery: 'lib/jquery-2.2.4.min',
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
     bootstrap: 'lib/bootstrap.min',
