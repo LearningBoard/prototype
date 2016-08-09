@@ -17,18 +17,18 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
         <div class="col-md-8">
           <h3 class="title board_title">`+util.toTitle(model.title)+`</h3>
           <div class="row">
-            <div class="col-md-1 col-sm-1 col-xs-1" style="width: 70px">
+            <div class="col-xs-1" style="width: 70px">
               <p class="title">Author: </p>
             </div>
-            <div class="col-md-1 col-sm-1 col-xs-1">
+            <div class="col-xs-1">
               <a href="#">`+model.author.username+`</a>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-1 col-sm-1 col-xs-1" style="width: 70px">
+            <div class="col-xs-1" style="width: 70px">
               Level:
             </div>
-            <div class="col-md-1 col-sm-1 col-xs-1">
+            <div class="col-xs-1">
               <span class="board_level title">`+model.getLevelName()+`</span>
             </div>
           </div>
@@ -56,7 +56,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
             </div>
           </div>
           <br>
-          <div class="row progressBox">
+          <div class="progressBox">
             <div class="progress">
               <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="${model.getCompletedPercentage()}" aria-valuemin="0" aria-valuemax="100" style="width: ${model.getCompletedPercentage()}%;">
                 <span>${model.getCompletedPercentage()}%</span>
@@ -67,7 +67,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
           </div>`;
         html += `
         </div>
-        <div class="col-md-4">
+        <div class="col-md-offset-1 col-md-3">
           <h4>About This Board</h4>
           <div class="board_description">${model.description}</div>
           <h4>Tags</h4>

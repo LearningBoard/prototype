@@ -34,7 +34,7 @@ define(['util', 'temps/Template'], function (util, Template) {
             </li>
             <li class="markAsComplete ${model.completed ? 'text-success' : ''}">
               <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-              Mark as complete
+              Complete
             </li>
             <li>
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>

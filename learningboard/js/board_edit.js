@@ -28,11 +28,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       function(res)
       {
         var data = res.data;
+        $('select[name=category]').append(`<option value=""></option>`);
         for(var i = 0; i < data.category.length; i++){
           $('select[name=category]')
           .append(`
             <option value="${data.category[i].id}">
-              ${data.category[i].name}
+              ${data.category[i].category}
             </option>`
           );
         }
