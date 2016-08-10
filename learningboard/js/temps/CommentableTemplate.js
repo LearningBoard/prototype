@@ -1,24 +1,36 @@
 // decorator for Commentable Templates
-define(['util', 'temps/Template'], function (util, Template) {
+define(['util', 'mdls/User', 'temps/Template', 'temps/CommentTemplate'], function (util, User, Template, CommentTemplate) {
   var CommentableTemplate = function(model)
   {
     var cmt_field = `
       <div class="comment">
         <span class="glyphicon glyphicon-heart ${model.liked ? 'text-danger' : ''}"></span> <span class="liked_num">${model.like_num}</span>
-        <span class="glyphicon glyphicon-comment"></span> 0 comment
+        <span class="glyphicon glyphicon-comment"></span> <span class="comment_num">${model.comments.length}</span> comment
         <a class="cmt-toggle" href="#">Add comment</a>
         <div class="commentBox hidden">
           <form>
-            <input type="text" name="comment">
-            <button type="button" class="btn btn-default btn-xs cmt-submit">Submit</button>
+            <div class="input-group">
+              <input type="text" name="comment" class="form-control input-sm" required>
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-default btn-sm cmt-submit">Submit</button>
+              </span>
+            </div>
           </form>
         </div>
         <div class="commentList">
           <ul></ul>
         </div>
+      </div>
     `;
     var $this = this;
     this.$cmtBox = $(cmt_field);
+
+    if (model.comments) {
+      model.comments.map(function(item) {
+        var temp = new CommentTemplate(item);
+        temp.display($this.$cmtBox.find('.commentList ul'));
+      });
+    }
 
     // like activity button
     this.$cmtBox.on('click', '.glyphicon-heart', function(){
@@ -39,15 +51,27 @@ define(['util', 'temps/Template'], function (util, Template) {
     // add comment button
     this.$cmtBox.on('click', 'a.cmt-toggle', function(e){
       e.preventDefault();
-      $(this).parent().find('.commentBox').toggleClass('hidden');
+      $this.$cmtBox.find('.commentBox').toggleClass('hidden');
     });
 
     // comment submit button
     this.$cmtBox.on('click', '.commentBox button.cmt-submit', function(e){
-      e.preventDefault();
-      var target = $(this).prev();
-      $(this).parents('.comment').find('.commentList ul').append(`<li>${target.val()}</li>`);
-      target.val('');
+      // trigger html5 validation
+      if ($this.$cmtBox.find('form')[0].checkValidity()) {
+        e.preventDefault();
+      } else {
+        return;
+      }
+      var target = $this.$cmtBox.find('[name=comment]');
+      util.post('/comment', {comment: target.val(), author: User.getId(), activity: model.id},
+        function(res) {
+          target.val('');
+          var commentNum = parseInt($this.$cmtBox.find('.comment_num').text()) + 1;
+          $this.$cmtBox.find('.comment_num').text(commentNum);
+          var temp = new CommentTemplate(res.data.comment);
+          temp.display($this.$cmtBox.find('.commentList ul'));
+        }
+      );
     });
 
     Template.call(this, this.$cmtBox);
