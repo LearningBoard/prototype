@@ -1,4 +1,4 @@
-define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temps/AudioTemplate', 'temps/GDriveTemplate', 'temps/ODriveTemplate', 'temps/DefaultActivityTemplate'], function(VideoTemplate, TextTemplate, CodeTemplate, AudioTemplate, GDriveTemplate, ODriveTemplate, DefaultActivityTemplate) {
+define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temps/AudioTemplate', 'temps/GDriveTemplate', 'temps/ODriveTemplate', 'temps/QuizTemplate', 'temps/DefaultActivityTemplate'], function(VideoTemplate, TextTemplate, CodeTemplate, AudioTemplate, GDriveTemplate, ODriveTemplate, QuizTemplate, DefaultActivityTemplate) {
   "use strict";
 
   var tmp;
@@ -20,6 +20,9 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
     },
     'odrive': {
       createFormView: 'temps/activities/ODriveFormTemplate'
+    },
+    'quiz': {
+      createFormView: 'temps/activities/QuizFormTemplate'
     }
   };
 
@@ -46,6 +49,9 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
             break;
           case 'odrive':
             tmp = ODriveTemplate;
+            break;
+          case 'quiz':
+            tmp = QuizTemplate;
             break;
           default:
             tmp = DefaultActivityTemplate;
