@@ -93,7 +93,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
   var ActivityTemplate = function(activity, index)
   {
     this.model = new Activity(activity);
-    console.log(this.model);
 
     if(activity){
       this.model = new Activity(activity);

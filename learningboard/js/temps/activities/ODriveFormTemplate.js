@@ -9,22 +9,22 @@ define(['util', '../ActivityFormTemplate', "temps/SortableListTemplate", "lib/OD
 
     var $customFormHtml = $(`
     <div class="fileList"></div>
+    <iframe class="shared_ofile hidden"></iframe>
     <div class="form-group">
-      <iframe class="shared_ofile"></iframe>
       <input type="hidden" name="odrive_link" value=""></input>
-    </div>
     <a class="btn btn-default selectFileBtn">Select Files</a>
+    </div>
     `);
     this.$template.find('.customForm').append($customFormHtml);
     var thisArg = this;
+    
     this.$template.find('.selectFileBtn').off('click').on('click', function() {
       fp.pick(function(data) {
 
-        console.log(data);
         var embed_view = thisArg.$template.find(".shared_ofile");
-        var odrive_link_input = thisArg.$template.find('[name="odrive_link"]');
-        odrive_link_input.attr("value", data.webUrl);
-        embed_view.attr("src", data.webUrl);
+        embed_view.attr("src", data.webUrl).removeClass("hidden");
+
+        thisArg.$template.find('[name="odrive_link"]').attr("value", data.webUrl);
      });
     });
   };
@@ -45,7 +45,7 @@ define(['util', '../ActivityFormTemplate', "temps/SortableListTemplate", "lib/OD
   ODriveFormTemplate.prototype.reset = function() {
     var obj = ActivityFormTemplate.prototype.reset.call(this);
     this.$template.find('[name="odrive_link"]').val("");
-    this.$template.find("iframe.shared_ofile").attr("src", "");
+    this.$template.find("iframe.shared_ofile").attr("src", "").addClass("hidden");
     return obj;
   }
 

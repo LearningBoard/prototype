@@ -5,12 +5,23 @@ define(["OneDrive"], function(OneDrive) {
   {
     console.log("cancelled");
     console.log(data);
-  }
+  };
 
   var error = function(data)
   {
     console.log(data);
-  }
+  };
+
+  var odOptions = { /* ... specify the desired options ... */ 
+    clientId: "8cfc5300-2316-4282-8781-688551f56c1c",
+    action: "share",
+    advanced: {
+      redirectUri: "http://localhost:8000/ofilepicker.html",
+      createLinkParameters: {type: "embed"}
+    },
+    linkType: "webviewlink",
+    multiSelect: true,
+  };
 
   /**
    * @method pick
@@ -25,35 +36,34 @@ define(["OneDrive"], function(OneDrive) {
      * @prop {function} options.error: callback on error
      * @default {function} options.error: error
      */
-    pick: function launchOneDrivePicker(success, options) {
+    pick: function (success, options) {
       console.log("here");
-      if (options === undefined) 
-      {
-        options = {
-          cancel: cancel, 
-          error: error
-        };
-      }
+      if (options === undefined) options = {};
+      if (options.cancel === undefined) options.cancel = cancel;
+      if (options.error === undefined) options.error = error;
 
-      var odOptions = { /* ... specify the desired options ... */ 
-        clientId: "8cfc5300-2316-4282-8781-688551f56c1c",
-        action: "share",
-        advanced: {
-          redirectUri: "http://localhost:8000/ofilepicker.html",
-          createLinkParameters: {type: "embed"}
-        },
-        linkType: "webViewLink",
-        multiSelect: true,
-        success: success, 
-        cancel: options.cancel,
-        error: options.error
-      };
-      console.log("started");
+      odOptions.success = success;
+      odOptions.cancel = cancel;
+      odOptions.error = error;
+
       OneDrive.open(odOptions);
-      console.log("finished");
+    },
+
+    /* deprecated
+    createPickButton: function (success, options) {
+      console.log("here");
+      if (options === undefined) options = {};
+      if (options.cancel === undefined) options.cancel = cancel;
+      if (options.error === undefined) options.error = error;
+
+      odOptions.success = success;
+      odOptions.cancel = cancel;
+      odOptions.error = error;
+
+      return OneDrive.createOpenButton(odOptions);
     }
+    */
   };
 
   return ODriveFilePicker;
-
-})
+});

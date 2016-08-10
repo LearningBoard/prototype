@@ -84,5 +84,10 @@ define(['util', 'mdls/User'], function(util, user) {
         }
       );
     });
+
+    $("button.fbLoginBtn").on("click", function(e) {
+      e.preventDefault();
+      window.location.href = util.urls.serv_addr+"/auth/facebook/";
+    });
   });
 });

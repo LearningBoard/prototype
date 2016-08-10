@@ -1,6 +1,6 @@
 define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, BoardBriefTemplate) {
   'use strict'; 
-  $(document).ready(function(){
+  $(function(){
     // login required
     if (!user.getToken()) {
       alert('Login required!');

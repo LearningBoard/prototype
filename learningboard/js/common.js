@@ -36,7 +36,7 @@ requirejs.config({
 });
 
 define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
-  var public_list = ['index.html', 'login.html']
+  var public_list = ['index.html', 'login.html', 'profile.html']
   $(function() {
     // dump the nav bar to body
     if(!location.href.includes('board_edit.html'))

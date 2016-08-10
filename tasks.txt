@@ -1,8 +1,20 @@
 learning behaviors
     - backward/forward
     - distribution of genre of courses
-    - assignments download times
-    - users' browsering behavior
+    - download times of assignments
+    - users' browsing behavior
     - keywords searched
     - focus of attention when reading long materials
+    - facebook
+    - endorse 
+    - readd
+    - user from facebook twitter
+    - blackboard
     
+profile
+    - name (first, last, middle)
+    - school
+    - institution
+    - education
+    - skill
+    - learning boards

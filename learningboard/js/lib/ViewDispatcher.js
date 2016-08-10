@@ -60,6 +60,7 @@ define(['temps/VideoTemplate', 'temps/TextTemplate', 'temps/CodeTemplate', 'temp
             tmp = new arguments[0]();
             resolve(tmp);
           }, function(err) {
+            throw err;
             resolve();
           });
         });
