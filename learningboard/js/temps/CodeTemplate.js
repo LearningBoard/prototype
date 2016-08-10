@@ -10,8 +10,10 @@ define(['temps/Template', 'models/Code'], function(Template, Code) {
       if(link.match(/jsfiddle\.net/) != null){
         link = link + 'embedded/';
       }else if(link.match(/plnkr\.co/) != null){
-        link = 'https://embed.plnkr.co/' 
+        link = 'https://embed.plnkr.co/'
         + link.replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
+      }else if(link.match(/codepen\.io/) != null){
+        link = link.replace('/pen/', '/embed/');
       }
     }
 
@@ -27,4 +29,4 @@ define(['temps/Template', 'models/Code'], function(Template, Code) {
 
   return CodeTemplate;
 
-})
+});
