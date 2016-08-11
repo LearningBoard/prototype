@@ -1,21 +1,25 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTabTemplate', 'lib/ViewDispatcher', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTabTemplate, ViewDispatcher, ui, fi) {
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTabTemplate', 'temps/ActivityEditControl', 'lib/ViewDispatcher', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTabTemplate, ActivityEditControl, ViewDispatcher, ui, fi) {
 
-  var pk;
-  var cover_img;
-  var tag_list = [];
-  var activity_index = 0;
-  var actList;
-  var actFormTemp = {};
+  var scope = {
+    pk: undefined,
+    cover_img: undefined,
+    tag_list: [],
+    actList: undefined,
+    actFormTemp: {}
+  };
 
   var afterCreateActivityCallback = function(act) {
-    var index = actList.length;
-    actList.addElement(new ActivityTemplate(act, index));
+    var index = scope.actList.length;
+    var act_t = new ActivityTemplate(act, index);
+    var act_c = new ActivityEditControl();
+    act_t.addControl(act_c);
+    scope.actList.addElement(act);
     $('#collapseAddActivity').collapse('hide');
   };
   var afterEditActivityCallback = function(act) {
     console.log(act);
-    var index = actList.getIdList().indexOf(act.id);
-    actList.updateElementAt(new Activity(act), index);
+    var index = scope.actList.getIdList().indexOf(act.id);
+    scope.actList.updateElementAt(new Activity(act), index);
     $('#collapseAddActivity').collapse('hide');
   };
 
@@ -28,11 +32,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       function(res)
       {
         var data = res.data;
+        $('select[name=category]').append(`<option value=""></option>`);
         for(var i = 0; i < data.category.length; i++){
           $('select[name=category]')
           .append(`
             <option value="${data.category[i].id}">
-              ${data.category[i].name}
+              ${data.category[i].category}
             </option>`
           );
         }
@@ -50,11 +55,11 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
       initCoverImage('img/placeholder-no-image.png');
 
-      actList = new SortableListTemplate(new ActivityListTemplate(), util.urls.actOrder);
-      actList.display($(".activityListContainer"));
+      scope.actList = new SortableListTemplate(new ActivityListTemplate());
+      scope.actList.display($(".activityListContainer"));
     } else if(/\?\d+/.test(location.search)){ // assign value to field when editing the board
-      pk = location.search.replace('?', '');
-      util.get('/lb/'+pk+'/',
+      scope.pk = location.search.replace('?', '');
+      util.get('/lb/'+scope.pk+'/',
         function(res){
           // get the info of the board with pk
           var board = res.data.learningboard;
@@ -64,7 +69,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           }
           if(board.tags){
             board.tags.map(function(item){
-              tag_list.push(item.id);
+              scope.tag_list.push(item.id);
               $('.tagList ul')
               .append(`
                 <li data-id="${item.id}">
@@ -85,17 +90,26 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             $('.activityListContainer .noActivity').hide();
             var activities = board.activities;
             var length = activities.length;
-            var actTemps = util.arrayMapping(activities,
+            var actTemps = activities.map(
               function(activity, index) {
-              return new ActivityTemplate(activity, index);
-            });
-            actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
-            actList.display($(".activityListContainer"));
+                return new ActivityTemplate(activity, index);
+              }
+            );
+            scope.actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
+            var len = actTemps.length, ele;
+            for (var ii = 0; ii < len; ++ii)
+            {
+              ele = actTemps[ii];
+              var act_c = new ActivityEditControl(ele);
+              act_c.register(scope.actList);
+              if (ele.addControl) ele.addControl(act_c);
+            }
+            scope.actList.display($(".activityListContainer"));
           }
           else
           {
-            actList = new SortableListTemplate(new ActivityListTemplate());
-            actList.display($(".activityListContainer"));
+            scope.actList = new SortableListTemplate(new ActivityListTemplate());
+            scope.actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});
           initCoverImage(board.coverImage ? util.urls.media_addr + '/' + board.coverImage: "img/placeholder-no-image.png");
@@ -112,8 +126,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       return false;
     }
     $(".btn.sortLockMode").on("click", function() {
-      actList.toggleSortingEnabled();
-      if (actList.sortingEnabled) {$(this).html("Sorting Enabled");}
+      scope.actList.toggleSortingEnabled();
+      if (scope.actList.sortingEnabled) {$(this).html("Sorting Enabled");}
       else {$(this).html("Sorting Disabled");}
     })
 
@@ -123,13 +137,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       var promise = new Promise(function(resolve, reject) {
         ViewDispatcher.activities.getCreateFormView(act).then(function(form) {
           if (!form) return resolve();
-          if (pk) {
-            form.setLearningBoardId(pk);
+          if (scope.pk) {
+            form.setLearningBoardId(scope.pk);
           }
           form.setAfterCreate(afterCreateActivityCallback);
           form.setAfterEdit(afterEditActivityCallback);
           form.display($('.activityForm'));
-          actFormTemp[form.type] = form;
+          scope.actFormTemp[form.type] = form;
           resolve(form);
         }).catch(function(err) {
           resolve();
@@ -159,7 +173,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       var $this = $(this).parent();
       $this.fadeOut('fast', function(){
         $this.remove();
-        tag_list.splice(tag_list.indexOf($this.data('id')), 1);
+        scope.tag_list.splice(scope.tag_list.indexOf($this.data('id')), 1);
       });
     });
 
@@ -195,8 +209,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
                 function(data)
                 {
                   var id = data.data.tag.id;
-                  if(tag_list.indexOf(id) === -1){
-                    tag_list.push(id);
+                  if(scope.tag_list.indexOf(id) === -1){
+                    scope.tag_list.push(id);
                     $('.tagList ul').append(`<li data-id="${id}">${item} <span>x</span></li>`);
                   }
                 }
@@ -219,17 +233,17 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         return;
       }
       var dataObject = $('form.addBoardForm').serializeObject();
-      if (cover_img) {
-        dataObject.coverImage = cover_img;
+      if (scope.cover_img) {
+        dataObject.coverImage = scope.cover_img;
       } else {
         dataObject.coverImage = null;
       }
-      if(tag_list){
-        dataObject.tags = tag_list;
+      if(scope.tag_list){
+        dataObject.tags = scope.tag_list;
       }
-      dataObject.activities = actList.getIdList();
-      if(pk){
-        util.put('/lb/'+pk+'/', dataObject,
+      dataObject.activities = scope.actList.getIdList();
+      if(scope.pk){
+        util.put('/lb/'+scope.pk+'/', dataObject,
           function(res)
           {
             alert('Board saved');
@@ -252,10 +266,10 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $('a.deleteBoardBtn').on('click', function(e)
     {
       e.preventDefault();
-      if(!pk) return false;
+      if(!scope.pk) return false;
       var r = confirm('Are you sure to delete the board?');
       if(r){
-        util.delete('/lb/'+pk+'/',
+        util.delete('/lb/'+scope.pk+'/',
           function(data)
           {
             alert('Board deleted');
@@ -269,8 +283,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $('a.publishBoardBtn').on('click', function(e)
     {
       e.preventDefault();
-      if(!pk) return false;
-      util.post('/lb/publish/'+pk+'/', {publish: true},
+      if(!scope.pk) return false;
+      util.post('/lb/publish/'+scope.pk+'/', {publish: true},
         function(data)
         {
           $('.publishBoardBtn').parent().addClass('hidden');
@@ -284,8 +298,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $('a.unpublishBoardBtn').on('click', function(e)
     {
       e.preventDefault();
-      if(!pk) return false;
-      util.post('/lb/publish/'+pk+'/', {publish: false},
+      if(!scope.pk) return false;
+      util.post('/lb/publish/'+scope.pk+'/', {publish: false},
         function(data)
         {
           $('.publishBoardBtn').parent().removeClass('hidden');
@@ -299,8 +313,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     $('a.previewBoardBtn').on('click', function(e)
     {
       e.preventDefault();
-      if(!pk) return false;
-      window.open('board_preview.html?' + pk,'_blank');
+      if(!scope.pk) return false;
+      window.open('board_preview.html?' + scope.pk,'_blank');
     });
 
     // add activity collapse
@@ -321,27 +335,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           var data = res.data.activity;
           $('#collapseAddActivity').collapse('show');
           $('#activityTab a[href="#'+data.type+'"]').tab('show');
-          actFormTemp[data.type].setData(data);
+          scope.actFormTemp[data.type].setData(data);
           $('html, body')
           .animate({ scrollTop: $('#addActivityBox').offset().top }, 500);
         }
       );
     });
 
-    // remove activity
-    $(document).on('click', '.activity span.glyphicon-remove', function(e){
-      var $this = $(this).parents('div.activity');
-      var r = confirm('Are you sure to delete this activity?');
-      if(!r) return;
-      var id = $(this).parents('div.control').data('id');
-      util.delete(
-        '/activity/'+id+'/',
-        function(data)
-        {
-          actList.removeElementBy({id: id}, {fadeOut: true});
-        }
-      );
-    });
   });
 
   function initCoverImage(url){
@@ -364,12 +364,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     (function(instance){
       instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader){
         util.post('/media', {data: reader.result}, function(res) {
-          cover_img = res.data.file;
+          scope.cover_img = res.data.file;
         });
       });
       instance.off('filecleared').on('filecleared', function(e){
         initCoverImage('img/placeholder-no-image.png');
-        cover_img = undefined;
+        scope.cover_img = undefined;
       });
     })(instance);
   }

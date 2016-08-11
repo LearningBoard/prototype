@@ -22,10 +22,7 @@ p {
 }
 
 body > .container {
-  padding-top: 80px;
-  padding-right: 0;
-  padding-left: 0;
-  padding-bottom: 20px;
+  padding: 80px 0 20px;
 }
 
 body > .body_container {
@@ -197,7 +194,6 @@ p.minor {
 
 /* single board detail */
 .board_status > div {
-  padding-left: 0;
   border-right: 1px solid #CCC;
   color: #555;
 }
@@ -220,17 +216,15 @@ p.minor {
 }
 
 .progressBox .progress span {
-  position: absolute;
-  display: block;
-  width: 100%;
+  margin-left: 10px;
   color: #555;
 }
 
-/* activity list */
-.activityList {
-  padding: 2px;
+.progress-bar.progress-bar-info {
+  background-color: #1fbbee;
 }
 
+/* activity list */
 .activityList.sortableList {
   margin-top: 10px;
   width: 100%;
@@ -357,7 +351,7 @@ p.minor {
 
 @media (max-width: 768px) {
   body > .container {
-    padding: 40px 15px 0;
+    padding: 40px 15px 20px;
   }
 
   .nav > li {
@@ -444,12 +438,6 @@ p.minor {
 .carousel-control {
   width: 0;
   opacity: initial;
-}
-
-.activity-img {
-  width: 65%;
-  height: 65%;
-  float: left;
 }
 
 .activity-video {

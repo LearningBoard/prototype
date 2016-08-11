@@ -5,15 +5,18 @@ define(['util', 'temps/Template', 'mdls/Text'], function(util, Template, Text) {
 
     this.model = new Text(text);
 
-    var link; 
+    var link;
     if (this.model.text_image === '') link = "img/placeholder-no-image.png";
-    else link = util.urls.media_addr+'/'+this.model.text_image; 
+    else link = util.urls.media_addr+'/'+this.model.text_image;
 
-    var $html = $(`
-      <div class="clearfix">
-        <img src="${link}" class="img-responsive activity-img" />
-      </div>
-    `);
+    var $html = '';
+    if (this.model.text_image) {
+      $html = $(`
+        <div class="clearfix">
+          <img src="${link}" class="img-responsive pull-left" />
+        </div>
+      `);
+    }
 
     Template.call(this, $html);
   }

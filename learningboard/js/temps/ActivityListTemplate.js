@@ -30,5 +30,10 @@ define(['util', "jquery_ui", 'temps/ListTemplate'], function(util, ui, ListTempl
 
   $.extend(ActivityListTemplate.prototype, ListTemplate.prototype);
 
+  ActivityListTemplate.prototype.onActivityDelete = function(model)
+  {
+    this.removeElementBy({id: model.id}, {fadeOut: true});
+  }
+
   return ActivityListTemplate;
 });

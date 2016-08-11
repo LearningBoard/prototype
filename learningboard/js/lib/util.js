@@ -127,7 +127,14 @@ define(['mdls/User'], function(user) {
     strTrunc: function(str, length)
     {
       return (str.length > length) ? str.substr(0,length-1)+'&hellip;' : str
-    }
+    },
     
+    create: function(Cls, args) {
+      args.unshift(Cls);
+      console.log(args);
+      var x = new (Function.prototype.bind.apply(Cls, args));
+      console.log(x);
+      return x;
+    }
   }
 });

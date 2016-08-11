@@ -1,51 +1,10 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
-'lib/ViewDispatcher'], function(util, User, Activity, ListElementTemplate,
- ViewDispatcher) {"use strict";
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temps/CommentableTemplate', 'temps/ActivityEditControl', 'temps/ActivityActionControl', 'lib/ViewDispatcher'], function(util, User, Activity, ListElementTemplate, CommentableTemplate, ActivityEditControl, ActivityActionControl, ViewDispatcher) {
+  "use strict";
 
   var _get_html = function(model, index)
   {
     var html = '';
     var $html, $dif;
-    var activityControl;
-    if(User.is_staff() && location.href.includes('board_edit.html')){
-      activityControl = `
-      <div class="control" data-id="${model.id}">
-        <ul>
-          <li ${model.published() ? 'class="hidden"' : ''}>
-            <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
-          </li>
-          <li ${model.published() ? '' : 'class="hidden"'}>
-            <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
-          </li>
-          <li>
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-          </li>
-          <li>
-            <span class="glyphicon glyphicon-remove" name="removeBtn" aria-hidden="true"></span>
-          </li>
-        </ul>
-      </div>`;
-    }
-    else
-    {
-      activityControl = `
-      <div class="control" data-id="${model.id}">
-        <ul class="text-muted">
-          <li>
-            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-            Share
-          </li>
-          <li class="markAsComplete ${model.completed ? 'text-success' : ''}">
-            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-            Mark as complete
-          </li>
-          <li>
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            Delete
-          </li>
-        </ul>
-      </div>`;
-    }
     index++;
     $html = $(`
       <div class="activity ${model.published() ? '' : 'unpublish'}">
@@ -63,7 +22,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
             <div class="description">${model.description}</div>
           </div>
         </div>
-        ${activityControl}
+        <div class="activityControl"></div>
+        <div class="activityComment"></div>
       </div>
     `);
     $dif = $html.find("[name='dif']");
@@ -71,16 +31,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
     var rsc = new Resource(model.data);
     rsc.display($dif);
 
-    // mark as complete button
-    $html.find('.markAsComplete').off('click').on('click', function() {
-      var $this = $(this);
-      util.post('/activity/complete/'+model.id, {complete: !model.completed},
-        function(res) {
-          $this.toggleClass('text-success');
-          model.completed = !model.completed;
-        }
-      );
-    });
+    var editMode = User.is_staff() && location.href.includes('board_edit.html');
+
+    if (!editMode) {
+      var $activityComment = $html.find('div.activityComment');
+      var commentTemp = new CommentableTemplate(model);
+      commentTemp.display($activityComment);
+    }
 
     return $html;
   }
@@ -89,16 +46,20 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
    * @constructor
    * @param activity - the activity data
    * @param index - for the order of displaying
+   * @param BoardDetailTemplate - the board detail template
    */
   var ActivityTemplate = function(activity, index)
   {
     this.model = new Activity(activity);
+    this.controller = null;
 
     if(activity){
       this.model = new Activity(activity);
     }
     ListElementTemplate.call(this, _get_html(this.model, index), index);
   };
+
+  $.extend(ActivityTemplate.prototype, ListElementTemplate.prototype);
 
   ActivityTemplate.prototype.updateIndex = function(index)
   {
@@ -116,7 +77,15 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate',
     this.$template = new_html;
   }
 
-  $.extend(ActivityTemplate.prototype, ListElementTemplate.prototype);
+  ActivityTemplate.prototype.addControl = function(ctrl)
+  {
+    console.log(ctrl);
+    this.controller = ctrl;
+
+    ctrl.display(this.$template.find(".activityControl"));
+
+    return this;
+  }
 
   return ActivityTemplate;
 });

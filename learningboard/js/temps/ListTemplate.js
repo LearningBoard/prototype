@@ -156,5 +156,18 @@ define(["temps/Template"], function(Template) {
       }      
     }
   }
+
+  /**
+   * @param ctrl - the controller to be added to each template in the list
+   */
+  ListTemplate.prototype.addControl = function()
+  {
+    var len = this.templateList.length, ele;
+    for (var ii = 0; ii < len; ii++)
+    {
+      ele = this.templateList[ii];
+      if (ele.addControl) ele.addControl.apply(ele, arguments);
+    }
+  }
   
 });

@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableTemplate', 'temps/ActivityTemplate', 'temps/ActivityListTemplate'], function (util, User, Board, Template, CommentableTemplate, ActivityTemplate, ActivityListTemplate) {
+define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl'], function (util, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl) {
   var BoardDetailTemplate = function(board)
   {
     /* this.variables:
@@ -7,27 +7,28 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
     */
 
     this.model = new Board(board);
+    var $this = this;
     var model = this.model;
     var follow_html = '<span class="glyphicon glyphicon-envelope"></span>&nbsp subscribe</button>';
     var unfollow_html = '<span class="glyphicon glyphicon-remove"></span>&nbsp unsubscribe';
     var following_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
     var html = `
       <div class="row">
-        <div class="col-md-8 col-lg-8">
+        <div class="col-md-8">
           <h3 class="title board_title">`+util.toTitle(model.title)+`</h3>
           <div class="row">
-            <div class="col-md-1 col-sm-1 col-xs-1" style="width: 70px">
+            <div class="col-xs-1" style="width: 70px">
               <p class="title">Author: </p>
             </div>
-            <div class="col-md-1 col-sm-1 col-xs-1">
+            <div class="col-xs-1">
               <a href="#">`+model.author.username+`</a>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-1 col-sm-1 col-xs-1" style="width: 70px">
+            <div class="col-xs-1" style="width: 70px">
               Level:
             </div>
-            <div class="col-md-1 col-sm-1 col-xs-1">
+            <div class="col-xs-1">
               <span class="board_level title">`+model.getLevelName()+`</span>
             </div>
           </div>
@@ -55,10 +56,10 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
             </div>
           </div>
           <br>
-          <div class="row progressBox">
+          <div class="progressBox">
             <div class="progress">
               <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="${model.getCompletedPercentage()}" aria-valuemin="0" aria-valuemax="100" style="width: ${model.getCompletedPercentage()}%;">
-                <span>${model.getCompletedPercentage()}%</span>
+                <span style="color: white">${model.getCompletedPercentage()}%</span>
               </div>
             </div>
           </div>
@@ -66,7 +67,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
           </div>`;
         html += `
         </div>
-        <div class="col-md-4 col-lg-4">
+        <div class="col-md-offset-1 col-md-3">
           <h4>About This Board</h4>
           <div class="board_description">${model.description}</div>
           <h4>Tags</h4>
@@ -169,10 +170,15 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
     $actList = $template.find(".activityList");
     var length = model.activities.length;
 
-    this.actTemps = util.arrayMapping(model.activities, function(ele, i)
-    {
-      return new CommentableTemplate(new ActivityTemplate(ele, i));
-    });
+    var parent = this;
+    var constructor = function(ele, i) {
+        var act_t = new ActivityTemplate(ele, i);
+        var act_c = new ActivityActionControl(act_t);
+        act_c.register(parent);
+        act_t.addControl(act_c);
+        return act_t;
+      }
+    this.actTemps = model.activities.map(constructor);
 
     var actList = new ActivityListTemplate(this.actTemps, false);
     actList.display($actList);
@@ -180,6 +186,24 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/CommentableT
 
   $.extend(BoardDetailTemplate.prototype, Template.prototype);
 
+  BoardDetailTemplate.prototype.onActivityComplete = function(model) {
+    console.log("here");
+    var progrssElement = this.$template.find('.progressBox .progress-bar');
+    var percentagePerActivity = !this.model.activity_num ? 0 : Math.ceil(100 / this.model.activity_num);
+    var currentPercentage = parseInt(progrssElement.attr('aria-valuenow'));
+    if (model.completed) {
+      currentPercentage += percentagePerActivity;
+      if (currentPercentage > 100) currentPercentage = 100;
+      progrssElement.css('width', currentPercentage + '%').attr('aria-valuenow', currentPercentage);
+      progrssElement.find('span').text(currentPercentage + '%');
+    } else {
+      currentPercentage -= percentagePerActivity;
+      if (currentPercentage < 0) currentPercentage = 0;
+      progrssElement.css('width', currentPercentage + '%').attr('aria-valuenow', currentPercentage);
+      progrssElement.find('span').text(currentPercentage + '%');
+    }
+  }
+
   return BoardDetailTemplate;
 
-})
+});

@@ -1,12 +1,7 @@
- // decorator for Commentable Templates
-define(['util'], function (util) {
-  var CommentableTemplate = function(template)
+// decorator for Commentable Templates
+define(['util', 'temps/Template'], function (util, Template) {
+  var CommentableTemplate = function(model)
   {
-    $.extend(this, template);
-    $.extend(template.__proto__);
-
-    var $this = this;
-    var model = this.model;
     var cmt_field = `
       <div class="comment">
         <span class="glyphicon glyphicon-heart ${model.liked ? 'text-danger' : ''}"></span> <span class="liked_num">${model.like_num}</span>
@@ -22,8 +17,8 @@ define(['util'], function (util) {
           <ul></ul>
         </div>
     `;
+    var $this = this;
     this.$cmtBox = $(cmt_field);
-    this.$template.append(this.$cmtBox);
 
     // like activity button
     this.$cmtBox.on('click', '.glyphicon-heart', function(){
@@ -32,11 +27,10 @@ define(['util'], function (util) {
         function(res) {
           $thisBtn.toggleClass('text-danger');
           model.liked = !model.liked;
-          var num = parseInt($this.$cmtBox.find('.liked_num').text());
           if (model.liked) {
-            $this.$cmtBox.find('.liked_num').text(++num);
+            $this.$cmtBox.find('.liked_num').text(++model.like_num);
           } else {
-            $this.$cmtBox.find('.liked_num').text(--num);
+            $this.$cmtBox.find('.liked_num').text(--model.like_num);
           }
         }
       );
@@ -55,7 +49,10 @@ define(['util'], function (util) {
       $(this).parents('.comment').find('.commentList ul').append(`<li>${target.val()}</li>`);
       target.val('');
     });
+
+    Template.call(this, this.$cmtBox);
   }
 
+  $.extend(CommentableTemplate.prototype, Template.prototype);
   return CommentableTemplate;
 });
