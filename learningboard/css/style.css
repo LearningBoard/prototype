@@ -282,9 +282,25 @@ p.minor {
   cursor: pointer;
 }
 
-.activityList > .activity .comment span, .activityList > .activity .comment a {
+.activityList > .activity .comment span.glyphicon, .activityList > .activity .comment a {
   cursor: pointer;
   padding: 0 5px;
+}
+
+.commentList {
+  margin-top: 5px;
+  max-height: 120px;
+  overflow: auto;
+}
+
+.commentList ul {
+  padding-left: 2px;
+}
+
+.commentList ul li {
+  list-style: none;
+  border-bottom: 1px solid #EEE;
+  padding-bottom: 2px;
 }
 
 /* tag list */

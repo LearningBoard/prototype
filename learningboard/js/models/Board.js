@@ -1,4 +1,4 @@
-define(['mdls/Activity'], function (Activity) {
+define(['util', 'mdls/Activity'], function (util, Activity) {
   "use strict";
 
   var Board = function(board)
@@ -36,6 +36,14 @@ define(['mdls/Activity'], function (Activity) {
         case false: return "unpublished";
         case true: return "published";
       };
+    },
+
+    getCoverImage: function()
+    {
+      if (!this.coverImage) {
+        return 'img/placeholder-no-image.png';
+      }
+      return util.urls.media_addr + '/' + this.coverImage;
     },
 
     getCompletedPercentage: function()
