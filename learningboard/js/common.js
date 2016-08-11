@@ -54,10 +54,10 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
               <a class="navbar-brand" href="index.html">Learning Boards</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
-              <form class="navbar-form navbar-left" role="search">
+              <form class="navbar-form navbar-left" role="search" action="search.html">
                 <div class="form-group">
                   <span class="glyphicon glyphicon-search search-bar-glyphicon" aria-hidden="true"></span>
-                  <input type="text" class="form-control search-bar" placeholder="What do you want to learn today?" required>
+                  <input type="text" class="form-control search-bar" name="s" placeholder="What do you want to learn today?" required>
                 </div>
               </form>
               <ul class="nav navbar-nav navbar-right text-center">
@@ -158,6 +158,12 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
       }
     );
     return o;
+  };
+
+  // https://gist.github.com/varemenos/2531765
+  $.getUrlVar = function(key) {
+    var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search);
+    return result && unescape(result[1]) || "";
   };
 
 });
