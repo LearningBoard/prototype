@@ -31,7 +31,7 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
           for (var ii = 0; ii < len; ++ii)
           {
             var ele = parent.subscribers[ii];
-            if (ele.onActivityCompleted) 
+            if (ele.onActivityComplete) 
               ele.onActivityComplete(model);
           }
         }
