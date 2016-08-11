@@ -1,14 +1,8 @@
-define(['util', 'mdls/User'], function(util, user) 
+define(['util'], function(util)
 {
   $(function(){
-    if(!user.hasToken()){
-      alert('Login required!');
-      location.href = 'login.html';
-      return;
-    }
-
     // fetch and render news
-    util.get('/news/?user_id='+localStorage.user_id+'&is_staff='+localStorage.is_staff, 
+    util.get('/news',
       function(data)
       {
         if(data.news && data.news.length > 0)
@@ -31,6 +25,6 @@ define(['util', 'mdls/User'], function(util, user)
           }
         }
       }
-    )
+    );
   });
 });

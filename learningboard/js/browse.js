@@ -9,16 +9,22 @@ define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBri
       function(res) {
         var data = res.data;
         var bl = data.learningboard;
-        for (var i = 0; i < bl.length; ++i)
-        {
-          var bt = new BoardBriefTemplate(bl[i]);
+        if (bl.length > 0) {
+          for (var i = 0; i < bl.length; ++i)
+          {
+            var bt = new BoardBriefTemplate(bl[i]);
+            bt.display($("#boardList"));
+            grid.appended(bt.$template);
+          }
+        } else {
+          var bt = new BoardBriefTemplate({});
           bt.display($("#boardList"));
-          grid.appended(bt.$template);
         }
       }
     );
-    $('#boardList').on('arrangeComplete', function(){
-      if($('#boardList .board-brief-temp:visible').length < 1){
+    $('#boardList').on('arrangeComplete', function(e, filteredItems){
+      var isAll = Isotope.data($('#boardList')[0]).options.filter === '';
+      if(filteredItems.length < 1 && !isAll){
         alert('No result found');
         $('.filter[data-filter="all"]').trigger('click');
       }

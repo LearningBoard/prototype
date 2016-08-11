@@ -36,7 +36,7 @@ requirejs.config({
 });
 
 define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
-  var public_list = ['index.html', 'login.html', 'profile.html']
+  var public_list = ['/', 'index.html', 'login.html', 'profile.html'];
   $(function() {
     // dump the nav bar to body
     if(!location.href.includes('board_edit.html'))
@@ -98,7 +98,7 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
       var public = false;
       for (var i = 0; i < public_list.length; ++i)
       {
-        if (location.href.indexOf(public_list[i]) > -1)
+        if (location.href.endsWith(public_list[i]))
         {
           public = true;
           break;
@@ -108,6 +108,7 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
       {
         alert("please login first");
         location.href = "login.html";
+        return;
       }
 
       $('.navbar-nav .login').removeClass('hidden');
