@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="img/favicon.ico">
-    <title>Learning Boards</title>
+    <title>Browse | Learning Boards</title>
     <script src="js/lib/require.js"></script>
     <script>
       requirejs(["./js/common"], function(common) {requirejs(['browse']);});
@@ -23,38 +23,7 @@
         <button type="button" class="btn btn-default filter" data-filter="1">Intermediate</button>
         <button type="button" class="btn btn-default filter" data-filter="2">Advanced</button>
       </div>
-      <div class="row" id="boardList">
-        <div class="col-md-3">
-          <div class="thumbnail">
-            <img src="https://placehold.it/300x200" alt="JavaScript Callbacks And Non-Blocking Computation">
-            <div class="caption">
-              <h4><a href="board_view.html">JavaScript Callbacks And Non-Blocking Computation</a></a></h4>
-              <p class="text-muted">Content Level: Beginner</p>
-              <p>Join us in a journey through data manipulation, callbacks, and non-blocking compuation. We will start with callbacks, filters, sort, map, and reduce. ...</p>
-              <p class="text-muted">
-                Status: <span class="text-success">Published</span><br />
-                15 Learning Activities
-              </p>
-            </div>
-            <div class="boardInfoBox">
-              <div class="row text-center text-muted">
-                <div class="col-xs-4">
-                  <span class="fa fa-thumb-tack" aria-hidden="true"></span>
-                  <p>None have endorsed</p>
-                </div>
-                <div class="col-xs-4">
-                  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                  <p>1 has completed</p>
-                </div>
-                <div class="col-xs-4">
-                  <span class="fa fa-users" aria-hidden="true"></span>
-                  <p>4 are following</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="row" id="boardList"></div>
     </div>
 
     <footer class="footer">

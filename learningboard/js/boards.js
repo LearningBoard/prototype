@@ -64,9 +64,14 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, B
         var board_list = data.learningboard;
         var $board_list_ele = $("#boardList")
         var length = data.learningboard.length;
-        for (var i = 0; i < length; ++i)
-        {
-          var board = new BoardBriefTemplate(board_list[i]);
+        if (length) {
+          for (var i = 0; i < length; ++i)
+          {
+            var board = new BoardBriefTemplate(board_list[i]);
+            board.display($("#boardList"));
+          }
+        } else {
+          var board = new BoardBriefTemplate({});
           board.display($("#boardList"));
         }
       }
