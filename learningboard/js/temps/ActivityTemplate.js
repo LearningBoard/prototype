@@ -80,7 +80,6 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
 
   ActivityTemplate.prototype.addControl = function(ctrl)
   {
-    console.log(ctrl);
     this.controller = ctrl;
 
     ctrl.display(this.$template.find(".activityControl"));

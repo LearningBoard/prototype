@@ -17,9 +17,6 @@ define(['mdls/User', 'mdls/Board', './Template'], function (user, Board, Templat
               <li class="boardEditButton">\
                 <a href="board_edit.html?'+this.model.id+'">Edit</a>\
               </li>\
-              <li class="boardSendNewsButton">\
-                <a href="#" data-toggle="modal" data-target="#sendNewsModal">Send News</a>\
-              </li>\
             </ul>\
         ';
       }

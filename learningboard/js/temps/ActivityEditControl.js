@@ -2,8 +2,6 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
 
   var ActivityEditControl = function(actTemp) {
 
-    console.log(arguments);
-
     var $html;
     var model = actTemp.model;
     $html = $(`
@@ -36,7 +34,6 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
         function(data)
         {
           var len = thisArg.subscribers.length, ele;
-          console.log(thisArg.subscribers);
           for (var ii = 0; ii < len; ++ii)
           {
             ele = thisArg.subscribers[ii];

@@ -34,14 +34,6 @@ define(['util', '../ActivityFormTemplate', "temps/SortableListTemplate", "lib/OD
   /**
    * @override
    */
-  ODriveFormTemplate.prototype.serializeObject = function() {
-    var obj = ActivityFormTemplate.prototype.serializeObject.call(this);
-    return obj;
-  }
-
-  /**
-   * @override
-   */
   ODriveFormTemplate.prototype.reset = function() {
     var obj = ActivityFormTemplate.prototype.reset.call(this);
     this.$template.find('[name="odrive_link"]').val("");

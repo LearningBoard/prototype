@@ -61,7 +61,6 @@ define(["temps/Template"], function(Template) {
     {
       this.$container.children(".noElement").remove();
     }
-    console.log(ele);
     ele.display(this.$container);
     console.log("pushing");
     console.log(this.getIdList());
