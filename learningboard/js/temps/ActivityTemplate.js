@@ -75,6 +75,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
     this.model = model;
     this.$template.replaceWith(new_html);
     this.$template = new_html;
+    this.controller.display(this.$template.find(".activityControl"));
   }
 
   ActivityTemplate.prototype.addControl = function(ctrl)

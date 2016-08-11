@@ -11,9 +11,10 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   var afterCreateActivityCallback = function(act) {
     var index = scope.actList.length;
     var act_t = new ActivityTemplate(act, index);
-    var act_c = new ActivityEditControl();
+    var act_c = new ActivityEditControl(act_t);
+    act_c.register(scope.actList);
     act_t.addControl(act_c);
-    scope.actList.addElement(act);
+    scope.actList.addElement(act_t);
     $('#collapseAddActivity').collapse('hide');
   };
   var afterEditActivityCallback = function(act) {
