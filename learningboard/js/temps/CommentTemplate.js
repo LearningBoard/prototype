@@ -4,7 +4,7 @@ define(['temps/Template'], function (Template) {
 
     var $html = $(`
       <li>
-        <p><b>${model.author.username}</b></p>
+        <p><b><a href="profile.html?${model.author.id}" target="_blank">${model.author.username}</a></b></p>
         <p>${model.comment}</p>
       </li>
    `);

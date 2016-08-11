@@ -1,5 +1,11 @@
 define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, BoardBriefTemplate) {
   $(function() {
+    if (!/\?\d+/.test(location.search)) {
+      alert('User not found');
+      location.href = 'index.html';
+      return;
+    }
+
     var off = $(".fixed-sidebar-right").offset().top;
     $(".fixed-wrap-inner").css("max-width", $(".fixed-sidebar-right").width());
     $(window).resize(function() {
@@ -11,7 +17,10 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, B
       if (scroPos >= off-78) $(".fixed-sidebar-right").addClass("fixed");
       else $(".fixed-sidebar-right").removeClass("fixed");
     });
-    util.get("/lb?user", 
+
+    var userId = location.search.match(/\?(\d+)/)[1];
+    var queryBoardUrl = user.getId() == userId ? '/lb?user' : '/lb?user=' + userId;
+    util.get(queryBoardUrl,
       function(res)
       {
         var data = res.data;
