@@ -21,7 +21,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
               <p class="title">Author: </p>
             </div>
             <div class="col-xs-1">
-              <a href="#">`+model.author.username+`</a>
+              <a href="profile.html?${model.author.id}" target="_blank">`+model.author.username+`</a>
             </div>
           </div>
           <div class="row">

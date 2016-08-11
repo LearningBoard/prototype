@@ -75,10 +75,7 @@ define(['util', 'mdls/User'], function(util, user) {
         function(res)
         {
           var data = res.data;
-          console.log(res);
-          user.setToken(data.token);
-          user.set(data.user);
-          location.href = "index.html";
+          $("button.loginBtn").trigger('click');
         },
         function(xhr, status, data)
         {

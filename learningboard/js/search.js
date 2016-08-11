@@ -3,7 +3,7 @@ define(['util', 'temps/BoardBriefTemplate'], function(util, BoardBriefTemplate) 
 
   $(function()
   {
-    util.post('/search/lb', {keyword: $.getUrlVar('s')},
+    util.post('/search/lb', {keyword: decodeURIComponent($.getUrlVar('s').replace(/\+/g, ' '))},
       function(res)
       {
         var bl = res.data.learningboard;
