@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, BoardBriefTemplate) {
+define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileFollowTemplate'], function(util, user, BoardBriefTemplate, ProfileFollowTemplate) {
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
@@ -33,6 +33,26 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, B
           var board = new BoardBriefTemplate(board_list[i]);
           board.display($("#boardList"));
         }
+      }
+    );
+
+    util.get('/user/' + userId,
+      function(res) {
+        var data = res.data.user;
+        if (data.followedlearningboard.length < 1) {
+          var temp = new ProfileFollowTemplate({});
+          temp.display($('div.followingboard'));
+        } else {
+          data.followedlearningboard.map(function(item) {
+            var temp = new ProfileFollowTemplate(item);
+            temp.display($('div.followingboard'));
+          });
+        }
+      },
+      function() {
+        alert('User not found');
+        location.href = 'index.html';
+        return;
       }
     );
   });
