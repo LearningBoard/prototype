@@ -34,15 +34,11 @@ define(['mdls/User', 'mdls/Board', './Template'], function (user, Board, Templat
           </div>\
           <div class="boardInfoBox">\
             <div class="row text-center text-muted">\
-              <div class="col-xs-4">\
-                <span class="fa fa-thumb-tack" aria-hidden="true"></span>\
-                <p>'+ this.model.endorsed_num + ' endorsed</p>\
-              </div>\
-              <div class="col-xs-4">\
+              <div class="col-xs-6">\
                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>\
                 <p>'+ this.model.completed_num + ' completed</p>\
               </div>\
-              <div class="col-xs-4">\
+              <div class="col-xs-6">\
                 <span class="fa fa-users" aria-hidden="true"></span>\
                 <p class="subscribing_num">'+ this.model.subscribing_num + ' subscribing</p>\
               </div>\

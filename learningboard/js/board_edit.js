@@ -63,7 +63,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       util.get('/lb/'+scope.pk+'/',
         function(res){
           // get the info of the board with pk
-          var board = res.data.learningboard;
+          var board = res.data.lb;
           if(board.publish == 1){
             $('.publishBoardBtn').parent().addClass('hidden');
             $('.unpublishBoardBtn').parent().removeClass('hidden');
@@ -257,7 +257,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           function(res)
           {
             console.log(res);
-            location.href = 'board_edit.html?' + res.data.learningboard.id;
+            location.href = 'board_edit.html?' + res.data.lb.id;
           }
         );
       }
