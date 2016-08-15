@@ -514,6 +514,22 @@ iframe.shared_ofile {
   opacity: .85;
 }
 
+.ellipsis {
+  color: #444; 
+  text-overflow: ellipsis; 
+  overflow: hidden; 
+  display: -webkit-box; 
+  -webkit-box-orient: vertical;
+}
+
+.ellipsis-2-lines {
+  -webkit-line-clamp: 2; 
+}
+
+.ellipsis-4-lines {
+  -webkit-line-clamp: 4; 
+}
+
 a.no-color-change {
   color: inherit;
 }

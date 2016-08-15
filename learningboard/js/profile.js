@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileFollowTemplate'], function(util, user, BoardBriefTemplate, ProfileFollowTemplate) {
+define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileFollowTemplate'], function(util, User, BoardBriefTemplate, ProfileFollowTemplate) {
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
