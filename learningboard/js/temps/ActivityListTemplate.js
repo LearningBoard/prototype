@@ -11,7 +11,7 @@ define(['util', "jquery_ui", 'temps/ListTemplate'], function(util, ui, ListTempl
     // inherits ListTemplate
     if (actTemps === undefined) actTemps = [];
 
-    this.model = util.arrayMapping(actTemps, function(ele) {return ele.model});
+    this.model = actTemps.map(function(ele) {return ele.model});
 
     var templateList = actTemps.slice();
     // list of ActivityTemplates

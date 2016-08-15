@@ -31,7 +31,7 @@ define(['util', 'jquery_ui', 'temps/ListTemplate'], function(util, jquery_ui, Li
 
     ListTemplate.call(this, templateList, $template, $inner_container, noElementHtml);
 
-    this.model = util.arrayMapping(templateList, function(ele){return ele.model});
+    this.model = templateList.map(function(ele){return ele.model});
 
     if (this.length === 0) this.$container.append(noFileHtml);
 
