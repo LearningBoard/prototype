@@ -44,7 +44,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (user, Board, Templat
               </div>\
               <div class="col-xs-4">\
                 <span class="fa fa-users" aria-hidden="true"></span>\
-                <p class="following_num">'+ this.model.following_num + ' subscribing</p>\
+                <p class="subscribing_num">'+ this.model.subscribing_num + ' subscribing</p>\
               </div>\
             </div>\
           </div>\

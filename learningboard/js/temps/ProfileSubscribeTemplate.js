@@ -1,13 +1,13 @@
 define(['temps/Template'], function (Template) {
 
-  var ProfileFollowTemplate = function(data) {
+  var ProfileSubscribeTemplate = function(data) {
 
     var $html;
 
     if (!data.id) {
       $html = $(`
         <div class="col-sm-12 thumbnail sidebar-item">
-          <i>No board following</i>
+          <i>No board subscribing</i>
         </div>
       `);
     } else {
@@ -25,6 +25,6 @@ define(['temps/Template'], function (Template) {
     Template.call(this, $html);
   };
 
-  $.extend(ProfileFollowTemplate.prototype, Template.prototype);
-  return ProfileFollowTemplate;
+  $.extend(ProfileSubscribeTemplate.prototype, Template.prototype);
+  return ProfileSubscribeTemplate;
 });

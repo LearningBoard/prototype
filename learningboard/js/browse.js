@@ -8,7 +8,7 @@ define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBri
     util.get('/lb/',
       function(res) {
         var data = res.data;
-        var bl = data.learningboard;
+        var bl = data.lb;
         if (bl.length > 0) {
           for (var i = 0; i < bl.length; ++i)
           {

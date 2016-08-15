@@ -12,10 +12,10 @@ define(['util', 'temps/BoardDetailTemplate'], function(util, BoardDetailTemplate
       util.get('/lb/'+pk+'/', 
         function(res) {
           var data = res.data;
-          var brd_t = new BoardDetailTemplate(data.learningboard, false);
-          console.log(brd_t.$followBtn);
-          brd_t.$followBtn.off("click");
-          brd_t.$followBtn.on("click", function(){alert("You can't subscribe in preview mode.");});
+          var brd_t = new BoardDetailTemplate(data.lb, false);
+          console.log(brd_t.$subscribeBtn);
+          brd_t.$subscribeBtn.off("click");
+          brd_t.$subscribeBtn.on("click", function(){alert("You can't subscribe in preview mode.");});
           var brd_m = brd_t.model;
           brd_t.display($(".body_container"));
           document.title = brd_m.title + ' | Learning Boards';

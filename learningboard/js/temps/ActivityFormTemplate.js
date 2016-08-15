@@ -16,7 +16,7 @@ define(['util', './Template'], function (util, Template) {
     <div role="tabpanel" class="tab-pane" id="${this.type}">
       <form class="addActivityForm">
         <input type="hidden" name="id" value="">
-        <input type="hidden" name="learningboard" value="">
+        <input type="hidden" name="lb" value="">
         <input type="hidden" name="type" value="${this.type}">
         <div class="form-group">
           <label for="${this.type}_title">Title</label>
@@ -100,8 +100,8 @@ define(['util', './Template'], function (util, Template) {
     this.$template.find('form')[0].reset();
   };
 
-  ActivityFormTemplate.prototype.setLearningBoardId = function(id) {
-    this.$template.find('[name=learningboard]').val(id);
+  ActivityFormTemplate.prototype.setLBId = function(id) {
+    this.$template.find('[name=lb]').val(id);
   };
 
   ActivityFormTemplate.prototype.setData = function(act) {

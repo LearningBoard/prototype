@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileFollowTemplate'], function(util, User, BoardBriefTemplate, ProfileFollowTemplate) {
+define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribingTemplate'], function(util, User, BoardBriefTemplate, ProfileSubscribeTemplate) {
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
@@ -25,9 +25,9 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileFollowTem
       {
         var data = res.data;
         console.log(res);
-        var board_list = data.learningboard;
+        var board_list = data.lb;
         var $board_list_ele = $("#boardList")
-        var length = data.learningboard.length;
+        var length = data.lb.length;
         if (length > 0) {
           for (var i = 0; i < length; ++i)
           {
@@ -60,13 +60,13 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileFollowTem
     util.get('/user/' + userId,
       function(res) {
         var data = res.data.user;
-        if (data.followedlearningboard.length < 1) {
-          var temp = new ProfileFollowTemplate({});
-          temp.display($('div.followingboard'));
+        if (data.subscribedlb.length < 1) {
+          var temp = new ProfileSubscribeTemplate({});
+          temp.display($('div.subscribingboard'));
         } else {
-          data.followedlearningboard.map(function(item) {
-            var temp = new ProfileFollowTemplate(item);
-            temp.display($('div.followingboard'));
+          data.subscribedlb.map(function(item) {
+            var temp = new ProfileSubscribeTemplate(item);
+            temp.display($('div.subscribingboard'));
           });
         }
       },

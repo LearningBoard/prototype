@@ -139,7 +139,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         ViewDispatcher.activities.getCreateFormView(act).then(function(form) {
           if (!form) return resolve();
           if (scope.pk) {
-            form.setLearningBoardId(scope.pk);
+            form.setLBId(scope.pk);
           }
           form.setAfterCreate(afterCreateActivityCallback);
           form.setAfterEdit(afterEditActivityCallback);

@@ -5,7 +5,7 @@ define(['util', 'User', 'temps/BoardBriefTemplate', 'test/dataSet'], function(ut
     util.get('/lb/',
       function(res)
       {
-        var bl = res.data.learningboard;
+        var bl = res.data.lb;
         if (bl.length > 0) {
           for (var i = 0; i < bl.length; ++i)
           {

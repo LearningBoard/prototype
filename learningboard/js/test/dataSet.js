@@ -20,10 +20,9 @@ define(function() {
         "updatedAt": "2016-07-25T22:26:45.224Z",
         "activity_num": 0,
         "like_num": 0,
-        "following_num": 1,
+        "subscribing_num": 1,
         "completed_num": -1,
         "endorsed_num": 0,
-        "following": true,
         "endorsed": false,
         "liked": false,
         "image_url": -1

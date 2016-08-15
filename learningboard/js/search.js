@@ -6,7 +6,7 @@ define(['util', 'temps/BoardBriefTemplate'], function(util, BoardBriefTemplate) 
     util.post('/search/lb', {keyword: decodeURIComponent($.getUrlVar('s').replace(/\+/g, ' '))},
       function(res)
       {
-        var bl = res.data.learningboard;
+        var bl = res.data.lb;
         if (bl.length > 0) {
           for (var i = 0; i < bl.length; ++i)
           {

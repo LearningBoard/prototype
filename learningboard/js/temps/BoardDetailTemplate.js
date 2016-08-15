@@ -9,9 +9,9 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     this.model = new Board(board);
     var $this = this;
     var model = this.model;
-    var follow_html = '<span class="glyphicon glyphicon-envelope"></span>&nbsp subscribe</button>';
-    var unfollow_html = '<span class="glyphicon glyphicon-remove"></span>&nbsp unsubscribe';
-    var following_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
+    var subscribe = '<span class="glyphicon glyphicon-envelope"></span>&nbsp subscribe</button>';
+    var unsubscribe_html = '<span class="glyphicon glyphicon-remove"></span>&nbsp unsubscribe';
+    var subscribe_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
     var html = `
       <div class="row">
         <div class="col-md-8">
@@ -33,7 +33,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
             </div>
           </div>
           <div class="action" style="margin-top: 15px">
-            <button type="button" class="btn btn-default followBtn">
+            <button type="button" class="btn btn-default subscribeBtn">
             <button type="button" class="btn btn-default endorseBtn">Endorse</button>
             <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-send"></span>&nbsp share</button>
           </div>
@@ -50,8 +50,8 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
               model.completed_num + ` completed </span>
             </div>
             <div class="col-sm-3 col-xs-6">
-              <span aria-hidden="true" class="glyphicon glyphicon-play" style="width: 45px"></span><span class="following_num">`+
-                model.following_num + ` subscribing
+              <span aria-hidden="true" class="glyphicon glyphicon-play" style="width: 45px"></span><span class="subscribing_num">`+
+                model.subscribing_num + ` subscribing
               </span>
             </div>
           </div>
@@ -92,17 +92,17 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     `;
 
     var $template = $(html);
-    var $followBtn = $template.find(".followBtn");
+    var $subscribeBtn = $template.find(".subscribeBtn");
 
     Template.call(this, $template);
-    this.$followBtn = $followBtn;
+    this.$subscribeBtn = $subscribeBtn;
 
-    $followBtn.hover(
-      function(){if(model.following) $(this).html(unfollow_html);},
-      function(){if(model.following) $(this).html(following_html);}
+    $subscribeBtn.hover(
+      function(){if(model.subscribing) $(this).html(unsubscribe_html);},
+      function(){if(model.subscribing) $(this).html(subscribing_html);}
     );
-    if (!model.following) $followBtn.html(follow_html);
-    else $followBtn.html(following_html);
+    if (!model.subscribing) $subscribeBtn.html(subscribe_html);
+    else $subscribeBtn.html(subscribing_html);
 
     if (User.is_staff() !== "true")
     {
@@ -116,23 +116,23 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
       {
         $template.find(".endorseBtn").addClass("hidden");
       }
-      $followBtn.addClass("hidden");
+      $subscribeBtn.addClass("hidden");
     }
-    $followBtn.on('click', function(){
-      if(model.following)
+    $subscribeBtn.on('click', function(){
+      if(model.subscribing)
       {
         util.post(
-          '/lb/follow/'+model.id,
-          {follow: false},
+          '/lb/subscribe/'+model.id,
+          {subscribe: false},
           function(res) {
             var data = res.data;
             console.log(res);
             if (res.success)
             {
-              model.following_num -= 1;
-              model.following = false;
-              $followBtn.html(follow_html);
-              $template.find(".following_num").html(model.following_num + ' subscribing');
+              model.subscribing_num -= 1;
+              model.subscribing = false;
+              $subscribeBtn.html(subscribe_html);
+              $template.find(".subscribing_num").html(model.subscribing_num + ' subscribing');
             }
           }
         );
@@ -140,16 +140,16 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
       else
       {
         util.post(
-          '/lb/follow/'+model.id,
-          {follow: true},
+          '/lb/subscribe/'+model.id,
+          {subscribe: true},
           function(res)
           {
             if (res.success)
             {
-              model.following_num += 1;
-              model.following = true;
-              $followBtn.html(unfollow_html);
-              $template.find(".following_num").html(model.following_num + ' subscribing');
+              model.subscribing_num += 1;
+              model.subscribing = true;
+              $subscribeBtn.html(unsubscribe_html);
+              $template.find(".subscribing_num").html(model.subscribing_num + ' subscribing');
             }
           }
         );
