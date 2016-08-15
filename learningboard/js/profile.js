@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribingTemplate'], function(util, User, BoardBriefTemplate, ProfileSubscribeTemplate) {
+define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate'], function(util, User, BoardBriefTemplate, ProfileSubscribeTemplate) {
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
@@ -55,6 +55,9 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribi
           school = ele.school.name;
       }
       $("#user_education").text(school);
+    }
+    else {
+      $("#user_name").text(user.username);
     }
 
     util.get('/user/' + userId,

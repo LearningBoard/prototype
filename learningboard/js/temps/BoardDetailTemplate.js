@@ -9,9 +9,9 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     this.model = new Board(board);
     var $this = this;
     var model = this.model;
-    var subscribe = '<span class="glyphicon glyphicon-envelope"></span>&nbsp subscribe</button>';
+    var subscribe_html = '<span class="glyphicon glyphicon-envelope"></span>&nbsp subscribe</button>';
     var unsubscribe_html = '<span class="glyphicon glyphicon-remove"></span>&nbsp unsubscribe';
-    var subscribe_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
+    var subscribing_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
     var html = `
       <div class="row">
         <div class="col-md-8">
@@ -93,9 +93,10 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     Template.call(this, $template);
     this.$subscribeBtn = $subscribeBtn;
 
+    console.log(model.subscribing);
     $subscribeBtn.hover(
       function(){if(model.subscribing) $(this).html(unsubscribe_html);},
-      function(){if(model.subscribing) $(this).html(subscribe_html);}
+      function(){if(model.subscribing) $(this).html(subscribing_html);}
     );
     if (!model.subscribing) $subscribeBtn.html(subscribe_html);
     else $subscribeBtn.html(subscribing_html);
