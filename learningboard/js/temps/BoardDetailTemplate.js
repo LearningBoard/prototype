@@ -34,22 +34,18 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
           </div>
           <div class="action" style="margin-top: 15px">
             <button type="button" class="btn btn-default subscribeBtn">
-            <button type="button" class="btn btn-default endorseBtn">Endorse</button>
             <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-send"></span>&nbsp share</button>
           </div>
           <br/>
           <div class="row board_status">
-            <div class="col-sm-3 col-xs-6">
+            <div class="col-xs-4">
               <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ model.activity_num+(model.activity_num_all ? `(+${model.activity_num_all - model.activity_num})` : '')+' '+(model.activity_num == 1? "activity": "activities")+`</span>
             </div>
-            <div class="col-sm-3 col-xs-6">
-              <span aria-hidden="true" class="glyphicon glyphicon-pushpin" style="width: 45px"></span><span>`+ model.endorsed_num + ` endorsed </span>
-            </div>
-            <div class="col-sm-3 col-xs-6">
+            <div class="col-xs-4">
               <span aria-hidden="true" class="glyphicon glyphicon-education" style="width: 45px"></span><span>`+
               model.completed_num + ` completed </span>
             </div>
-            <div class="col-sm-3 col-xs-6">
+            <div class="col-xs-4">
               <span aria-hidden="true" class="glyphicon glyphicon-play" style="width: 45px"></span><span class="subscribing_num">`+
                 model.subscribing_num + ` subscribing
               </span>
@@ -99,23 +95,15 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
 
     $subscribeBtn.hover(
       function(){if(model.subscribing) $(this).html(unsubscribe_html);},
-      function(){if(model.subscribing) $(this).html(subscribing_html);}
+      function(){if(model.subscribing) $(this).html(subscribe_html);}
     );
     if (!model.subscribing) $subscribeBtn.html(subscribe_html);
     else $subscribeBtn.html(subscribing_html);
 
-    if (User.is_staff() !== "true")
-    {
-      $template.find(".endorseBtn").addClass("hidden");
-    }
-    else
+    if (User.is_staff() === "true")
     {
       // the board of itself
       console.log(model);
-      if (localStorage.user_id == model.id)
-      {
-        $template.find(".endorseBtn").addClass("hidden");
-      }
       $subscribeBtn.addClass("hidden");
     }
     $subscribeBtn.on('click', function(){
@@ -153,17 +141,6 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
             }
           }
         );
-      }
-    });
-
-    // endorse button
-    $('.endorseBtn').on('click', function(){
-      if($(this).hasClass('btn-primary')){
-        $('.progress_endorsed').text(parseInt($('.progress_endorsed').text()) - 1);
-        $(this).removeClass('btn-primary');
-      }else{
-        $('.progress_endorsed').text(parseInt($('.progress_endorsed').text()) + 1);
-        $(this).addClass('btn-primary');
       }
     });
 
