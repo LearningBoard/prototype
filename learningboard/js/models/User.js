@@ -1,7 +1,14 @@
 define(function() {
   return {
-    set: function(user)
+    setUser: function(user)
     {
+      localStorage.user = JSON.stringify(user)
+    },
+
+    set: function(key, val)
+    {
+      var user = JSON.parse(localStorage.user);
+      user[key] = val;
       localStorage.user = JSON.stringify(user)
     },
 

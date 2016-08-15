@@ -1,4 +1,4 @@
-define(['util', 'temps/BoardBriefTemplate', 'test/dataSet'], function(util, BoardBriefTemplate, test) {
+define(['util', 'User', 'temps/BoardBriefTemplate', 'test/dataSet'], function(util, User, BoardBriefTemplate, test) {
 
   $(function()
   {
@@ -16,7 +16,9 @@ define(['util', 'temps/BoardBriefTemplate', 'test/dataSet'], function(util, Boar
           var bt = new BoardBriefTemplate({});
           bt.display($("#boardList"));
         }
+        console.log(User.getInfo());
       }
     );
+    console.log()
   });
 });

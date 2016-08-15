@@ -54,6 +54,10 @@ body > .body_container {
   font-size: 20px;
 }
 
+.top-fixed-btn.active>a {
+  background-color: #00a3ca !important;
+}
+
 .navbar-toggle .icon-bar {
   border: 1px solid #DDD;
 }
@@ -83,7 +87,7 @@ body > .body_container {
 .navbar-form .form-control {
   margin-top: 16px;
   height: 40px;
-  width: 360px;
+  width: 320px;
   font-size: 16px;
 }
 .navbar-form .form-group span {

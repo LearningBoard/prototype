@@ -25,8 +25,7 @@ define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBri
     $('#boardList').on('arrangeComplete', function(e, filteredItems){
       var isAll = Isotope.data($('#boardList')[0]).options.filter === '';
       if(filteredItems.length < 1 && !isAll){
-        alert('No result found');
-        $('.filter[data-filter="all"]').trigger('click');
+        console.log("no results");
       }
     });
     $('.filter').on('click', function(e){

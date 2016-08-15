@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, BoardBriefTemplate) {
+define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, User, BoardBriefTemplate) {
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
@@ -19,7 +19,7 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, B
     });
 
     var userId = location.search.match(/\?(\d+)/)[1];
-    var queryBoardUrl = user.getId() == userId ? '/lb?user' : '/lb?user=' + userId;
+    var queryBoardUrl = User.getId() == userId ? '/lb?user' : '/lb?user=' + userId;
     util.get(queryBoardUrl,
       function(res)
       {
@@ -35,5 +35,21 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, B
         }
       }
     );
+    var user = User.getInfo();
+    if (user.fb)
+    {
+      $("#user_name").text(user.fb.name);
+      console.log(user);
+      $("#user_location").text(user.fb.location.name);
+      var len = user.fb.education.length;
+      var school;
+      for (var ii = 0; ii < len; ++ii)
+      {
+        ele = user.fb.education[ii];
+        if (ele.type === "College") 
+          school = ele.school.name;
+      }
+      $("#user_education").text(school);
+    }
   });
 });

@@ -1,10 +1,18 @@
-define(['util', 'mdls/User'], function(util, user) {
+define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
   "use strict";
+
+  FB.init({
+    appId   : '1677882592535443',
+    version : 'v2.4'
+  });
+  FB.getLoginStatus(function(response) {
+    console.log(response);
+  });
 
   $(function()
   {
     // redirect if logged in
-    if (user.hasToken()) {
+    if (User.hasToken()) {
       location.href = 'index.html';
       return;
     }
@@ -50,8 +58,8 @@ define(['util', 'mdls/User'], function(util, user) {
         function(res, status, xhr)
         {
           var data = res.data;
-          user.setToken(data.token)
-          user.set(data.user);
+          User.setToken(data.token)
+          User.setUser(data.user);
           location.href = 'index.html';
         },
         function(xhr, status)
@@ -85,9 +93,46 @@ define(['util', 'mdls/User'], function(util, user) {
       );
     });
 
-    $("button.fbLoginBtn").on("click", function(e) {
+    var login_callback = function(fb) {
+      return function(res, status, xhr)
+      {
+        console.log(res);
+        console.log(fb);
+        var data = res.data;
+        console.log("success");
+        User.setToken(data.token);
+        User.setUser(data.user);
+        User.set("fb", fb);
+        console.log(xhr)
+        console.log(User.getInfo());
+
+        location.href = "index.html";
+      }
+    };
+
+    var login_backend = function(res) {
+      var accessToken = res.authResponse.accessToken;
+      FB.api('/me', {fields: ["first_name", "middle_name", "last_name", "name", "email", "education", "location", "work"]}, function(res) {
+        if (res.error) return;
+        console.log(res);
+        var obj = {};
+        obj.identifier = res.id;
+        obj.username = res.id;
+        obj.accessToken = accessToken;
+        obj.email = res.email;
+        console.log('Successful login for: ' + res.name);
+        util.post("/auth/facebook/callbackAccessToken", obj, login_callback(res));
+      });
+    }
+
+    $("button.fbLoginBtn").on("click", function(e) 
+    {
       e.preventDefault();
-      window.location.href = util.urls.serv_addr+"/auth/facebook/";
+      FB.getLoginStatus(function(res) 
+      { 
+        if (res.status === "connected") login_backend(res);
+        else FB.login(function(res) {if (res.status === "connected") login_backend(res);}, {scope: ["user_education_history", "user_location", "user_work_history"]});
+      });
     });
   });
 });

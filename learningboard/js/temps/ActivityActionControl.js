@@ -37,7 +37,6 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
         }
       );
     });
-    console.log(parent.subscribers);
 
     ControlTemplate.call(this, $html);
 

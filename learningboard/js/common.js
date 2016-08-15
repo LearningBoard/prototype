@@ -11,17 +11,19 @@ requirejs.config({
   paths: {
     temps: 'temps/',
     mdls: 'models/',
-    test: "test/",
-    OneDrive: "https://js.live.net/v7.0/OneDrive",
+    test: 'test/',
+    OneDrive: 'https://js.live.net/v7.0/OneDrive',
     jquery: 'lib/jquery-2.2.4.min',
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
     bootstrap: 'lib/bootstrap.min',
     util: 'lib/util',
+    User: "models/User",
     // fileinput: 'https://raw.githubusercontent.com/kartik-v/bootstrap-fileinput/master/js/fileinput',
     fileinput: 'https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min',
 
     select2: 'https://cdn.jsdelivr.net/select2/4.0.3/js/select2.min',
-    isotope: "https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min"
+    isotope: 'https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min',
+    facebook: '//connect.facebook.net/en_US/sdk'
   },
   shim: {
     bootstrap: {
@@ -31,8 +33,11 @@ requirejs.config({
     jquery_ui: {
       deps: ['jquery'],
       exports: 'jquery_ui'
+    },
+    facebook: {
+      exports: 'FB'
     }
-  }
+  },
 });
 
 define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
@@ -61,19 +66,22 @@ define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
                 </div>
               </form>
               <ul class="nav navbar-nav navbar-right text-center">
-                <li class="${location.href.includes('browse.html') ? 'active' : ''}"><a href="browse.html">
+                <li class="top-fixed-btn ${location.href.includes('profile.html?'+user.getId()) ? 'active' : ''}"><a href="profile.html?${user.getId()}"><span class="glyphicon glyphicon-user" area-hidden="true"></span>
+                  <br />Profile
+                </a></li>
+                <li class="top-fixed-btn ${location.href.includes('browse.html') ? 'active' : ''}"><a href="browse.html">
                   <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
                   <br />Browse
                 </a></li>
-                <li class="${location.href.includes('boards.html') ? 'active' : ''}"><a href="boards.html">
+                <li class="top-fixed-btn ${location.href.includes('boards.html') ? 'active' : ''}"><a href="boards.html">
                   <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
                   <br />My Boards
                 </a></li>
-                <li class="${location.href.includes('news.html') ? 'active' : ''}"><a href="news.html">
+                <li class="top-fixed-btn ${location.href.includes('news.html') ? 'active' : ''}"><a href="news.html">
                   <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
                   <br />What's New
                 </a></li>
-                <li class="login ${location.href.includes('login.html') ? 'active' : ''}"><a href="login.html">
+                <li class="login top-fixed-btn ${location.href.includes('login.html') ? 'active' : ''}"><a href="login.html">
                   <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
                   <br />Login
                 </a></li>

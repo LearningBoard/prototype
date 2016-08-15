@@ -22,6 +22,7 @@ define(['util', 'mdls/User', 'temps/Template', 'temps/CommentTemplate'], functio
         </div>
       </div>
     `;
+    this.model = model;
     var $this = this;
     this.$cmtBox = $(cmt_field);
 
