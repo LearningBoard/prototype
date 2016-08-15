@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, User, BoardBriefTemplate) {
-=======
 define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileFollowTemplate'], function(util, user, BoardBriefTemplate, ProfileFollowTemplate) {
->>>>>>> 8539e1aa643ab056a206ab5fcc04969c916cbdc2
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
