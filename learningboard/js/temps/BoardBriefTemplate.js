@@ -9,7 +9,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (user, Board, Templat
     if (this.model.id) {
       html = '\
       <div class="col-xs-12 col-sm-4 board-brief-temp '+this.model.getLevelName()+'" data-id="'+this.model.id+'" >\
-        <div class="thumbnail">\
+        <div class="thumbnail ' + (this.model.published() ? '' : 'unpublish') + '">\
           <div class="img-button thumbnail">\
             <img src="'+this.model.getCoverImage()+'" alt="Cover Image" class="img-responsive" />'
       if (user.is_staff()) {
@@ -29,7 +29,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (user, Board, Templat
             <p class="text-muted title">Content Level: '+this.model.getLevelName()+' </p>\
             <p class="description">'+this.model.description+'</p>\
             <p class="text-muted title">\
-              Status: <span class="text-success">'+this.model.getStatusName()+'</span>\
+              Status: <span class="'+ (this.model.published() ? 'text-success' : 'text-warning') +'">'+this.model.getStatusName()+'</span>\
             </p>\
             <p class="text-muted">\
               '+this.model.activity_num+ (this.model.activity_num_all ? `(+${this.model.activity_num_all - this.model.activity_num})` : '') +' Learning Activities</p>\

@@ -48,14 +48,12 @@ define(['util', 'mdls/Activity'], function (util, Activity) {
 
     getCompletedPercentage: function()
     {
-      var count;
-      var count = this.activities.map(function(item) {
-        return item.completed;
-      }).reduce(function(prev, current) {
-        if (current) {
-          return prev + 1;
+      if (this.activities.length < 1) return 0;
+      var count = this.activities.reduce(function(count, current) {
+        if (current.completed) {
+          return count + 1;
         } else {
-          return prev;
+          return count;
         }
       }, 0);
       return parseInt(count / this.activities.length * 100);
@@ -64,7 +62,7 @@ define(['util', 'mdls/Activity'], function (util, Activity) {
     published: function()
     {
       console.log(this);
-      return this.status === 1;
+      return this.publish === true;
     }
 
   });
