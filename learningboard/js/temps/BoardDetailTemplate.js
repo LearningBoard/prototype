@@ -93,7 +93,6 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     Template.call(this, $template);
     this.$subscribeBtn = $subscribeBtn;
 
-    console.log(model.subscribing);
     $subscribeBtn.hover(
       function(){if(model.subscribing) $(this).html(unsubscribe_html);},
       function(){if(model.subscribing) $(this).html(subscribing_html);}
@@ -144,6 +143,9 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
         );
       }
     });
+    
+    if (User.getId() === this.model.author.id) 
+      $subscribeBtn.hide(); 
 
     $actList = $template.find(".activityList");
     var length = model.activities.length;
