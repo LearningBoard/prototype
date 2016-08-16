@@ -17,6 +17,7 @@ define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, 
           brd_t.display($(".body_container"));
           document.title = brd_m.title + ' | Learning Boards';
           // unpublish board, deny access
+          $("meta[property='og:title']").attr("content", "My not awesome website");
         },
         function(xhr)
         {
