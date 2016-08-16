@@ -143,7 +143,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
         );
       }
     });
-    
+
     if (User.getId() === this.model.author.id) 
       $subscribeBtn.hide(); 
 
