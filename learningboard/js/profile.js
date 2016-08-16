@@ -51,7 +51,7 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
       for (var ii = 0; ii < len; ++ii)
       {
         ele = user.fb.education[ii];
-        if (ele.type === "College") 
+        if (ele.type === "College")
           school = ele.school.name;
       }
       $("#user_education").text(school);
@@ -65,11 +65,11 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
         var data = res.data.user;
         if (data.subscribedlb.length < 1) {
           var temp = new ProfileSubscribeTemplate({});
-          temp.display($('div.subscribingboard'));
+          temp.display($('div.subscribinglb'));
         } else {
           data.subscribedlb.map(function(item) {
             var temp = new ProfileSubscribeTemplate(item);
-            temp.display($('div.subscribingboard'));
+            temp.display($('div.subscribinglb'));
           });
         }
       },
