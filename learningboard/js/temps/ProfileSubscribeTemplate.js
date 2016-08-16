@@ -14,7 +14,7 @@ define(['temps/Template'], function (Template) {
       $html = $(`
         <div class="col-sm-4 thumbnail sidebar-item">
           <span>
-            <a href="board.view.html?${data.id}" class="no-color-change">
+            <a href="board_view.html?${data.id}" target="_blank" class="no-color-change">
               <i>${data.title}</i>
             </a>
           </span>

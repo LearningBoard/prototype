@@ -33,6 +33,10 @@ body > .body_container {
   margin: 0 auto;
 }
 
+.img-mini {
+  float: left;
+}
+
 .title {
   text-transform: capitalize;
 }
@@ -55,7 +59,7 @@ body > .body_container {
 }
 
 .top-fixed-btn.active>a {
-  background-color: #00a3ca !important;
+  background-color: #11a9db !important;
 }
 
 .navbar-toggle .icon-bar {

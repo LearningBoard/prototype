@@ -5,6 +5,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (user, Board, Templat
   {
     this.model = new Board(board);
     var html;
+    console.log(this.model);
     if (this.model.id) {
       html = '\
       <div class="col-xs-12 col-sm-4 board-brief-temp '+this.model.getLevelName()+'" data-id="'+this.model.id+'" >\
@@ -24,6 +25,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (user, Board, Templat
           </div>\
           <div class="caption">\
             <h4 class="title"><a href="board_view.html?'+this.model.id+'">'+this.model.title+'</a></a></h4>\
+            <p class="text-muted title">Owner: <a href="profile.html?'+this.model.author.id+'">'+this.model.author.username+'</a></p>\
             <p class="text-muted title">Content Level: '+this.model.getLevelName()+' </p>\
             <p class="description">'+this.model.description+'</p>\
             <p class="text-muted title">\

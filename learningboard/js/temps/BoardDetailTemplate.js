@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl'], function (util, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl) {
+define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl, fb) {
   var BoardDetailTemplate = function(board)
   {
     /* this.variables:
@@ -13,12 +13,14 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     var unsubscribe_html = '<span class="glyphicon glyphicon-remove"></span>&nbsp unsubscribe';
     var subscribing_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
     var html = `
+      <meta property="og:title" content="My awesome site" />
+      <meta property="og:image" content="http://example.com/ogp.jpg" />
       <div class="row">
         <div class="col-md-8">
           <h3 class="title board_title">`+util.toTitle(model.title)+`</h3>
           <div class="row">
             <div class="col-xs-1" style="width: 70px">
-              <p class="title">Author: </p>
+              <p class="title">Owner: </p>
             </div>
             <div class="col-xs-1">
               <a href="profile.html?${model.author.id}" target="_blank">`+model.author.username+`</a>
@@ -34,7 +36,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
           </div>
           <div class="action" style="margin-top: 15px">
             <button type="button" class="btn btn-default subscribeBtn">
-            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-send"></span>&nbsp share</button>
+            <button type="button" class="btn btn-default shareBtn"><span class="glyphicon glyphicon-send"></span>&nbsp share</button>
           </div>
           <br/>
           <div class="row board_status">
@@ -146,6 +148,19 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
 
     if (User.getId() === this.model.author.id) 
       $subscribeBtn.hide(); 
+
+    this.$shareBtn = $template.find(".shareBtn");
+    console.log(this.$shareBtn);
+    this.$shareBtn.on("click", function(e) {
+      e.preventDefault();
+      console.log("clicked");
+      FB.ui({
+        method: "share",
+        href: 'http://localhost:8000/board_view.html?1'
+      }, function(res) {
+        console.log(res);
+      });
+    });
 
     $actList = $template.find(".activityList");
     var length = model.activities.length;

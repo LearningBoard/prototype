@@ -5,9 +5,6 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
     appId   : '1677882592535443',
     version : 'v2.4'
   });
-  FB.getLoginStatus(function(response) {
-    console.log(response);
-  });
 
   $(function()
   {

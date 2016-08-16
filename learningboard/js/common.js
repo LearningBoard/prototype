@@ -23,7 +23,8 @@ requirejs.config({
 
     select2: 'https://cdn.jsdelivr.net/select2/4.0.3/js/select2.min',
     isotope: 'https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min',
-    facebook: '//connect.facebook.net/en_US/sdk'
+    fbsdk: '//connect.facebook.net/en_US/sdk',
+    facebook: 'lib/facebookAPI'
   },
   shim: {
     bootstrap: {
