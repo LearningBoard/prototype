@@ -2,7 +2,7 @@ define(['util', 'temps/Template', 'models/Audio'], function(util, Template, Audi
   "use strict";
 
   var AudioTemplate = function(audio, parent) {
-    this.parent = parent;
+    this.parentModel = parent;
     this.model = new Audio(audio);
 
     var images = this.model.audio_image;

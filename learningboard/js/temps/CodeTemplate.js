@@ -2,7 +2,7 @@ define(['temps/Template', 'models/Code'], function(Template, Code) {
   "use strict";
 
   var CodeTemplate = function(code, parent) {
-    this.parent = parent;
+    this.parentModel = parent;
     this.model = new Code(code);
     var link = this.model.code_link;
 

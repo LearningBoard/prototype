@@ -2,7 +2,7 @@ define(['temps/Template', 'models/Quiz'], function(Template, Quiz) {
   "use strict";
 
   var QuizTemplate = function(quiz, parent) {
-    this.parent = parent;
+    this.parentModel = parent;
     this.model = new Quiz(quiz);
     console.log(this.model);
     var link = this.model.quiz_link;

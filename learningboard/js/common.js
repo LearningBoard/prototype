@@ -32,9 +32,10 @@ requirejs.config({
     isotope: 'https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min',
     fbsdk: '//connect.facebook.net/en_US/sdk',
     facebook: 'lib/facebookAPI',
-    _plyr: 'lib/plyr',
-    plyr: 'lib/_plyr',
-    ga: 'https://www.google-analytics.com/analytics'
+    ga: 'https://www.google-analytics.com/analytics',
+    _vjs: '//vjs.zencdn.net/5.8/video.min',
+    videojs: 'lib/video',
+    YouTube: '../node_modules/videojs-youtube/dist/Youtube.min'
   },
   shim: {
     bootstrap: {

@@ -1,4 +1,4 @@
-define(['temps/Template', 'models/Video', 'plyr', 'ga'], function(Template, Video, plyr, ga) {
+define(['temps/Template', 'models/Video', 'videojs', 'ga', 'YouTube'], function(Template, Video, videojs, ga, ytb) {
   "use strict";
 
   var VideoTemplate = function(video, parent) {
@@ -7,14 +7,25 @@ define(['temps/Template', 'models/Video', 'plyr', 'ga'], function(Template, Vide
     var $this = this;
     this.model = new Video(video);
 
-    var $html = $(`<div><div class="js-player" data-type="${this.model.video_type}" data-video-id="${this.model.video_id}"></div></div>`);
+    var $html = $(`
+    <video
+      id="vid1"
+      class="video-js vjs-default-skin"
+      controls
+      autoplay
+      width="640" height="264"
+      data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"}] }'
+    >
+    </video>
+    `);
     var video_tag = $html[0];
-
-    var instance = plyr.setup(video_tag);
-    var player = instance[0].plyr;
-    $html.on('play playing pause ended seeked seeking volumechange enterfullscreen exitfullscreen captionsenabled captionsdisabled', function(e) {
-      ga('send', 'event', 'Activity_video', e.type, $this.model.video_link);
-    });
+    instance = videojs(video_tag);
+    var eventList = ['play', 'playing', 'pause', 'ended', 'seeked', 'seeking', 'volumechange', 'enterfullscreen', 'exitfullscreen', 'captionsenabled', 'captionsdisabled']
+    eventList.forEach(function(item) {
+      instance.on(item, function() {
+        ga('send', 'event', 'Activity_video', e.type, $this.model.video_link);
+      })
+    })
 
     Template.call(this, $html);
   }

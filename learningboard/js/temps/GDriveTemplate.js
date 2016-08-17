@@ -26,7 +26,7 @@ define(['mdls/GFile', 'mdls/GDriveData', 'temps/Template'], function(GFile, GDri
     `);
     data.fileList = data.fileList.map(function(ele){return new GFile(ele);});
     this.model = new GDriveData(data);
-    this.parent = parent;
+    this.parentModel = parent;
 
     var fileList = this.model.fileList;
     var len = fileList.length;
