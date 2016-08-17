@@ -54,7 +54,7 @@ requirejs.config({
   },
 });
 
-define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
+define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, user, ga) {
   var public_list = ['/', 'index.html', 'login.html', 'profile.html'];
   $(function() {
     // dump the nav bar to body
