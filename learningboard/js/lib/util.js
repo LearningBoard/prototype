@@ -107,6 +107,11 @@ define(['mdls/User'], function(user) {
       location.href = "404.html"
     },
 
+    err403: function()
+    {
+      location.href = "403.html"
+    },
+
     toTitle: function(str)
     {
       return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});

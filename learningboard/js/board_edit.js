@@ -130,16 +130,14 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           $('.navbar-nav li:not(:first) a').css({});
           initCoverImage(board.coverImage ? util.urls.media_addr + '/' + board.coverImage: "img/placeholder-no-image.png");
         },
-        function(){
-          alert('Learning Board not found');
-          location.href = 'boards.html';
+        function(xhr){
+          if (xhr.status === 404) util.err404();
+          if (xhr.status === 403) util.err403();
         }
       );
     }
     else{
-      alert('Learning Board not found');
-      location.href = 'boards.html';
-      return false;
+      util.err404();
     }
     $(".btn.sortLockMode").on("click", function() {
       scope.actList.toggleSortingEnabled();

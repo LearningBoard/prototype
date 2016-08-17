@@ -22,8 +22,11 @@ define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, 
         function(xhr)
         {
           if (xhr.status === 404) util.err404();
+          if (xhr.status === 403) util.err403();
         }
       );
+    } else {
+      util.err404();
     }
   });
 });

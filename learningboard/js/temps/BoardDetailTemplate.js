@@ -55,7 +55,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
           <div class="progressBox">
             <div class="progress">
               <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="${model.getCompletedPercentage()}" aria-valuemin="0" aria-valuemax="100" style="width: ${model.getCompletedPercentage()}%;">
-                <span style="color: white">${model.getCompletedPercentage()}%</span>
+                <span style="color: #000; opacity: 0.5">${model.getCompletedPercentage()}%</span>
               </div>
             </div>
           </div>
