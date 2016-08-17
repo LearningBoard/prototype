@@ -5,6 +5,13 @@
 //Configure loading modules from the lib directory,
 //except for 'app' ones, which are in a sibling
 //directory.
+
+window.GoogleAnalyticsObject = '__ga__';
+window.__ga__ = {
+  q: [['create', 'UA-79439648-1', 'auto'], ['send', 'pageview']],
+  l: Date.now()
+};
+
 requirejs.config({
   baseUrl: 'js/',
   waitSeconds: 30,
@@ -26,7 +33,8 @@ requirejs.config({
     fbsdk: '//connect.facebook.net/en_US/sdk',
     facebook: 'lib/facebookAPI',
     _plyr: 'lib/plyr',
-    plyr: 'lib/_plyr'
+    plyr: 'lib/_plyr',
+    ga: 'https://www.google-analytics.com/analytics'
   },
   shim: {
     bootstrap: {
@@ -39,6 +47,9 @@ requirejs.config({
     },
     facebook: {
       exports: 'FB'
+    },
+    ga: {
+      exports: '__ga__'
     }
   },
 });

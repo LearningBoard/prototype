@@ -10,8 +10,8 @@ define(function () {
       if(link.match(/watch\?v=(.*)/) != null) {
         this.video_id = link.match(/watch\?v=(.*)/)[1];
         this.video_type = "youtube";
-      } else if(link.match(/vimeo\.com\/(.*)/) != null) {
-        this.video_id = link.match(/vimeo\.com\/(.*)/)[1];
+      } else if(link.match(/vimeo\.com\/(\d+)/) != null) {
+        this.video_id = link.match(/vimeo\.com\/(\d+)/)[1];
         this.video_type = "vimeo";
       }
     }
