@@ -33,7 +33,7 @@ define(['util', 'mdls/Activity'], function (util, Activity) {
     {
       switch (this.publish)
       {
-        case false: return "unpublished";
+        case false: return "not published";
         case true: return "published";
       };
     },
@@ -64,7 +64,13 @@ define(['util', 'mdls/Activity'], function (util, Activity) {
     published: function()
     {
       console.log(this);
-      return this.status === 1;
+      return this.publish === true;
+    },
+
+    getOwnerName: function()
+    {
+      console.log(this.author);
+      return this.author.username;
     }
 
   });

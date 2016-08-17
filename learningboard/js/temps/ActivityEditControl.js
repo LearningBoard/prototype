@@ -3,14 +3,14 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
   var ActivityEditControl = function(actTemp) {
 
     var $html;
-    var model = actTemp.model;
+    this.model = actTemp.model;
     $html = $(`
-      <div class="control" data-id="${model.id}">
+      <div class="control" data-id="${this.model.id}">
         <ul>
-          <li ${model.published() ? 'class="hidden"' : ''}>
+          <li ${this.model.published() ? 'class="hidden"' : ''}>
             <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
           </li>
-          <li ${model.published() ? '' : 'class="hidden"'}>
+          <li ${this.model.published() ? '' : 'class="hidden"'}>
             <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
           </li>
           <li>
@@ -26,25 +26,29 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
     ControlTemplate.call(this, $html);
 
     var thisArg = this;
+  }
+
+  $.extend(ActivityEditControl.prototype, ControlTemplate.prototype);
+
+  ActivityEditControl.prototype.onActive = function() {
     // remove activity
-    $html.find("[name='removeBtn']").on('click', function(e){
+    var thisArg = this;
+    this.$template.find("[name='removeBtn']").on('click', function(e){
       var r = confirm('Are you sure to delete this activity?');
       if(!r) return;
-      util.delete('/activity/'+model.id+'/',
+      util.delete('/activity/'+thisArg.model.id+'/',
         function(data)
         {
           var len = thisArg.subscribers.length, ele;
           for (var ii = 0; ii < len; ++ii)
           {
             ele = thisArg.subscribers[ii];
-            if (ele.onActivityDelete) ele.onActivityDelete(model);
+            if (ele.onActivityDelete) ele.onActivityDelete(thisArg.model);
           }
         }
       );
     });
   }
-
-  $.extend(ActivityEditControl.prototype, ControlTemplate.prototype);
 
   return ActivityEditControl;
 });

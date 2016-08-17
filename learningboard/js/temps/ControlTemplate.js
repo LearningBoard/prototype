@@ -8,6 +8,14 @@ define(["temps/Template"], function(Template) {
 
   $.extend(ControlTemplate.prototype, Template.prototype);
 
+  ControlTemplate.prototype.display = function() {
+    Template.prototype.display.apply(this, arguments)
+    console.log(this.onActive);
+    this.onActive();
+  }
+
+  ControlTemplate.prototype.onActive = function() {}
+
   ControlTemplate.prototype.register = function()
   {
     var len = arguments.length;

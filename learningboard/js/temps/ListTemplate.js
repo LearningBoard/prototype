@@ -1,15 +1,37 @@
 define(["temps/Template"], function(Template) {
-  
-  var ListTemplate = function(templateList, $template, $inner_container, noElementHTML)
+  "use strict"; 
+
+  /**
+   * @param {object} settings - properties to initiate a ListTemplate
+   * @param {array} [settings.templateList=[]] - list of Template Objects
+   * @param {jQuery} [settings.template=default] - jQuery frame of the whole list
+   * @param {jQuery} [settings.container=settings.template] - jQuery element containing Template Objects
+   * @param {jQuery | string} [noElementHTML=''] - the html that displays when the list is empty
+   **/
+  var ListTemplate = function(settings)
   {
-    this.templateList = templateList;
+    if (settings.templateList === undefined) var temps = [];
+    var temps = settings.templateList.slice();
+
+    var $template = settings.template? 
+      settings.template: $(`
+        <div class="listFrame">
+          <div class="eleList"></div>
+        </div>`
+      );
+
+    this.templateList = temps;
     // a list of Template objects
 
-    this.$container = ($inner_container === undefined? $template: $inner_container);
+    this.$container = settings.container? 
+      settings.container: (settings.template? 
+        settings.template: $template.children(".eleList")
+      );
     // a jQuery html element which contains all children templates
 
-    this.length = templateList.length;
-    this.noElementHTML = noElementHTML === undefined? '': noElementHTML;
+    this.length = temps.length;
+    this.noElementHTML = settings.noElementHTML === undefined? 
+      '': settings.noElementHTML;
 
     Template.call(this, $template);
   };
@@ -94,7 +116,7 @@ define(["temps/Template"], function(Template) {
     this.model.splice(index, 1);
 
     this.length--;
-    for (var ii = index; ii < this.length; ++ii)
+    for (var ii = index; ii < this.length && this.templateList[ii].updateIndex; ++ii)
       this.templateList[ii].updateIndex(ii);
 
     if (this.length < 1) this.$container.append(this.noElementHTML);

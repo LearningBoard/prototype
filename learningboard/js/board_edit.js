@@ -58,6 +58,21 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
       scope.actList = new SortableListTemplate(new ActivityListTemplate());
       scope.actList.display($(".activityListContainer"));
+      window.onbeforeunload = function(e) {
+        // If we haven't been passed the event get the window.event
+        e = e || window.event;
+
+        var message = "Your board haven't been saved. \nDo you want to leave the page?";
+
+        // For IE6-8 and Firefox prior to version 4
+        if (e) 
+        {
+            e.returnValue = message;
+        }
+
+        // For Chrome, Safari, IE8+ and Opera 12+
+        return message;
+      }
     } else if(/\?\d+/.test(location.search)){ // assign value to field when editing the board
       scope.pk = location.search.replace('?', '');
       util.get('/lb/'+scope.pk+'/',
@@ -256,6 +271,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         util.post('/lb/', dataObject,
           function(res)
           {
+            window.onbeforeunload = null;
             console.log(res);
             location.href = 'board_edit.html?' + res.data.lb.id;
           }

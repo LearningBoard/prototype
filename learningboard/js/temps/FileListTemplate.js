@@ -1,12 +1,12 @@
 define(['util', 'jquery_ui', 'temps/ListTemplate'], function(util, jquery_ui, ListTemplate) {
   "use strict";
 
-  var noFileHtml = `
+  var noFileHTML = `
   <p class="text-center noElement" style="margin-top: 25px">
     <i>Please select your file(s)</i>
   </p>`;
 
-  var FileListTemplate = function(fileTemps, $template, $inner_container, noElementHtml) {
+  var FileListTemplate = function(fileTemps, $template, $inner_container, noElementHTML) {
     if (fileTemps === undefined) var fileTemps = [];
     var templateList = fileTemps.slice();
 
@@ -27,13 +27,19 @@ define(['util', 'jquery_ui', 'temps/ListTemplate'], function(util, jquery_ui, Li
       $inner_container  = $template.children(".fileList");
     }
 
-    if (noElementHtml === undefined) noElementHtml = noFileHtml;
+    if (noElementHTML === undefined) noElementHTML = noFileHTML;
 
-    ListTemplate.call(this, templateList, $template, $inner_container, noElementHtml);
+    ListTemplate.call(this, 
+    {
+      templateList: templateList, 
+      template: $template, 
+      container: $inner_container,
+      noELementHTML: noElementHTML
+    });
 
     this.model = templateList.map(function(ele){return ele.model});
 
-    if (this.length === 0) this.$container.append(noFileHtml);
+    if (this.length === 0) this.$container.append(noFileHTML);
 
     for (var i = 0; i < this.length; ++i)
     {

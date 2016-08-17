@@ -13,8 +13,6 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     var unsubscribe_html = '<span class="glyphicon glyphicon-remove"></span>&nbsp unsubscribe';
     var subscribing_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
     var html = `
-      <meta property="og:title" content="My awesome site" />
-      <meta property="og:image" content="http://example.com/ogp.jpg" />
       <div class="row">
         <div class="col-md-8">
           <h3 class="title board_title">`+util.toTitle(model.title)+`</h3>
@@ -23,7 +21,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
               <p class="title">Owner: </p>
             </div>
             <div class="col-xs-1">
-              <a href="profile.html?${model.author.id}" target="_blank">`+model.author.username+`</a>
+              <a href="profile.html?${model.author.id}" target="_blank">`+model.getOwnerName()+`</a>
             </div>
           </div>
           <div class="row">

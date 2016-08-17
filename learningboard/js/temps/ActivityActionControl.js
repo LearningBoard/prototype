@@ -3,15 +3,16 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
   var ActivityActionControl = function(actTemp) {
 
     var $html;
-    var model = actTemp.model;
+    this.model = actTemp.model;
+
     $html = $(`
-      <div class="control" data-id="${model.id}">
+      <div class="control" data-id="${this.model.id}">
         <ul class="text-muted">
           <li>
             <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
             Share
           </li>
-          <li class="markAsComplete ${model.completed ? 'text-success' : ''}">
+          <li class="markAsComplete ${this.model.completed ? 'text-success' : ''}">
             <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
             Complete
           </li>
@@ -19,29 +20,34 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
       </div>
    `);
 
-    var parent = this;
-    // mark as complete button
-    $html.find('.markAsComplete').off('click').on('click', function() {
-      var $this = $(this);
-      util.post('/activity/complete/'+model.id, {complete: !model.completed},
-        function(res) {
-          $this.toggleClass('text-success');
-          model.completed = !model.completed;
-          var len = parent.subscribers.length;
-          for (var ii = 0; ii < len; ++ii)
-          {
-            var ele = parent.subscribers[ii];
-            if (ele.onActivityComplete) 
-              ele.onActivityComplete(model);
-          }
-        }
-      );
-    });
-
     ControlTemplate.call(this, $html);
 
   };
 
   $.extend(ActivityActionControl.prototype, ControlTemplate.prototype);
+
+  ActivityActionControl.prototype.onActive = function() 
+  {
+    var parent = this;
+    // mark as complete button
+    this.$template.find('.markAsComplete').on('click', function() {
+      var $this = $(this);
+      util.post('/activity/complete/'+parent.model.id, {complete: !parent.model.completed},
+        function(res) {
+          $this.toggleClass('text-success');
+          parent.model.completed = !parent.model.completed;
+          var len = parent.subscribers.length;
+          for (var ii = 0; ii < len; ++ii)
+          {
+            var ele = parent.subscribers[ii];
+            if (ele.onActivityComplete) 
+              ele.onActivityComplete(parent.model);
+          }
+        }
+      );
+    });
+
+  }
+
   return ActivityActionControl;
 });

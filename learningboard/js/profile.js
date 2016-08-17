@@ -35,8 +35,7 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
             board.display($("#boardList"));
           }
         } else {
-          var board = new BoardBriefTemplate({});
-          board.display($("#boardList"));
+          $("#boardList").append("<p>Could not find any Learning Boards. Create your own one today.</p>");
         }
       }
     );
@@ -64,8 +63,11 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
       function(res) {
         var data = res.data.user;
         if (data.subscribedlb.length < 1) {
-          var temp = new ProfileSubscribeTemplate({});
-          temp.display($('div.subscribinglb'));
+          $("div.subscribinglb").append(`
+            <div class="col-sm-12 thumbnail sidebar-item opaque-75">
+              <i>He hasn't subscribed any board</i>
+            </div>
+          `);
         } else {
           data.subscribedlb.map(function(item) {
             var temp = new ProfileSubscribeTemplate(item);

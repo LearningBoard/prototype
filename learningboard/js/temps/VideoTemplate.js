@@ -1,23 +1,24 @@
-define(['temps/Template', 'models/Video'], function(Template, Video) {
+define(['temps/Template', 'models/Video', 'plyr'], function(Template, Video, plyr) {
   "use strict";
+
 
   var VideoTemplate = function(video) {
 
     this.model = new Video(video);
 
-    var link = this.model.video_link;
-    if (link) {
-      if(link.match(/watch\?v=(.*)/) != null) {
-        link = 'https://www.youtube.com/embed/' + link.match(/watch\?v=(.*)/)[1];
-      } else if(link.match(/vimeo\.com\/(.*)/) != null) {
-        link = 'https://player.vimeo.com/video/' + link.match(/vimeo\.com\/(.*)/)[1];
-      }
-    }
-    var $html = $(`
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="activity-video embed-responsive-item" src="${link}" allowfullscreen></iframe>
-      </div>
-    `);
+    var $html = $(`<div><div class="js-player" data-type="${this.model.video_type}" data-video-id="${this.model.video_id}" controls> </div></div>`);
+    var video_tag = $html[0];
+
+    var options = {
+      title: "testing",
+      controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'fullscreen'],
+      debug: true
+    };
+
+    var instance = plyr.setup(video_tag, options);
+    var player = instance[0].plyr;
+    player.play();
+
     Template.call(this, $html);
   }
 

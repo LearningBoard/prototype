@@ -1,7 +1,7 @@
 define(['util', "jquery_ui", 'temps/ListTemplate'], function(util, ui, ListTemplate){
   "use strict";
 
-  var noActHtml = `
+  var noActHTML = `
   <p class="text-center noElement">
     <i>Currently there are no activities in the board</i>
   </p>`;
@@ -24,8 +24,14 @@ define(['util', "jquery_ui", 'temps/ListTemplate'], function(util, ui, ListTempl
       </div>`
     );
     var $container = $template.find(".activityList");
-    ListTemplate.call(this, templateList, $template, $container, noActHtml);
-    if (this.length === 0) $container.append(noActHtml);
+    ListTemplate.call(this, 
+    {
+      templateList: templateList, 
+      template: $template, 
+      container: $container, 
+      noElementHTML: noActHTML
+    });
+    if (this.length === 0) $container.append(noActHTML);
   }
 
   $.extend(ActivityListTemplate.prototype, ListTemplate.prototype);

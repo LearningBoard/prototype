@@ -277,14 +277,14 @@ p.minor {
   cursor: pointer;
 }
 
-.activityList > .activity .control ul {
+.control ul {
   list-style: none;
   position: absolute;
   top: 5px;
   right: 5px;
 }
 
-.activityList > .activity .control ul li {
+.control ul li {
   display: inline-block;
   padding: 0 2px;
   cursor: pointer;
@@ -544,4 +544,8 @@ a.no-color-change:hover {
 
 a.no-color-change:visited {
   color: inherit;
+}
+
+.plyr__controls {
+  padding-top: 0 !important;
 }

@@ -1,11 +1,6 @@
 define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
   "use strict";
 
-  FB.init({
-    appId   : '1677882592535443',
-    version : 'v2.4'
-  });
-
   $(function()
   {
     // redirect if logged in
