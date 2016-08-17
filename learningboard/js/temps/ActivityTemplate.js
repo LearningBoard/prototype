@@ -28,7 +28,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
     `);
     $dif = $html.find("[name='dif']");
     var Resource = ViewDispatcher.activities.getView(model.type);
-    var rsc = new Resource(model.data, this);
+    var rsc = new Resource(model.data, model);
     rsc.display($dif);
 
     var editMode = User.is_staff() && location.href.includes('board_edit.html');
