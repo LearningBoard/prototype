@@ -6,11 +6,13 @@ define(['temps/Template', 'models/Video', 'plyr'], function(Template, Video, ply
 
     this.model = new Video(video);
 
-    var $html = $(`<div><div class="js-player" data-type="${this.model.video_type}" data-video-id="${this.model.video_id}" controls> </div></div>`);
+    var $html = $(`
+      <div>
+        <div class="js-player" data-type="${this.model.video_type}" data-video-id="${this.model.video_id}" controls> </div>
+      </div>`);
     var video_tag = $html[0];
 
     var options = {
-      title: "testing",
       controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'fullscreen'],
       debug: true
     };

@@ -8,8 +8,8 @@ define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Templat
     console.log(this.model);
     html = '\
     <div class="col-xs-12 col-sm-4 board-brief-temp '+this.model.getLevelName()+'" data-id="'+this.model.id+'" >\
-      <div class="thumbnail">\
-        <div class="thumbnail ' + (this.model.published() ? '' : 'unpublish') + '">\
+      <div class="thumbnail ' + (this.model.published() ? '' : 'unpublish') + '">\
+        <div class="thumbnail">\
           <img src="'+this.model.getCoverImage()+'" alt="Cover Image" class="img-responsive" />'
     if (User.getId() === this.model.author.id) {
       html += '\

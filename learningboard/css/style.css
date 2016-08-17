@@ -191,7 +191,7 @@ p.minor {
 }
 
 .unpublish {
-  background: url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom center;
+  opacity: .6;
 }
 
 /* board edit */

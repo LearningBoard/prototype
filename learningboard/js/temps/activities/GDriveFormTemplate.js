@@ -11,6 +11,7 @@ define(['util', '../ActivityFormTemplate', 'temps/SortableListTemplate', 'temps/
       <a id="addFileBtn" class="btn btn-default addFileBtn">Add File</a>
     </div>`;
     this.$template.find('.customForm').append(customFormHtml);
+    console.log(SortableListTemplate);
     this.fileListTemplate = new SortableListTemplate(new GFileListTemplate());
     this.fileListTemplate.display(this.$template.find(".fileList"));
     var thisArg = this;
