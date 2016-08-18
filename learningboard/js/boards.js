@@ -1,18 +1,6 @@
 define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, BoardBriefTemplate) {
   'use strict'; 
   $(function(){
-    // login required
-    if (!user.getToken()) {
-      alert('Login required!');
-      location.href = 'login.html';
-      return;
-    }
-    $(document).on('mouseenter', '.thumbnail', function(e) {
-      $(this).parent().find('.boardControlBtn').toggleClass('hidden');
-    });
-    $(document).on('mouseleave', '.thumbnail', function(e) {
-      $(this).parent().find('.boardControlBtn').toggleClass('hidden');
-    });
 
     $('#sendNewsModal').on('shown.bs.modal', function(e){
       var modal = $(this);
@@ -51,7 +39,6 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, B
         );
       });
     });
-    $('#addBoardBtn').removeClass('hidden');
 
     util.get("/lb?user", 
       function(res)

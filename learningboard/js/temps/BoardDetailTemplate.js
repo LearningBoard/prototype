@@ -100,12 +100,6 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     if (!model.subscribing) $subscribeBtn.html(subscribe_html);
     else $subscribeBtn.html(subscribing_html);
 
-    if (User.is_staff() === "true")
-    {
-      // the board of itself
-      console.log(model);
-      $subscribeBtn.addClass("hidden");
-    }
     $subscribeBtn.on('click', function(){
       if(model.subscribing)
       {
