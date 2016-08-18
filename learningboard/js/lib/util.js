@@ -128,6 +128,23 @@ define(['mdls/User'], function(user) {
       var x = new (Function.prototype.bind.apply(Cls, args));
       console.log(x);
       return x;
+    },
+
+    /**
+     * @param callback - function to be called
+     * @param interval - callback will be called if the function is not called for [interval]
+     */
+    funcCalledWhenNotActive: function(callback, interval) {
+      var id;
+
+      function _wrapper() {
+        // if _wrapper is called again in interval, previous callback in setTimeout will not be called, and the timeout will be refreshed
+        clearTimeout(id);
+        id = setTimeout(function(args) {
+          callback.apply(null, args);
+        }, interval, arguments);
+      }
+      return _wrapper;
     }
   }
 });

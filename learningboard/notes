@@ -1,0 +1,16 @@
+URLs for testing;
+  https://www.youtube.com/watch?v=DhVPJSL2kk4
+  https://jsfiddle.net/rniemeyer/LkqTU/
+  https://vimeo.com/179197689
+
+seeking:
+  log:
+    start_time 
+    seeking = true
+    
+seeked:
+  send:
+    time_consumed_for_seeking
+    activity_id
+    start_time
+    end_time
