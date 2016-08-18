@@ -56,7 +56,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
       initCoverImage('img/placeholder-no-image.png');
 
-      scope.actList = new SortableListTemplate(new ActivityListTemplate());
+      scope.actList = new SortableListTemplate(new ActivityListTemplate(), false);
       scope.actList.display($(".activityListContainer"));
       window.onbeforeunload = function(e) {
         // If we haven't been passed the event get the window.event
@@ -111,7 +111,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
                 return new ActivityTemplate(activity, index);
               }
             );
-            scope.actList = new SortableListTemplate(new ActivityListTemplate(actTemps));
+            scope.actList = new SortableListTemplate(new ActivityListTemplate(actTemps), false);
             var len = actTemps.length, ele;
             for (var ii = 0; ii < len; ++ii)
             {
@@ -124,7 +124,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           }
           else
           {
-            scope.actList = new SortableListTemplate(new ActivityListTemplate());
+            scope.actList = new SortableListTemplate(new ActivityListTemplate(), false);
             scope.actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});

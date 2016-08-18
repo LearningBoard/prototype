@@ -1,11 +1,11 @@
 define(["jquery_ui", "util"], function(jquery_ui, util) {
 
-  var SortableListTemplate = function(listTemplate)
+  var SortableListTemplate = function(listTemplate, initialSortingEnabled)
   {
     $.extend(this, listTemplate);
     $.extend(this, listTemplate.__proto__);
 
-    this.sortingEnabled = true;
+    this.sortingEnabled = initialSortingEnabled === undefined? true: initialSortingEnabled;
 
     var $container = this.$container;
     var $template = this.$template;
@@ -17,6 +17,8 @@ define(["jquery_ui", "util"], function(jquery_ui, util) {
       opacity: 0.95,
       cursor: 'move'
     });
+    console.log(this.sortingEnabled);
+    this.setSortingEnabled(this.sortingEnabled);
     $container.addClass("sortableList");
     var startIndex = -1, endIndex = -1;
     $template.on('sortstart', function(e, ui)

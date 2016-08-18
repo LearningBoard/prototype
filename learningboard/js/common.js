@@ -34,8 +34,10 @@ requirejs.config({
     facebook: 'lib/facebookAPI',
     ga: 'https://www.google-analytics.com/analytics',
     _vjs: '//vjs.zencdn.net/5.8/video.min',
+    "video.js": 'lib/video',
     videojs: 'lib/video',
-    YouTube: '../node_modules/videojs-youtube/dist/Youtube.min'
+    YouTube: '../node_modules/videojs-youtube/dist/Youtube.min',
+    Vimeo: '../node_modules/videojs-vimeo/src/Vimeo'
   },
   shim: {
     bootstrap: {
@@ -51,11 +53,17 @@ requirejs.config({
     },
     ga: {
       exports: '__ga__'
+    },
+    Vimeo: {
+      deps: ['videojs']
+    },
+    YouTube: {
+      deps: ['videojs']
     }
   },
 });
 
-define(['jquery', 'bootstrap', 'mdls/User'], function(jquery, bootstrap, user) {
+define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, user, ga) {
   var public_list = ['/', 'index.html', 'login.html', 'profile.html'];
   $(function() {
     // dump the nav bar to body
