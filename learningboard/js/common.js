@@ -36,8 +36,8 @@ requirejs.config({
     _vjs: '//vjs.zencdn.net/5.8/video.min',
     "video.js": 'lib/video',
     videojs: 'lib/video',
-    YouTube: '../node_modules/videojs-youtube/dist/Youtube.min',
-    Vimeo: '../node_modules/videojs-vimeo/src/Vimeo'
+    YouTube: 'https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.1.0/Youtube.min',
+    Vimeo: 'lib/Vimeo'
   },
   shim: {
     bootstrap: {
