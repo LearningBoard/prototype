@@ -31,7 +31,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
     var rsc = new Resource(model.data, model);
     rsc.display($dif);
 
-    var editMode = User.is_staff() && location.href.includes('board_edit.html');
+    var editMode = location.href.includes('board_edit.html');
 
     if (!editMode) {
       var $activityComment = $html.find('div.activityComment');

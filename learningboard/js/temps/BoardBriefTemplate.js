@@ -13,7 +13,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Templat
           <img src="'+this.model.getCoverImage()+'" alt="Cover Image" class="img-responsive" />'
     if (User.getId() === this.model.author.id) {
       html += '\
-          <ul class="boardControlBtn">\
+          <ul class="boardControlBtn hidden">\
             <li class="boardEditButton">\
               <a href="board_edit.html?'+this.model.id+'">Edit</a>\
             </li>\
@@ -48,7 +48,13 @@ define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Templat
       </div>\
     </div>\
     ';
-    Template.call(this, $(html));
+
+    html = $(html);
+    html.on('mouseenter mouseleave', function(e) {
+      html.find('.boardControlBtn').toggleClass('hidden');
+    });
+
+    Template.call(this, html);
   };
 
   $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
