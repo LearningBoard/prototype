@@ -45,9 +45,9 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       }
     );
 
-    window.onbeforeunload = util.onbeforeunload;
     // reset data for new board
     if(location.search.includes('?new')){
+      window.onbeforeunload = util.onbeforeunload;
       $("div[class=curated_by] span").text(user.getInfo().username);
 
       $('.navbar-nav li:not(:first) a').css({
@@ -347,6 +347,10 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       );
     });
 
+    $("input, textarea, select").on("change", function() {
+      window.onbeforeunload = util.onbeforeunload
+    });
+
   });
 
   function initCoverImage(url){
@@ -378,5 +382,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
       });
     })(instance);
   }
+
+
 
 });
