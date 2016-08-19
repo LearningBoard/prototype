@@ -9,8 +9,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Templat
     html = '\
     <div class="col-xs-12 col-sm-4 board-brief-temp '+this.model.getLevelName()+'" data-id="'+this.model.id+'" >\
       <div class="thumbnail ' + (this.model.published() ? '' : 'unpublish') + '">\
-        <div style="height: 225px;">\
-          <img src="'+this.model.getCoverImage()+'" alt="Cover Image" class="img-responsive" />'
+        <div class="coverImage" style="background-image: url('+this.model.getCoverImage()+')">'
     if (User.getId() === this.model.author.id) {
       html += '\
           <ul class="boardControlBtn hidden">\
