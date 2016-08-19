@@ -11,7 +11,8 @@ define(function () {
         this.video_id = link.match(/watch\?v=(.*)/)[1];
         this.video_type = "youtube";
         this.video_techOrder = ["youtube"];
-        this.video_sup = {};
+        this.video_sup = {
+        };
       } 
       else if(link.match(/vimeo\.com\/(\d+)/) != null) 
       {

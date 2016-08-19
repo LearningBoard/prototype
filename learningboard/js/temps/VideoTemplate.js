@@ -20,7 +20,8 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'YouTube', 'Vimeo']
     <video
       id="vid${this.parent.id}"
       class="video-js vjs-default-skin ${this.model.video_type === "youtube"? "vjs-16-9": ""}"
-      controls 
+      preload="auto"
+      controls
       data-setup=${JSON.stringify(setupObj)}
     >
     </video>
@@ -36,6 +37,8 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'YouTube', 'Vimeo']
     Template.prototype.display.apply(this, arguments);
     var video_tag = this.$template[0];
     var instance = videojs(video_tag);
+    console.log(instance);
+
     var eventList = [
       'play', 
       'playing', 
@@ -76,7 +79,6 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'YouTube', 'Vimeo']
       seek_from: null, 
       seek_to: null, // progress of the video
     }
-    var volumeInfo
     eventList.forEach(function(item) {
       switch (item)
       {
@@ -107,8 +109,10 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'YouTube', 'Vimeo']
         break;
         case "volumechange":
         instance.on(item, function(e) {
+          console.log(e);
 
         })
+        break;
         default:
         instance.on(item, function(e) {
           console.log(e);
