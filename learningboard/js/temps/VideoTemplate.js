@@ -7,6 +7,7 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'YouTube', 'Vimeo']
 
     var setupObj = {
       techOrder: this.model.video_techOrder, 
+      playbackRates: [0.25, 0.5, 1, 2],
       sources: [
         { 
           type: "video/"+this.model.video_type,
