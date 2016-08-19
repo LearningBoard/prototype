@@ -9,8 +9,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Templat
     html = '\
     <div class="col-xs-12 col-sm-4 board-brief-temp '+this.model.getLevelName()+'" data-id="'+this.model.id+'" >\
       <div class="thumbnail ' + (this.model.published() ? '' : 'unpublish') + '">\
-        <div class="thumbnail">\
-          <img src="'+this.model.getCoverImage()+'" alt="Cover Image" class="img-responsive" />'
+        <div class="coverImage" style="background-image: url('+this.model.getCoverImage()+')">'
     if (User.getId() === this.model.author.id) {
       html += '\
           <ul class="boardControlBtn hidden">\
@@ -23,7 +22,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Templat
     html += '\
         </div>\
         <div class="caption">\
-          <h4 class="title"><a href="board_view.html?'+this.model.id+'">'+this.model.title+'</a></a></h4>\
+          <h4 class="title"><a href="'+(this.model.published() ? 'board_view.html' : 'board_preview.html')+'?'+this.model.id+'">'+this.model.title+'</a></a></h4>\
           <p class="text-muted title">Owner: <a href="profile.html?'+this.model.author.id+'">'+this.model.getOwnerName()+'</a></p>\
           <p class="text-muted title">Content Level: '+this.model.getLevelName()+' </p>\
           <p class="description">'+this.model.description+'</p>\

@@ -55,11 +55,11 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         cursor: 'not-allowed'
       });
 
-      initCoverImage('img/placeholder-no-image.png');
+      initCoverImage();
 
       scope.actList = new SortableListTemplate(new ActivityListTemplate(), false);
       scope.actList.display($(".activityListContainer"));
-    } 
+    }
     else if(/\?\d+/.test(location.search)){ // assign value to field when editing the board
       scope.pk = location.search.replace('?', '');
       util.get('/lb/'+scope.pk+'/',
@@ -118,7 +118,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             scope.actList.display($(".activityListContainer"));
           }
           $('.navbar-nav li:not(:first) a').css({});
-          initCoverImage(board.coverImage ? util.urls.media_addr + '/' + board.coverImage: "img/placeholder-no-image.png");
+          initCoverImage(board.coverImage ? util.urls.media_addr + '/' + board.coverImage: '');
         },
         function(xhr){
           if (xhr.status === 404) util.err404();
@@ -355,6 +355,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   });
 
   function initCoverImage(url){
+    if (!url) url = 'img/placeholder-300x225.png';
     var instance = $('.uploadImage').fileinput('destroy').fileinput({
       overwriteInitial: true,
       showClose: false,
@@ -378,7 +379,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         });
       });
       instance.off('filecleared').on('filecleared', function(e){
-        initCoverImage('img/placeholder-no-image.png');
+        initCoverImage();
         scope.cover_img = undefined;
       });
     })(instance);

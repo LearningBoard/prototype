@@ -145,6 +145,14 @@ div.img-button:hover div {
   border-radius: 1px;
 }
 
+.coverImage {
+  width: 100%;
+  height: 225px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 div.img-button.thumbnail {
   border: 0 none;
   box-shadow: none;

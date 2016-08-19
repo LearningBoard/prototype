@@ -36,7 +36,7 @@ requirejs.config({
     _vjs: '//vjs.zencdn.net/5.8/video.min',
     "video.js": 'lib/video',
     videojs: 'lib/video',
-    YouTube: 'https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.1.0/Youtube.min',
+    YouTube: 'lib/Youtube',
     Vimeo: 'lib/Vimeo'
   },
   shim: {
