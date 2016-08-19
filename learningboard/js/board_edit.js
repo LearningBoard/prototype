@@ -251,6 +251,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           function(res)
           {
             alert('Board saved');
+            window.onbeforeunload = null;
           }
         );
       }else{
