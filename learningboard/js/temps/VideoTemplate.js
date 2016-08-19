@@ -18,7 +18,7 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'YouTube', 'Vimeo']
 
     var $html = $(`
     <video
-      id="vid1"
+      id="vid${this.parent.id}"
       class="video-js vjs-default-skin ${this.model.video_type === "youtube"? "vjs-16-9": ""}"
       controls 
       data-setup=${JSON.stringify(setupObj)}
@@ -74,8 +74,9 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'YouTube', 'Vimeo']
       tstamp1: null,
       tstamp2: null,// time stamps
       seek_from: null, 
-      seek_to: null, // time of the video
+      seek_to: null, // progress of the video
     }
+    var volumeInfo
     eventList.forEach(function(item) {
       switch (item)
       {
@@ -104,6 +105,10 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'YouTube', 'Vimeo']
           });
         });
         break;
+        case "volumechange":
+        instance.on(item, function(e) {
+
+        })
         default:
         instance.on(item, function(e) {
           console.log(e);
