@@ -240,6 +240,7 @@ THE SOFTWARE. */
           this.trigger('loadstart');
           this.trigger('loadedmetadata');
           this.trigger('durationchange');
+          this.trigger('ratechange');
           break;
 
         case YT.PlayerState.ENDED:
