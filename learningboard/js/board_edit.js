@@ -83,6 +83,9 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
             $('.publishBoardBtn').parent().addClass('hidden');
             $('.unpublishBoardBtn').parent().removeClass('hidden');
           }
+          if (board.coverImage) {
+            scope.cover_img = board.coverImage;
+          }
           if(board.tags){
             board.tags.map(function(item){
               scope.tag_list.push(item.id);
