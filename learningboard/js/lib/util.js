@@ -146,6 +146,7 @@ define(['mdls/User'], function(user) {
       }
       return _wrapper;
     },
+
     onbeforeunload: function(e) {
       // If we haven't been passed the event get the window.event
       e = e || window.event;
@@ -160,6 +161,14 @@ define(['mdls/User'], function(user) {
 
       // For Chrome, Safari, IE8+ and Opera 12+
       return message;
+    },
+
+    getAppRootUrl: function() {
+      var loc = window.location.pathname;
+      for(var i = 0; i < 1; i++) {
+        loc = loc.substring(0, loc.lastIndexOf('/'));
+      }
+      return window.location.protocol + '//' + window.location.host + (window.location.port ? `:${window.location.port}` : '') + loc;
     }
   }
 });

@@ -1,4 +1,4 @@
-define(["OneDrive"], function(OneDrive) {
+define(["OneDrive", 'util'], function(OneDrive, util) {
   "use strict";
 
   var cancel = function(data)
@@ -16,7 +16,7 @@ define(["OneDrive"], function(OneDrive) {
     clientId: "8cfc5300-2316-4282-8781-688551f56c1c",
     action: "share",
     advanced: {
-      redirectUri: "http://localhost:8000/ofilepicker.html",
+      redirectUri: util.getAppRootUrl() + "/ofilepicker.html",
       createLinkParameters: {type: "embed"}
     },
     linkType: "webviewlink",

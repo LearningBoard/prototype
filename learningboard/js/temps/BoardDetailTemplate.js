@@ -148,7 +148,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
       console.log("clicked");
       FB.ui({
         method: "share",
-        href: 'http://localhost:8000/board_view.html?1'
+        href: util.getAppRootUrl() + '/board_view.html?1'
       }, function(res) {
         console.log(res);
       });
