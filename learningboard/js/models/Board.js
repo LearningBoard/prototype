@@ -4,14 +4,14 @@ define(['util', 'mdls/Activity'], function (util, Activity) {
   var Board = function(board)
   {
     $.extend(this, board);
-    var actvs;
-    if (board.activities)
-      actvs = board.activities;
-    else actvs = [];
-    var len = actvs.length;
-    for (var i = 0; i < len; ++i)
-    {
-      actvs[i] = new Activity(actvs[i]);
+    var actvs = [];
+    if (board.activities) {
+      board.activities.reduce(function(array, item) {
+        if (item.publish) {
+          actvs.push(new Activity(item));
+        }
+        return array;
+      }, actvs);
     }
   };
   // Board Mixin, for different templates of learning boards
@@ -57,6 +57,11 @@ define(['util', 'mdls/Activity'], function (util, Activity) {
         }
       }, 0);
       return parseInt(count / this.activities.length * 100);
+    },
+
+    getTotalUnpublishActivityNum: function()
+    {
+      return this.model.activity_num_all - this.model.activity_num;
     },
 
     published: function()

@@ -12,6 +12,10 @@ define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, 
       util.get('/lb/'+pk+'/', 
         function(res) {
           var data = res.data;
+          if (!data.lb.publish) {
+            location.href = `board_preview.html?${data.lb.id}`;
+            return false;
+          }
           var brd_t = new BoardDetailTemplate(data.lb);
           var brd_m = brd_t.model;
           brd_t.display($(".body_container"));

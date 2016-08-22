@@ -30,7 +30,7 @@ define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Templat
             Status: <span class="'+(this.model.published()? "text-success": "text-danger")+'">'+this.model.getStatusName()+'</span>\
           </p>\
           <p class="text-muted">\
-            '+this.model.activity_num+ (this.model.activity_num_all ? `(+${this.model.activity_num_all - this.model.activity_num})` : '') +' Learning Activities</p>\
+            '+this.model.activity_num+ (User.getId() === this.model.author.id && this.getTotalUnpublishActivityNum() > 0 ? `(+${this.getTotalUnpublishActivityNum()})` : '') +' Learning Activities</p>\
         </div>\
         <div class="boardInfoBox">\
           <div class="row text-center text-muted">\
