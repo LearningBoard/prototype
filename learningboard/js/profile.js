@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate'], function(util, User, BoardBriefTemplate, ProfileSubscribeTemplate) {
+define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate', 'temps/ProfileRecentActivityTemplate', 'temps/ProfileRecentActivityListTemplate'], function(util, User, BoardBriefTemplate, ProfileSubscribeTemplate, ProfileRecentActivityTemplate, ProfileRecentActivityListTemplate) {
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
@@ -80,7 +80,7 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
         if (data.subscribedlb.length < 1) {
           $("div.subscribinglb").append(`
             <div class="col-sm-12 thumbnail sidebar-item opaque-75">
-              <i>He hasn't subscribed any board</i>
+              <i>Hasn't subscribed any board</i>
             </div>
           `);
         } else {
@@ -88,6 +88,18 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
             var temp = new ProfileSubscribeTemplate(item);
             temp.display($('div.subscribinglb'));
           });
+        }
+        var actList;
+        if (data.recentActivity && data.recentActivity.length > 0) {
+          var userObj = {id: data.id, username: data.username, email: data.email, info: data.info};
+          actList = data.recentActivity.map(function(item, i) {
+            return new ProfileRecentActivityTemplate(Object.assign({}, item, {user: userObj}), i);
+          });
+          actList = new ProfileRecentActivityListTemplate(actList);
+          actList.display($('#recentActivity'));
+        } else {
+          actList = new ProfileRecentActivityListTemplate();
+          actList.display($('#recentActivity'));
         }
       },
       function() {
