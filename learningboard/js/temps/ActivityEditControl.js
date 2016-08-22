@@ -7,11 +7,11 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
     $html = $(`
       <div class="control" data-id="${this.model.id}">
         <ul>
-          <li ${this.model.published() ? 'class="hidden"' : ''}>
-            <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
-          </li>
           <li ${this.model.published() ? '' : 'class="hidden"'}>
-            <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-floppy-remove publishBtn" data-publish="false" aria-hidden="true"></span>
+          </li>
+          <li ${this.model.published() ? 'class="hidden"' : ''}>
+            <span class="glyphicon glyphicon-floppy-saved publishBtn" data-publish="true" aria-hidden="true"></span>
           </li>
           <li>
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
@@ -31,8 +31,28 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
   $.extend(ActivityEditControl.prototype, ControlTemplate.prototype);
 
   ActivityEditControl.prototype.onActive = function() {
-    // remove activity
     var thisArg = this;
+
+    // publish activity
+    this.$template.find('.publishBtn').on('click', function(e) {
+      var publish = $(this).data('publish');
+      util.post('/activity/publish/'+thisArg.model.id, {publish: publish},
+        function(data)
+        {
+          thisArg.model.publish = publish;
+          thisArg.$template.find('.publishBtn').parent('li').addClass('hidden');
+          thisArg.$template.find('.publishBtn[data-publish="'+!publish+'"]').parent('li').removeClass('hidden');
+          var len = thisArg.subscribers.length, ele;
+          for (var ii = 0; ii < len; ++ii)
+          {
+            ele = thisArg.subscribers[ii];
+            if (ele.onActivityPublish) ele.onActivityPublish(thisArg.model);
+          }
+        }
+      );
+    });
+
+    // remove activity
     this.$template.find("[name='removeBtn']").on('click', function(e){
       var r = confirm('Are you sure to delete this activity?');
       if(!r) return;
