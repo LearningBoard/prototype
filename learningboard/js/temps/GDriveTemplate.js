@@ -5,7 +5,7 @@ define(['mdls/GFile', 'mdls/GDriveData', 'temps/Template'], function(GFile, GDri
    * @constructor
    * @param {Array} data - activity data returned from backend
    */
-  var GDriveTemplate = function(data, parent) {
+  var GDriveTemplate = function(data, parentModel) {
 
     var $html = $("<div class='fileView'></div>");
     $html.append(`
@@ -26,7 +26,7 @@ define(['mdls/GFile', 'mdls/GDriveData', 'temps/Template'], function(GFile, GDri
     `);
     data.fileList = data.fileList.map(function(ele){return new GFile(ele);});
     this.model = new GDriveData(data);
-    this.parentModel = parent;
+    this.parentModel = parentModel;
 
     var fileList = this.model.fileList;
     var len = fileList.length;

@@ -146,7 +146,8 @@ define(['mdls/User'], function(user) {
       }
       return _wrapper;
     },
-    onbeforeunload: function(e) {
+    
+    saveRemindBeforeUnload: function(e) {
       // If we haven't been passed the event get the window.event
       e = e || window.event;
 

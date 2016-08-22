@@ -5,6 +5,9 @@ define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, 
 
   $(function(){
 
+    var scope = {
+      brd_t: null
+    }
     // fetch and render board data
     if(/\?\d+/.test(location.search))
     {
@@ -12,9 +15,9 @@ define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, 
       util.get('/lb/'+pk+'/', 
         function(res) {
           var data = res.data;
-          var brd_t = new BoardDetailTemplate(data.lb);
-          var brd_m = brd_t.model;
-          brd_t.display($(".body_container"));
+          scope.brd_t = new BoardDetailTemplate(data.lb);
+          var brd_m = scope.brd_t.model;
+          scope.brd_t.display($(".body_container"));
           document.title = brd_m.title + ' | Learning Boards';
           // unpublish board, deny access
           $("meta[property='og:title']").attr("content", "My not awesome website");

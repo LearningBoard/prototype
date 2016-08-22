@@ -5,8 +5,8 @@ define(['mdls/ODriveData', 'temps/Template'], function(ODriveData, Template) {
    * @constructor
    * @param {Array} data - activity data returned from backend
    */
-  var ODriveTemplate = function(data, parent) {
-    this.parentModel = parent;
+  var ODriveTemplate = function(data, parentModel) {
+    this.parentModel = parentModel;
     this.model = new ODriveData(data);
     console.log(this.model);
 

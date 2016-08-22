@@ -47,7 +47,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
     // reset data for new board
     if(location.search.includes('?new')){
-      window.onbeforeunload = util.onbeforeunload;
+      window.onbeforeunload = util.saveRemindBeforeUnload;
       $("div[class=curated_by] span").text(user.getInfo().username);
 
       $('.navbar-nav li:not(:first) a').css({
@@ -349,7 +349,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     });
 
     $("input, textarea, select").on("change", function() {
-      window.onbeforeunload = util.onbeforeunload
+      window.onbeforeunload = util.saveRemindBeforeUnload;
     });
 
   });

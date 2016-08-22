@@ -1,8 +1,8 @@
 define(['temps/Template', 'models/Quiz'], function(Template, Quiz) {
   "use strict";
 
-  var QuizTemplate = function(quiz, parent) {
-    this.parentModel = parent;
+  var QuizTemplate = function(quiz, parentModel) {
+    this.parentModel = parentModel;
     this.model = new Quiz(quiz);
     console.log(this.model);
     var link = this.model.quiz_link;

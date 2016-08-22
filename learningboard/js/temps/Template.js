@@ -4,6 +4,13 @@ define(function() {
   var Template = function($template) {
     // provides a display function for its children
     this.$template = $template;
+    if (this.onBeforeUnload)
+    {
+      var self = this;
+      $(window).unload(function() {
+        self.onBeforeUnload();
+      });
+    }
   };
 
   Template.prototype.display = function()
@@ -18,6 +25,12 @@ define(function() {
   {
     this.$template.remove();
   }
+
+  /*
+  Template.prototype.onBeforeUnload = function(event)
+  {
+  }
+  */
 
   return Template;
 })

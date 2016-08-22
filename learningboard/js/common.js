@@ -37,7 +37,8 @@ requirejs.config({
     "video.js": 'lib/video',
     videojs: 'lib/video',
     YouTube: 'lib/Youtube',
-    Vimeo: 'lib/Vimeo'
+    Vimeo: 'lib/Vimeo',
+    Timer: "lib/timer"
   },
   shim: {
     bootstrap: {

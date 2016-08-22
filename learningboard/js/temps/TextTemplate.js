@@ -1,8 +1,8 @@
 define(['util', 'temps/Template', 'mdls/Text'], function(util, Template, Text) {
   "use strict";
 
-  var TextTemplate = function(text, parent) {
-    this.parentModel = parent;
+  var TextTemplate = function(text, parentModel) {
+    this.parentModel = parentModel;
     this.model = new Text(text);
 
     var link;

@@ -14,3 +14,12 @@ seeked:
     activity_id
     start_time
     end_time
+
+play
+  pause
+  change rate
+  seek
+  ended
+
+total_play_time = 
+total_pause_time = 
