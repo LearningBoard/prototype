@@ -94,12 +94,12 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
         console.log("success");
         User.setToken(data.token);
         User.setUser(data.user);
-        User.set("fb", fb);
+        User.set("info", {facebook: fb});
         console.log(xhr);
         console.log(User.getInfo());
-        util.post("/user/"+User.getId(), User.getInfo());
-
-        location.href = "index.html";
+        util.put("/user/"+User.getId(), User.getInfo(), function(res) {
+          location.href = "index.html";
+        });
       }
     };
 
