@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate'], function(util, User, BoardBriefTemplate, ProfileSubscribeTemplate) {
+define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate', 'temps/ProfileRecentActivityTemplate', 'temps/ProfileRecentActivityListTemplate'], function(util, User, BoardBriefTemplate, ProfileSubscribeTemplate, ProfileRecentActivityTemplate, ProfileRecentActivityListTemplate) {
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
@@ -39,33 +39,48 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
         }
       }
     );
-    var user = User.getInfo();
-    if (user.fb)
-    {
-      $("#user_name").text(user.fb.name);
-      console.log(user);
-      $("#user_location").text(user.fb.location.name);
-      var len = user.fb.education.length;
-      var school;
-      for (var ii = 0; ii < len; ++ii)
-      {
-        ele = user.fb.education[ii];
-        if (ele.type === "College")
-          school = ele.school.name;
+    var displayUserInfo = function(data) {
+      if (data.passports) {
+        var key;
+        data.passports.some(function(item) {
+          if (data.info[item.provider]) {
+            key = item.provider;
+            return true;
+          }
+        });
+        if (key) {
+          switch (key) {
+            case 'facebook':
+              $('#user_name').text(data.info[key].name || '');
+              $('#user_location').text(data.info[key].location ? data.info[key].location.name : '');
+              var school;
+              if (data.info[key].education) {
+                var len = data.info[key].education.length;
+                for (var ii = 0; ii < len; ++ii)
+                {
+                  ele = data.info[key].education[ii];
+                  if (ele.type === 'College')
+                    school = ele.school.name;
+                }
+              }
+              $('#user_education').text(school || '');
+              $('.profile-avatar').attr('src', `https://graph.facebook.com/${data.info[key].id}/picture?height=263&height=263`);
+              break;
+          }
+        } else {
+          $('#user_name').text(data.username);
+        }
       }
-      $("#user_education").text(school);
-    }
-    else {
-      $("#user_name").text(user.username);
-    }
+    };
 
     util.get('/user/' + userId,
       function(res) {
         var data = res.data.user;
+        displayUserInfo(data);
         if (data.subscribedlb.length < 1) {
           $("div.subscribinglb").append(`
             <div class="col-sm-12 thumbnail sidebar-item opaque-75">
-              <i>He hasn't subscribed any board</i>
+              <i>Hasn't subscribed any board</i>
             </div>
           `);
         } else {
@@ -73,6 +88,18 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
             var temp = new ProfileSubscribeTemplate(item);
             temp.display($('div.subscribinglb'));
           });
+        }
+        var actList;
+        if (data.recentActivity && data.recentActivity.length > 0) {
+          var userObj = {id: data.id, username: data.username, email: data.email, info: data.info};
+          actList = data.recentActivity.map(function(item, i) {
+            return new ProfileRecentActivityTemplate(Object.assign({}, item, {user: userObj}), i);
+          });
+          actList = new ProfileRecentActivityListTemplate(actList);
+          actList.display($('#recentActivity'));
+        } else {
+          actList = new ProfileRecentActivityListTemplate();
+          actList.display($('#recentActivity'));
         }
       },
       function() {

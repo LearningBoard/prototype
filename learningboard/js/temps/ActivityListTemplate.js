@@ -1,4 +1,4 @@
-define(['util', "jquery_ui", 'temps/ListTemplate'], function(util, ui, ListTemplate){
+define(['util', "jquery_ui", 'temps/ListTemplate', 'mdls/Activity'], function(util, ui, ListTemplate, Activity){
   "use strict";
 
   var noActHTML = `
@@ -35,6 +35,12 @@ define(['util', "jquery_ui", 'temps/ListTemplate'], function(util, ui, ListTempl
   }
 
   $.extend(ActivityListTemplate.prototype, ListTemplate.prototype);
+
+  ActivityListTemplate.prototype.onActivityPublish = function(model)
+  {
+    var index = this.getIdList().indexOf(model.id);
+    this.updateElementAt(new Activity(model), index);
+  }
 
   ActivityListTemplate.prototype.onActivityDelete = function(model)
   {

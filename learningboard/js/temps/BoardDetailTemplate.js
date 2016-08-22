@@ -39,7 +39,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
           <br/>
           <div class="row board_status">
             <div class="col-xs-4">
-              <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ model.activity_num+(model.activity_num_all ? `(+${model.activity_num_all - model.activity_num})` : '')+' '+(model.activity_num == 1? "activity": "activities")+`</span>
+              <span class="glyphicon glyphicon-book" style="width: 45px" aria-hidden="true"></span><span>`+ model.activity_num+' '+(model.activity_num == 1? "activity": "activities")+`</span>
             </div>
             <div class="col-xs-4">
               <span aria-hidden="true" class="glyphicon glyphicon-education" style="width: 45px"></span><span>`+
@@ -148,24 +148,26 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
       console.log("clicked");
       FB.ui({
         method: "share",
-        href: 'http://localhost:8000/board_view.html?1'
+        href: util.getAppRootUrl() + '/board_view.html?1'
       }, function(res) {
         console.log(res);
       });
     });
 
     $actList = $template.find(".activityList");
-    var length = model.activities.length;
 
     var parent = this;
-    var constructor = function(ele, i) {
-        var act_t = new ActivityTemplate(ele, i);
-        var act_c = new ActivityActionControl(act_t);
-        act_c.register(parent);
-        act_t.addControl(act_c);
-        return act_t;
-      }
-    this.actTemps = model.activities.map(constructor);
+    var length = 0;
+    var constructor = function(array, ele) {
+      if (!ele.publish) return array;
+      var act_t = new ActivityTemplate(ele, length++);
+      var act_c = new ActivityActionControl(act_t);
+      act_c.register(parent);
+      act_t.addControl(act_c);
+      array.push(act_t);
+      return array;
+    }
+    this.actTemps = model.activities.reduce(constructor, []);
 
     var actList = new ActivityListTemplate(this.actTemps, false);
     actList.display($actList);

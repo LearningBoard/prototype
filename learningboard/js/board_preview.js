@@ -12,7 +12,10 @@ define(['util', 'temps/BoardDetailTemplate'], function(util, BoardDetailTemplate
       util.get('/lb/'+pk+'/', 
         function(res) {
           var data = res.data;
-          console.log(data);
+          if (data.lb.publish) {
+            location.href = `board_view.html?${data.lb.id}`;
+            return false;
+          }
           var brd_t = new BoardDetailTemplate(data.lb);
           console.log(brd_t.$subscribeBtn);
           brd_t.$subscribeBtn.off("click");
