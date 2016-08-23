@@ -170,6 +170,23 @@ define(['mdls/User'], function(user) {
         loc = loc.substring(0, loc.lastIndexOf('/'));
       }
       return window.location.protocol + '//' + window.location.host + (window.location.port ? `:${window.location.port}` : '') + loc;
-    }
+    },
+
+    uuid: function() {
+      // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      });
+    },
+
+    propertyExtend: function(dest) {
+      for (var i = 1; i < arguments.length; ++i)
+      {
+        var src = arguments[i];
+        for(var k in src) 
+          dest[k] = src[k];
+      }
+    },
   }
 });

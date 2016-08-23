@@ -1,9 +1,13 @@
-define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube', 'Vimeo'], function(util, Template, Video, videojs, Timer, ytb, vmo) {"use strict";
+define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Timer', 'YouTube', 'Vimeo', 'md5'], function(util, Template, Video, User, videojs, Timer, ytb, vmo, md5) {"use strict";
 
   var playbackRates = [ 2, 1.5, 1.25, 1, 0.5];
+  var parentId, cliendId, authorId;
 
   var VideoTemplate = function(video, parentModel) {
+    console.log(util.uuid());
 
+    parentId = parentModel.id;
+    authorId = parentModel.author.id;
     this.parentModel = parentModel; // parent model
     this.model = new Video(video);
     this.timer = new Timer();
@@ -19,7 +23,7 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
         }
       ] 
     }
-    $.extend(setupObj, this.model.video_sup);
+    util.propertyExtend(setupObj, this.model.video_sup);
 
     var $html = $(`
     <video
@@ -38,14 +42,28 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
 
   $.extend(VideoTemplate.prototype, Template.prototype)
 
-  function gaCount (event, model) {
-    __ga__('send', {
+  function gaSend (action, value, info) {
+    if (!$.isNumeric(value)) 
+    {
+      info = info || value || {};
+      value = 1;
+    }
+    else info = info || {};
+
+    var obj = {
       hitType: 'event',
-      eventCategory: `Activity_${model.type}`,
-      eventAction: event.type,
-      eventLabel: "id "+model.id+": "+model.title,
-      eventValue: 1
-    });
+      eventCategory: `Activity_video`,
+      eventAction: action,
+      eventLabel: util.uuid(),
+      eventValue: value,
+      userId: User.getId(),
+      dimension1: parentId,
+      dimension2: authorId
+    }
+
+    util.propertyExtend(obj, info);
+
+    __ga__('send', obj);
   }
 
   VideoTemplate.prototype.display = function() {
@@ -53,6 +71,7 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
     var video_tag = this.$template[0];
     var instance = videojs(video_tag);
     console.log(instance);
+    console.log(md5("dalkf"));
 
     var eventList = [
       // 'timeupate',
@@ -75,11 +94,7 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
       // a "seek" here is counted as a user move the slider and doesn't move it again for 1.5 seconds
       console.log(info);
       console.log("seeked");
-      __ga__('send', {
-        hitType: 'event',
-        eventCategory: 'Activity_video',
-        eventAction: 'seek',
-        eventLabel: info.activity.id + ":" + info.activity.title,
+      gaSend("seek", {
         eventValue: info.tstamp2 - info.tstamp1, // time cost for seeking
         metric1: info.seek_from,
         metric2: info.seek_to,
@@ -108,7 +123,7 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
           timer.measurePause("pause");
           timer.measureStart(currentRate); // play time in playbackRate
           timer.measureStart("play"); // total play time
-          if (instance.isFullScreen())
+          if (instance.isFullscreen())
             timer.measureStart("fullscreen");
         });
         break;
@@ -119,6 +134,7 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
           timer.measureStart("pause");
           timer.measurePause("play");
           timer.measurePause("fullscreen");
+          gaSend("pause", instance.currentTime());
         });
         break;
         case "ratechange":
@@ -146,7 +162,6 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
         instance.on(item, function(e) {
           seek_info.tstamp2 = new Date();
           seek_info.seek_to = instance.currentTime();
-          seek_info.activity = self.parent;
           // will log the seek behavior in ga 
           // if the user don't seek again in 2 seconds
           gaOnSeeked(seek_info, function() {
@@ -167,21 +182,21 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
             measurePause("fullscreen");
           }
           console.log("enterfullscreen");
-          gaCount(e, this.parentModel);
+          gaSend(e.type);
 
         })
         break;
         case "exitfullscreen":
         instance.on(item, function(e) {
           timer.measurePause("fullscreen");
-          gaCount(e, this.parentModel);
-        })
+          gaSend(e.type);
+        });
         break;
         default:
         instance.on(item, function(e) {
           console.log(e);
           console.log(instance);
-          gaCount(e, this.parentModel);
+          gaSend(e.type);
         });
       }
     });       
@@ -191,10 +206,6 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
   {
     var self = this;
     var timer_result_obj = {
-      hitType: 'event',
-      eventCategory: 'Activity_video',
-      eventAction: "view",
-      eventLabel: "id "+self.parentModel.id+": "+self.parentModel.title,
       eventValue: self.timer.measureStop("play")
     };
     var len = playbackRates.length;
@@ -204,8 +215,7 @@ define(['util', 'temps/Template', 'models/Video', 'videojs', 'Timer', 'YouTube',
     timer_result_obj['metric9'] = this.timer.measureStop("fullscreen");
 
     console.log("haha unload");
-    console.log(this.timer._.measures[1]);
-    __ga__('send', timer_result_obj);
+    gaSend("view", timer_result_obj);
   }
 
   return VideoTemplate;

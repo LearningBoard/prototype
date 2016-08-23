@@ -38,7 +38,8 @@ requirejs.config({
     videojs: 'lib/video',
     YouTube: 'lib/Youtube',
     Vimeo: 'lib/Vimeo',
-    Timer: "lib/timer"
+    Timer: "lib/timer",
+    md5: "lib/md5.min"
   },
   shim: {
     bootstrap: {
@@ -64,7 +65,7 @@ requirejs.config({
   },
 });
 
-define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, user, ga) {
+define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, User, ga) {
   var public_list = ['/', 'index.html', 'login.html', 'profile.html'];
   $(function() {
     // dump the nav bar to body
@@ -90,7 +91,7 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, u
                 </div>
               </form>
               <ul class="nav navbar-nav navbar-right text-center">
-                <li class="top-fixed-btn ${location.href.includes('profile.html?'+user.getId()) ? 'active' : ''}"><a href="profile.html?${user.getId()}"><span class="glyphicon glyphicon-user" area-hidden="true"></span>
+                <li class="top-fixed-btn ${location.href.includes('profile.html?'+User.getId()) ? 'active' : ''}"><a href="profile.html?${User.getId()}"><span class="glyphicon glyphicon-user" area-hidden="true"></span>
                   <br />Profile
                 </a></li>
                 <li class="top-fixed-btn ${location.href.includes('browse.html') ? 'active' : ''}"><a href="browse.html">
@@ -120,7 +121,7 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, u
       );
     }
     // display login/logout
-    if(user.hasToken())
+    if(User.hasToken())
     {
       $('.navbar-nav .login').addClass('hidden');
       $('.navbar-nav .logout').removeClass('hidden');
@@ -153,9 +154,12 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, u
       function(e)
       {
         e.preventDefault();
-        user.clear();
+        User.clear();
       }
     );
+    ga(function(track) {
+      User.set("id", track.get("clientId"));
+    });
   });
 
   // polyfill

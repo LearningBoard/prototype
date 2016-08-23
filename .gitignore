@@ -1,4 +1,5 @@
 learningboard/lb_proto/lb_proto/deployment.py
+*.log
 */migrations/*
 *.pyc
 db.sqlite3

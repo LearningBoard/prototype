@@ -73,15 +73,7 @@ define(function() {
 
     clear: function() 
     {
-      // clear all localStorage
-      Object.keys(localStorage)
-      .map(
-        function(key)
-        {
-          localStorage.removeItem(key);
-        }
-      );
-      location.reload();
+      localStorage.user = "{}";
     }
   }
 });
