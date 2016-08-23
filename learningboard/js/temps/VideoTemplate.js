@@ -224,7 +224,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
     {
       timer_result_obj["metric"+(8-i)] = this.timer.measureStop(playbackRates[i]);
       console.log(8-i);
-      cosnole.log(timer_result_obj["metric"+(8-i)]);
+      console.log(timer_result_obj["metric"+(8-i)]);
     }
     console.log(timer_result_obj);
     console.log(timer_result_obj["metric4"]);
