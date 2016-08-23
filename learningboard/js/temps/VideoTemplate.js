@@ -49,6 +49,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
       value = 1;
     }
     else info = info || {};
+    console.log(authorId);
 
     var obj = {
       hitType: 'event',
@@ -58,7 +59,8 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
       eventValue: value,
       userId: User.getId(),
       dimension1: parentId,
-      dimension2: authorId
+      dimension2: authorId,
+      dimension3: User.getId()
     }
 
     util.propertyExtend(obj, info);
@@ -127,6 +129,10 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
             timer.measureStart("fullscreen");
         });
         break;
+        case "stalled":
+        instance.on(item, function(e) {
+          console.log("stalled");
+        })
         case "pause":
         instance.on(item, function(e) {
           console.log("paused");
@@ -139,10 +145,14 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
         break;
         case "ratechange":
         instance.on(item, function(e) {
+          console.log("ratechange");
           console.log("rate changed");
           timer.measurePause(currentRate);
+          var changeFrom = currentRate;
           currentRate = instance.playbackRate();
-          timer.measureStart(currentRate);
+          if (!instance.paused())
+            timer.measureStart(currentRate);
+          gaSend("ratechange", instance.currentTime());
         }); 
         break;
         case "seeking":
@@ -196,7 +206,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
         instance.on(item, function(e) {
           console.log(e);
           console.log(instance);
-          gaSend(e.type);
+          gaSend(e.type, instance.currentTime());
         });
       }
     });       
@@ -211,7 +221,13 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
     var len = playbackRates.length;
     timer_result_obj['metric3'] = this.timer.measureStop("pause");
     for (var i = 0; i < length; ++i)
+    {
       timer_result_obj["metric"+(8-i)] = this.timer.measureStop(playbackRates[i]);
+      console.log(8-i);
+      cosnole.log(timer_result_obj["metric"+(8-i)]);
+    }
+    console.log(timer_result_obj);
+    console.log(timer_result_obj["metric4"]);
     timer_result_obj['metric9'] = this.timer.measureStop("fullscreen");
 
     console.log("haha unload");
