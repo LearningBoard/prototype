@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate', 'temps/ProfileRecentActivityTemplate', 'temps/ProfileRecentActivityListTemplate'], function(util, User, BoardBriefTemplate, ProfileSubscribeTemplate, ProfileRecentActivityTemplate, ProfileRecentActivityListTemplate) {
+define(['util', 'mdls/User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate', 'temps/ProfileRecentActivityTemplate', 'temps/ProfileRecentActivityListTemplate'], function(util, User, BoardBriefListTemplate, BoardBriefTemplate, ProfileSubscribeTemplate, ProfileRecentActivityTemplate, ProfileRecentActivityListTemplate) {
   $(function() {
     if (!/\?\d+/.test(location.search)) {
       alert('User not found');
@@ -23,19 +23,16 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribe
     util.get(queryBoardUrl,
       function(res)
       {
-        var data = res.data;
-        console.log(res);
-        var board_list = data.lb;
-        var $board_list_ele = $("#boardList")
-        var length = data.lb.length;
-        if (length > 0) {
-          for (var i = 0; i < length; ++i)
-          {
-            var board = new BoardBriefTemplate(board_list[i]);
-            board.display($("#boardList"));
-          }
+        var board_list = res.data.lb;
+        if (board_list.length) {
+          board_list = board_list.map(function(item, i) {
+            return new BoardBriefTemplate(item, i);
+          });
+          board_list = new BoardBriefListTemplate(board_list);
+          board_list.display($('#boardList'));
         } else {
-          $("#boardList").append("<p>Could not find any Learning Boards. Create your own one today.</p>");
+          board_list = new BoardBriefListTemplate();
+          board_list.display($("#boardList"));
         }
       }
     );

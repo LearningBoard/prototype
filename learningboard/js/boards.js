@@ -1,5 +1,5 @@
-define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, BoardBriefTemplate) {
-  'use strict'; 
+define(['util', 'mdls/User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate'], function(util, user, BoardBriefListTemplate, BoardBriefTemplate) {
+  'use strict';
   $(function(){
 
     $('#sendNewsModal').on('shown.bs.modal', function(e){
@@ -43,18 +43,17 @@ define(['util', 'mdls/User', 'temps/BoardBriefTemplate'], function(util, user, B
     util.get("/lb?user", 
       function(res)
       {
-        var data = res.data;
-        console.log(data);
-        var board_list = data.lb;
-        var $board_list_ele = $("#boardList")
-        var length = data.lb.length;
-        if (length) {
-          for (var i = 0; i < length; ++i)
-          {
-            var board = new BoardBriefTemplate(board_list[i]);
-            board.display($("#boardList"));
-          }
-        }       
+        var board_list = res.data.lb;
+        if (board_list.length) {
+          board_list = board_list.map(function(item, i) {
+            return new BoardBriefTemplate(item, i);
+          });
+          board_list = new BoardBriefListTemplate(board_list);
+          board_list.display($('#boardList'));
+        } else {
+          board_list = new BoardBriefListTemplate();
+          board_list.display($('#boardList'));
+        }
       }
     );
   });
