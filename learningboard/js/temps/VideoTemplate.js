@@ -220,7 +220,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
     };
     var len = playbackRates.length;
     timer_result_obj['metric3'] = this.timer.measureStop("pause");
-    for (var i = 0; i < length; ++i)
+    for (var i = 0; i < len; ++i)
     {
       timer_result_obj["metric"+(8-i)] = this.timer.measureStop(playbackRates[i]);
       console.log(8-i);
