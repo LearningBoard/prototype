@@ -1,4 +1,4 @@
-define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBriefTemplate, Isotope) {
+define(['util', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBriefListTemplate, BoardBriefTemplate, Isotope) {
   $(document).ready(function()
   {
     var grid = new Isotope($('#boardList')[0], {
@@ -7,18 +7,18 @@ define(['util', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBri
     });
     util.get('/lb/',
       function(res) {
-        var data = res.data;
-        var bl = data.lb;
-        if (bl.length > 0) {
-          for (var i = 0; i < bl.length; ++i)
-          {
-            var bt = new BoardBriefTemplate(bl[i]);
-            bt.display($("#boardList"));
+        var bl = res.data.lb;
+        if (bl.length) {
+          bl = bl.map(function(item, i) {
+            var bt = new BoardBriefTemplate(item, i);
             grid.appended(bt.$template);
-          }
+            return bt;
+          });
+          bl = new BoardBriefListTemplate(bl);
+          bl.display($('#boardList'));
         } else {
-          var bt = new BoardBriefTemplate({});
-          bt.display($("#boardList"));
+          bl = new BoardBriefListTemplate();
+          bl.display($("#boardList"));
         }
       }
     );

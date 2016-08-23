@@ -1,7 +1,7 @@
 // dependencies: Template.js, Board.js
-define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Template)
+define(['mdls/User', 'mdls/Board', 'temps/ListElementTemplate'], function (User, Board, ListElementTemplate)
 {
-  var BoardBriefTemplate = function(board)
+  var BoardBriefTemplate = function(board, index)
   {
     this.model = new Board(board);
     var html;
@@ -53,9 +53,9 @@ define(['mdls/User', 'mdls/Board', './Template'], function (User, Board, Templat
       html.find('.boardControlBtn').toggleClass('hidden');
     });
 
-    Template.call(this, html);
+    ListElementTemplate.call(this, html, index);
   };
 
-  $.extend(BoardBriefTemplate.prototype, Board.prototype, Template.prototype);
+  $.extend(BoardBriefTemplate.prototype, Board.prototype, ListElementTemplate.prototype);
   return BoardBriefTemplate;
 });

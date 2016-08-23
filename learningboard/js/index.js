@@ -1,4 +1,4 @@
-define(['util', 'User', 'temps/BoardBriefTemplate', 'test/dataSet'], function(util, User, BoardBriefTemplate, test) {
+define(['util', 'User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'test/dataSet'], function(util, User, BoardBriefListTemplate, BoardBriefTemplate, test) {
 
   $(function()
   {
@@ -6,19 +6,18 @@ define(['util', 'User', 'temps/BoardBriefTemplate', 'test/dataSet'], function(ut
       function(res)
       {
         var bl = res.data.lb;
-        if (bl.length > 0) {
-          for (var i = 0; i < bl.length; ++i)
-          {
-            var bt = new BoardBriefTemplate(bl[i]);
-            bt.display($("#boardList"));
-          }
+        if (bl.length) {
+          bl = bl.map(function(item, i) {
+            return new BoardBriefTemplate(item, i);
+          });
+          bl = new BoardBriefListTemplate(bl);
+          bl.display($('#boardList'));
         } else {
-          var bt = new BoardBriefTemplate({});
-          bt.display($("#boardList"));
+          bl = new BoardBriefListTemplate();
+          bl.display($("#boardList"));
         }
         console.log(User.getInfo());
       }
     );
-    console.log()
   });
 });

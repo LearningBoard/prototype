@@ -1,4 +1,4 @@
-define(['util', 'temps/BoardBriefTemplate'], function(util, BoardBriefTemplate) {
+define(['util', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate'], function(util, BoardBriefListTemplate, BoardBriefTemplate) {
   'use strict';
 
   $(function()
@@ -7,15 +7,15 @@ define(['util', 'temps/BoardBriefTemplate'], function(util, BoardBriefTemplate) 
       function(res)
       {
         var bl = res.data.lb;
-        if (bl.length > 0) {
-          for (var i = 0; i < bl.length; ++i)
-          {
-            var bt = new BoardBriefTemplate(bl[i]);
-            bt.display($("#boardList"));
-          }
+        if (bl.length) {
+          bl = bl.map(function(item, i) {
+            return new BoardBriefTemplate(item, i);
+          });
+          bl = new BoardBriefListTemplate(bl);
+          bl.display($('#boardList'));
         } else {
-          var bt = new BoardBriefTemplate({});
-          bt.display($("#boardList"));
+          bl = new BoardBriefListTemplate();
+          bl.display($("#boardList"));
         }
       }
     );
