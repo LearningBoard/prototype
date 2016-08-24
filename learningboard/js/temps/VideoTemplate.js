@@ -60,15 +60,12 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
         dimension1: parentId,
         dimension2: authorId,
         dimension3: User.getId()
+      }
+
+      util.propertyExtend(obj, info);
+
+      __ga__('send', obj);
     }
-
-    util.propertyExtend(obj, info);
-
-    __ga__('send', obj);
-  }
-    console.log(instance);
-    console.log(md5("dalkf"));
-
     var eventList = [
       // 'timeupate',
       // 'loadmetadata',
@@ -89,12 +86,10 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
 
     var gaOnSeeked = util.funcCalledWhenNotActive(function(info, callback) {
       // a "seek" here is counted as a user move the slider and doesn't move it again for 1.5 seconds
-      console.log(info);
-      console.log("seeked");
       instance.__gaSend("seek", {
-        eventValue: info.tstamp2 - info.tstamp1, // time cost for seeking
         metric1: info.seek_from,
         metric2: info.seek_to,
+        metric10: info.tstamp2 - info.tstamp1, // time cost for seeking
       });
       callback.apply(null, Array.prototype.slice(arguments, 2));
     }, 1500);
@@ -109,7 +104,6 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
     }
     var currentRate = instance.playbackRate();
     var timer = this.timer;
-    console.log(instance);
     eventList.forEach(function(item) {
       switch (item)
       {
@@ -141,9 +135,9 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
         case "ratechange":
         instance.on(item, function(e) {
           console.log("ratechange");
-          console.log("rate changed");
           timer.measurePause(currentRate);
           var changeFrom = currentRate;
+          console.log(changeFrom);
           currentRate = instance.playbackRate();
           if (!instance.paused())
             timer.measureStart(currentRate);
@@ -152,6 +146,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
             console.log("sending ratechange");
             instance.__gaSend("ratechange");
           }
+          else currentRate = undefined;
         }); 
         break;
         case "seeking":
@@ -215,7 +210,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
   {
     var self = this;
     var timer_result_obj = {
-      eventValue: self.timer.measureStop("play")
+      metric11: self.timer.measureStop("play")
     };
     var len = playbackRates.length;
     timer_result_obj['metric3'] = this.timer.measureStop("pause");
