@@ -12,6 +12,7 @@ define(function () {
         this.video_type = "youtube";
         this.video_techOrder = ["youtube"];
         this.video_sup = {
+          youtube: {disablekb: 1, cc_load_policy: 0}
         };
       } 
       else if(link.match(/vimeo\.com\/(\d+)/) != null) 

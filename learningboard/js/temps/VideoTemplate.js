@@ -15,7 +15,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
       techOrder: this.model.video_techOrder, 
       playbackRates: playbackRates,
       sources: [
-        { 
+        {
           type: "video/"+this.model.video_type,
           src: this.model.video_link
         }
@@ -45,6 +45,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
     var video_tag = this.$template[0];
     var instance = videojs(video_tag);
     this.instance = instance;
+
     instance.__gaSend = function (action, info) {
       info = info || {};
       var obj = {
@@ -100,19 +101,25 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
       seek_to: null, // progress of the video
     }
     var currentRate = instance.playbackRate();
+    var paused_time, played_time;
     var timer = this.timer;
+    console.log(instance.on);
     eventList.forEach(function(item) {
       switch (item)
       {
-        case "playing": 
+        case "playing": break;
+        case "play": 
         instance.on(item, function(e) {
-          console.log("playing");
+          console.log("play");
           currentRate = instance.playbackRate();
-          timer.measurePause("pause");
+          paused_time = timer.measurePause("pause");
           timer.measureStart(currentRate); // play time in playbackRate
           timer.measureStart("play"); // total play time
+          console.log(paused_time);
           if (instance.isFullscreen())
             timer.measureStart("fullscreen");
+          if (paused_time)
+            instance.__gaSend("play", {metric3: paused_time});
         });
         break;
         case "stalled":
@@ -124,9 +131,10 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
           console.log("paused");
           timer.measurePause(currentRate);
           timer.measureStart("pause");
-          timer.measurePause("play");
+          played_time = timer.measurePause("play");
           timer.measurePause("fullscreen");
-          instance.__gaSend("pause");
+          if (played_time) instance.__gaSend("pause", {metric11: played_time});
+          else instance.__gaSend("pause");
         });
         break;
         case "ratechange":

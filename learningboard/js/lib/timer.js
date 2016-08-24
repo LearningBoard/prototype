@@ -115,12 +115,16 @@
   }
 
   Timer.prototype.measurePause = function (label) {
-    var measureArr = this._.measures[label || '']
+    var measureArr = this._.measures[label || ''],
+      metric = 0
+
     if (measureArr && !measureArr._.paused) {
-      measureArr.push(+new Date - measureArr._.startTime);
+      metric = +new Date - measureArr._.startTime
+      measureArr.push(metric)
       measureArr._.paused = true
     }
-    return this
+    
+    return metric;
   }
 
   Timer.prototype.measureStop = function (label) {
