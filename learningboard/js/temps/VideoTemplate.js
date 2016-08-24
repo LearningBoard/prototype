@@ -42,36 +42,30 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
 
   $.extend(VideoTemplate.prototype, Template.prototype)
 
-  function gaSend (action, value, info) {
-    if (!$.isNumeric(value)) 
-    {
-      info = info || value || {};
-      value = 1;
-    }
-    else info = info || {};
-    console.log(authorId);
 
-    var obj = {
-      hitType: 'event',
-      eventCategory: `Activity_video`,
-      eventAction: action,
-      eventLabel: util.uuid(),
-      eventValue: value,
-      userId: User.getId(),
-      dimension1: parentId,
-      dimension2: authorId,
-      dimension3: User.getId()
+  VideoTemplate.prototype.display = function() {
+    Template.prototype.display.apply(this, arguments);
+    var video_tag = this.$template[0];
+    var instance = videojs(video_tag);
+    this.instance = instance;
+    instance.__gaSend = function (action, info) {
+      info = info || {};
+      var obj = {
+        hitType: 'event',
+        eventCategory: `Activity_video`,
+        eventAction: action,
+        eventLabel: util.uuid(),
+        eventValue: parseInt(this.currentTime()),
+        userId: User.getId(),
+        dimension1: parentId,
+        dimension2: authorId,
+        dimension3: User.getId()
     }
 
     util.propertyExtend(obj, info);
 
     __ga__('send', obj);
   }
-
-  VideoTemplate.prototype.display = function() {
-    Template.prototype.display.apply(this, arguments);
-    var video_tag = this.$template[0];
-    var instance = videojs(video_tag);
     console.log(instance);
     console.log(md5("dalkf"));
 
@@ -96,7 +90,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
       // a "seek" here is counted as a user move the slider and doesn't move it again for 1.5 seconds
       console.log(info);
       console.log("seeked");
-      gaSend("seek", {
+      instance.__gaSend("seek", {
         eventValue: info.tstamp2 - info.tstamp1, // time cost for seeking
         metric1: info.seek_from,
         metric2: info.seek_to,
@@ -140,7 +134,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
           timer.measureStart("pause");
           timer.measurePause("play");
           timer.measurePause("fullscreen");
-          gaSend("pause", instance.currentTime());
+          instance.__gaSend("pause");
         });
         break;
         case "ratechange":
@@ -152,7 +146,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
           currentRate = instance.playbackRate();
           if (!instance.paused())
             timer.measureStart(currentRate);
-          gaSend("ratechange", instance.currentTime());
+          instance.__gaSend("ratechange");
         }); 
         break;
         case "seeking":
@@ -192,21 +186,21 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
             measurePause("fullscreen");
           }
           console.log("enterfullscreen");
-          gaSend(e.type);
+          instance.__gaSend(e.type);
 
         })
         break;
         case "exitfullscreen":
         instance.on(item, function(e) {
           timer.measurePause("fullscreen");
-          gaSend(e.type);
+          instance.__gaSend(e.type);
         });
         break;
         default:
         instance.on(item, function(e) {
           console.log(e);
           console.log(instance);
-          gaSend(e.type, instance.currentTime());
+          instance.__gaSend(e.type);
         });
       }
     });       
@@ -231,7 +225,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
     timer_result_obj['metric9'] = this.timer.measureStop("fullscreen");
 
     console.log("haha unload");
-    gaSend("view", timer_result_obj);
+    this.instance.__gaSend("view", timer_result_obj);
   }
 
   return VideoTemplate;
