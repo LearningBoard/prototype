@@ -74,6 +74,7 @@ define(function() {
     clear: function() 
     {
       localStorage.user = "{}";
+      localStorage.token = '';
     }
   }
 });
