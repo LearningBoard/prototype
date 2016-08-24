@@ -1,4 +1,4 @@
-define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Timer', 'YouTube', 'Vimeo', 'md5'], function(util, Template, Video, User, videojs, Timer, ytb, vmo, md5) {"use strict";
+define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'videojs_offset', 'Timer', 'YouTube', 'Vimeo', 'md5'], function(util, Template, Video, User, videojs, videojs_off, Timer, ytb, vmo, md5) {"use strict";
 
   var playbackRates = [ 2, 1.5, 1.25, 1, 0.5];
   var parentId, cliendId, authorId;
@@ -22,6 +22,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
       ] 
     }
     util.propertyExtend(setupObj, this.model.video_sup);
+    console.log(JSON.stringify(setupObj));
 
     var $html = $(`
     <video
@@ -43,7 +44,15 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
   VideoTemplate.prototype.display = function() {
     Template.prototype.display.apply(this, arguments);
     var video_tag = this.$template[0];
-    var instance = videojs(video_tag);
+    var self = this;
+    var instance = videojs(video_tag, {
+      plugins: {
+        offset: {
+          start: self.video_starttime,
+          end: self.video_endtime
+        }
+      }
+    });
     this.instance = instance;
 
     instance.__gaSend = function (action, info) {
@@ -90,7 +99,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
         metric10: info.tstamp2 - info.tstamp1, // time cost for seeking
       });
       callback.apply(null, Array.prototype.slice(arguments, 2));
-    }, 1500);
+    }, 2500);
 
     var seeking = false;
     var seek_info = {

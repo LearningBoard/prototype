@@ -169,7 +169,7 @@ define(['mdls/User'], function(user) {
       for(var i = 0; i < 1; i++) {
         loc = loc.substring(0, loc.lastIndexOf('/'));
       }
-      return window.location.protocol + '//' + window.location.host + (window.location.port ? `:${window.location.port}` : '') + loc;
+      return window.location.protocol + '//' + window.location.host + loc;
     },
 
     uuid: function() {
