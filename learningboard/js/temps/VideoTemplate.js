@@ -71,6 +71,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
 
     var eventList = [
       // 'timeupate',
+      // 'loadmetadata',
       'play', 
       'playing', 
       'pause', 
@@ -106,7 +107,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
       seek_from: null, 
       seek_to: null, // progress of the video
     }
-    var currentRate;
+    var currentRate = instance.playbackRate();
     var timer = this.timer;
     console.log(instance);
     eventList.forEach(function(item) {
@@ -146,7 +147,11 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
           currentRate = instance.playbackRate();
           if (!instance.paused())
             timer.measureStart(currentRate);
-          instance.__gaSend("ratechange");
+          if (changeFrom)
+          {
+            console.log("sending ratechange");
+            instance.__gaSend("ratechange");
+          }
         }); 
         break;
         case "seeking":
