@@ -10,7 +10,6 @@ define(["temps/Template"], function(Template) {
 
   ControlTemplate.prototype.display = function() {
     Template.prototype.display.apply(this, arguments)
-    console.log(this.onActive);
     this.onActive();
   }
 

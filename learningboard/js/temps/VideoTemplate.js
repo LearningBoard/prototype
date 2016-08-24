@@ -4,14 +4,12 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
   var parentId, cliendId, authorId;
 
   var VideoTemplate = function(video, parentModel) {
-    console.log(util.uuid());
 
     parentId = parentModel.id;
     authorId = parentModel.author.id;
     this.parentModel = parentModel; // parent model
     this.model = new Video(video);
     this.timer = new Timer();
-    console.log(this.timer);
 
     var setupObj = {
       techOrder: this.model.video_techOrder, 
@@ -35,7 +33,6 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
     >
     </video>
     `);
-    console.log($html[0]);
 
     Template.call(this, $html);
   }
@@ -134,16 +131,14 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
         break;
         case "ratechange":
         instance.on(item, function(e) {
-          console.log("ratechange");
           timer.measurePause(currentRate);
           var changeFrom = currentRate;
-          console.log(changeFrom);
           currentRate = instance.playbackRate();
           if (!instance.paused())
             timer.measureStart(currentRate);
           if (changeFrom)
           {
-            console.log("sending ratechange");
+            console.log("ratechange");
             instance.__gaSend("ratechange");
           }
           else currentRate = undefined;
@@ -175,11 +170,13 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
         break;
         case "volumechange":
         instance.on(item, function(e) {
+          console.log("volumechange");
           console.log(e);
         })
         break;
         case "enterfullscreen":
         instance.on(item, function(e) {
+          console.log("enterfullscreen");
           timer.measureStart("fullscreen");
           if (instance.paused())
           {
@@ -192,12 +189,14 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'Tim
         break;
         case "exitfullscreen":
         instance.on(item, function(e) {
+          console.log("exitfullscreen");
           timer.measurePause("fullscreen");
           instance.__gaSend(e.type);
         });
         break;
         default:
         instance.on(item, function(e) {
+          console.log(item);
           console.log(e);
           console.log(instance);
           instance.__gaSend(e.type);

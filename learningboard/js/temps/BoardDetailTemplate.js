@@ -108,7 +108,6 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
           {subscribe: false},
           function(res) {
             var data = res.data;
-            console.log(res);
             if (res.success)
             {
               model.subscribing_num -= 1;
@@ -142,15 +141,12 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
       $subscribeBtn.hide(); 
 
     this.$shareBtn = $template.find(".shareBtn");
-    console.log(this.$shareBtn);
     this.$shareBtn.on("click", function(e) {
       e.preventDefault();
-      console.log("clicked");
       FB.ui({
         method: "share",
         href: util.getAppRootUrl() + '/board_view.html?1'
       }, function(res) {
-        console.log(res);
       });
     });
 
@@ -176,7 +172,6 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
   $.extend(BoardDetailTemplate.prototype, Template.prototype);
 
   BoardDetailTemplate.prototype.onActivityComplete = function(model) {
-    console.log("here");
     var progrssElement = this.$template.find('.progressBox .progress-bar');
     var percentagePerActivity = !this.model.activity_num ? 0 : Math.ceil(100 / this.model.activity_num);
     var currentPercentage = parseInt(progrssElement.attr('aria-valuenow'));

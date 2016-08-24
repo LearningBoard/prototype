@@ -24,7 +24,6 @@ define(function () {
         };
       }
     }
-    console.log(this.video_id);
   };
 
   return Video;

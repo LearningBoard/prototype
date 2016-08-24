@@ -2,7 +2,6 @@
 define(['util', 'mdls/User', 'temps/Template', 'temps/CommentTemplate'], function (util, User, Template, CommentTemplate) {
   var CommentableTemplate = function(model)
   {
-    console.log(model);
     var cmt_field = `
       <div class="comment">
         <span class="glyphicon glyphicon-heart ${model.liked ? 'text-danger' : ''}"></span> <span class="liked_num">${model.like_num}</span>

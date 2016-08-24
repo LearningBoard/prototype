@@ -66,13 +66,11 @@ define(['util', 'mdls/Activity'], function (util, Activity) {
 
     published: function()
     {
-      console.log(this);
       return this.publish === true;
     },
 
     getOwnerName: function()
     {
-      console.log(this.author);
       return this.author.username;
     }
 
