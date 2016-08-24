@@ -155,10 +155,14 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, U
       {
         e.preventDefault();
         User.clear();
+        location.href = 'index.html';
       }
     );
+
+    // Set user id for tracking
     ga(function(track) {
-      User.set("id", track.get("clientId"));
+      if (!User.getId())
+        User.set("id", track.get("clientId"));
     });
   });
 
