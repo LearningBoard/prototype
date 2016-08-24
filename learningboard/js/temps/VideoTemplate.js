@@ -48,8 +48,8 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
     var instance = videojs(video_tag, {
       plugins: {
         offset: {
-          start: self.video_starttime,
-          end: self.video_endtime
+          start: 5,
+          end: 40
         }
       }
     });

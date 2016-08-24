@@ -36,7 +36,7 @@ requirejs.config({
     _vjs: '//vjs.zencdn.net/5.8/video.min',
     "video.js": 'lib/video',
     videojs: 'lib/video',
-    videojs_offset: 'lib/videojs-offset.min',
+    videojs_offset: 'lib/videojs-offset',
     YouTube: 'lib/Youtube',
     Vimeo: 'lib/Vimeo',
     Timer: "lib/timer",
@@ -61,6 +61,9 @@ requirejs.config({
       deps: ['videojs']
     },
     YouTube: {
+      deps: ['videojs']
+    },
+    videojs_offset: {
       deps: ['videojs']
     }
   },
