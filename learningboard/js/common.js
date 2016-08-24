@@ -40,7 +40,8 @@ requirejs.config({
     YouTube: 'lib/Youtube',
     Vimeo: 'lib/Vimeo',
     Timer: "lib/timer",
-    md5: "lib/md5.min"
+    md5: "lib/md5.min",
+    moment: 'https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min'
   },
   shim: {
     bootstrap: {
