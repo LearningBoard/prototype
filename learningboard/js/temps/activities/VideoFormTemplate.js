@@ -4,6 +4,8 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
   var VideoFormTemplate = function() {
     ActivityFormTemplate.call(this, 'Video', 'video');
 
+    var thisArg = this;
+
     var customFormHtml = `
     <div class="form-group">
       <label for="${this.type}_link">Video Link</label>
@@ -13,18 +15,33 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
       <div class="col-xs-6">
         <div class="form-group">
           <label for="${this.type}_starttime">Video Start Time</label>
-          <input type="text" class="form-control" id="${this.type}_starttime" name="${this.type}_starttime" value="00:00:00">
+          <input type="text" class="form-control" id="${this.type}_starttime" name="${this.type}_starttime" value="00:00:00" placeholder="00:00:00">
         </div>
       </div>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="${this.type}_endtime">Video End Time</label>
-          <input type="text" class="form-control" id="${this.type}_endtime" name="${this.type}_endtime" value="00:00:00">
+          <input type="text" class="form-control" id="${this.type}_endtime" name="${this.type}_endtime" value="00:00:00" placeholder="00:00:00">
         </div>
       </div>
     </div>
     `;
     this.$template.find('.customForm').append(customFormHtml);
+
+    this.$template.find('[name=video_link]').on('keyup', function() {
+      var currentStart = thisArg.$template.find('[name=video_starttime]');
+      var currentEnd = thisArg.$template.find('[name=video_endtime]');
+      var matchStart = $(this).val().match(/(start|t)=(\d+)/);
+      var matchEnd = $(this).val().match(/end=(\d+)/);
+      if (matchStart) {
+        var duration = moment.duration(parseInt(matchStart[2]), 'seconds');
+        currentStart.val($.padNumber(duration.hours(), 2) + ':' + $.padNumber(duration.minutes(), 2) + ':' + $.padNumber(duration.seconds(), 2));
+      }
+      if (matchEnd) {
+        var duration = moment.duration(parseInt(matchEnd[1]), 'seconds');
+        currentEnd.val($.padNumber(duration.hours(), 2) + ':' + $.padNumber(duration.minutes(), 2) + ':' + $.padNumber(duration.seconds(), 2));
+      }
+    });
   };
 
   $.extend(VideoFormTemplate.prototype, ActivityFormTemplate.prototype);
@@ -37,9 +54,13 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
     var start = moment.duration(startEle.val());
     var end = moment.duration(endEle.val());
     var pattern = /^\d{2}:[0-5][0-9]:[0-5][0-9]$/;
-    if (!pattern.test(startEle.val()) || !pattern.test(endEle.val()) || end.subtract(start).asSeconds() < 0) {
+    if (!pattern.test(startEle.val()) || !pattern.test(endEle.val())) {
       startEle.focus();
       alert('Video time format should be HH:MM:SS');
+      return false;
+    } else if (end.subtract(start).asSeconds() < 0) {
+      endEle.focus();
+      alert('Video ending time must be larger than starting time');
       return false;
     }
     return true;

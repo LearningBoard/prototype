@@ -211,4 +211,19 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, U
     return result && unescape(result[1]) || "";
   };
 
+  // https://github.com/angular/angular.js/blob/0400dc9c2a548a5015d5b73124a1b79f0a68566f/src/ng/filter/filters.js#L230
+  $.padNumber = function (num, digits, trim) {
+    var neg = '';
+    if (num < 0) {
+      neg =  '-';
+      num = -num;
+    }
+    num = '' + num;
+    while (num.length < digits) num = '0' + num;
+    if (trim) {
+      num = num.substr(num.length - digits);
+    }
+    return neg + num;
+  }
+
 });
