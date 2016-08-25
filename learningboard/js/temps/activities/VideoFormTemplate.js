@@ -15,13 +15,13 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
       <div class="col-xs-6">
         <div class="form-group">
           <label for="${this.type}_starttime">Video Start Time</label>
-          <input type="text" class="form-control" id="${this.type}_starttime" name="${this.type}_starttime" value="00:00:00" placeholder="00:00:00">
+          <input type="text" class="form-control" id="${this.type}_starttime" name="${this.type}_starttime" placeholder="00:00:00">
         </div>
       </div>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="${this.type}_endtime">Video End Time</label>
-          <input type="text" class="form-control" id="${this.type}_endtime" name="${this.type}_endtime" value="00:00:00" placeholder="00:00:00">
+          <input type="text" class="form-control" id="${this.type}_endtime" name="${this.type}_endtime" placeholder="00:00:00">
         </div>
       </div>
     </div>
@@ -46,14 +46,23 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
 
   $.extend(VideoFormTemplate.prototype, ActivityFormTemplate.prototype);
 
+  VideoFormTemplate.prototype.setData = function(act) {
+    ActivityFormTemplate.prototype.setData.call(this, act);
+
+    var startEle = this.$template.find(`[name=${this.type}_starttime]`);
+    var endEle = this.$template.find(`[name=${this.type}_endtime]`);
+    var duration = moment.duration(parseInt(act.data[`${this.type}_starttime`]), 'seconds');
+    startEle.val(duration.asSeconds() ? $.padNumber(duration.hours(), 2) + ':' + $.padNumber(duration.minutes(), 2) + ':' + $.padNumber(duration.seconds(), 2) : '');
+    duration = moment.duration(parseInt(act.data[`${this.type}_endtime`]), 'seconds');
+    endEle.val(duration.asSeconds() ? $.padNumber(duration.hours(), 2) + ':' + $.padNumber(duration.minutes(), 2) + ':' + $.padNumber(duration.seconds(), 2) : '');
+  };
+
   VideoFormTemplate.prototype.isFormDataValid = function() {
-    var valid = ActivityFormTemplate.prototype.isFormDataValid.call(this);
-    if (!valid) return false;
     var startEle = this.$template.find(`[name=${this.type}_starttime]`);
     var endEle = this.$template.find(`[name=${this.type}_endtime]`);
     var start = moment.duration(startEle.val());
     var end = moment.duration(endEle.val());
-    var pattern = /^\d{2}:[0-5][0-9]:[0-5][0-9]$/;
+    var pattern = /^(\d{2,}:[0-5][0-9]:[0-5][0-9])?$/;
     if (!pattern.test(startEle.val()) || !pattern.test(endEle.val())) {
       startEle.focus();
       alert('Video time format should be HH:MM:SS');
@@ -68,7 +77,9 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
 
   VideoFormTemplate.prototype.serializeObject = function() {
     var obj = ActivityFormTemplate.prototype.serializeObject.call(this);
-    if (obj.video_starttime == obj.video_endtime) {
+    obj.video_starttime = moment.duration(obj.video_starttime).asSeconds();
+    obj.video_endtime = moment.duration(obj.video_endtime).asSeconds();
+    if ((!obj.video_starttime && !obj.video_endtime) || obj.video_starttime == obj.video_endtime) {
       delete obj.video_starttime;
       delete obj.video_endtime;
     }
