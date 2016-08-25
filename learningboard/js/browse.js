@@ -20,6 +20,11 @@ define(['util', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'iso
           bl = new BoardBriefListTemplate();
           bl.display($("#boardList"));
         }
+        // trigger init arrange to fix all elements stacked together
+        grid.arrange({
+          filter: '',
+          transitionDuration: 0
+        });
       }
     );
     $('#boardList').on('arrangeComplete', function(e, filteredItems){
