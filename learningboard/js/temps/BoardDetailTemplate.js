@@ -66,6 +66,13 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
         <div class="col-md-offset-1 col-md-3">
           <h4>About This Board</h4>
           <div class="board_description">${model.description}</div>
+        `;
+        if (model.category) {
+          html += `
+          <h4>Category</h4>
+          <p>${model.category.category}</p>`;
+        }
+        html += `
           <h4>Tags</h4>
           <div class="tagList">`;
         var length = model.tags.length;
