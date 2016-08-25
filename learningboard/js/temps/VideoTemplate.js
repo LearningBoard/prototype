@@ -48,8 +48,9 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
     var instance = videojs(video_tag, {
       plugins: {
         offset: {
-          start: 5,
-          end: 40
+          start: 35,
+          end: 37,
+          restart_beginning: true
         }
       }
     });
@@ -87,7 +88,8 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
       'exitfullscreen', 
       'captionsenabled', 
       'captionsdisabled',
-      'ratechange'
+      'ratechange',
+      'timeupdate'
     ];
     var self = this;
 
@@ -117,6 +119,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
       switch (item)
       {
         case "playing": break;
+        case "timeupdate": break;
         case "play": 
         instance.on(item, function(e) {
           console.log("play");

@@ -248,6 +248,7 @@ THE SOFTWARE. */
           break;
 
         case YT.PlayerState.PLAYING:
+            console.log("triggering here");
           this.trigger('timeupdate');
           this.trigger('durationchange');
           this.trigger('playing');
@@ -268,6 +269,7 @@ THE SOFTWARE. */
           break;
 
         case YT.PlayerState.BUFFERING:
+            console.log("triggering here");
           this.player_.trigger('timeupdate');
           this.player_.trigger('waiting');
           break;
@@ -416,6 +418,8 @@ THE SOFTWARE. */
     },
 
     currentTime: function() {
+      console.log(this.ytPlayer);
+      console.log(this.ytPlayer.getCurrentTime());
       return this.ytPlayer ? this.ytPlayer.getCurrentTime() : 0;
     },
 
@@ -429,7 +433,7 @@ THE SOFTWARE. */
       }
 
       this.ytPlayer.seekTo(seconds, true);
-      this.trigger('timeupdate');
+      // this.trigger('timeupdate');
       this.trigger('seeking');
       this.isSeeking = true;
 
@@ -443,6 +447,7 @@ THE SOFTWARE. */
             //  clear the interval timer
             clearInterval(this.checkSeekedInPauseInterval);
           } else if (this.currentTime() !== this.timeBeforeSeek) {
+            console.log("triggering here");
             this.trigger('timeupdate');
             this.onSeeked();
           }

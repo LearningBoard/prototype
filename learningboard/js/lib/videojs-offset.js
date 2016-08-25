@@ -29,10 +29,14 @@ define(['videojs'], function(videojs) {
       };
 
       Player.prototype.currentTime = function(seconds){
+        var x;
         if(seconds !== undefined){
-          return Player.__super__.currentTime.call(this, seconds + this._offsetStart) - this._offsetStart;
+          x = Player.__super__.currentTime.call(this, seconds + this._offsetStart);
+          console.log(Player.__super__.currentTime.call(this));
+          return x - this._offsetStart;
         }
-        return Player.__super__.currentTime.apply(this, arguments) - this._offsetStart;
+        x = Player.__super__.currentTime.apply(this, arguments)
+        return x - this._offsetStart;
       };
 
       Player.prototype.remainingTime = function(){
@@ -55,14 +59,16 @@ define(['videojs'], function(videojs) {
       };
     }
 
-    this.on('timeupdate', function(){
+    this.on('timeupdate', function() {
       var curr = this.currentTime();
       if(curr < 0){
         this.currentTime(0);
         this.play();
       }
       if(this._offsetEnd > 0 && (curr > (this._offsetEnd-this._offsetStart))) {
+        console.log("changed here");
         this.pause();
+        this.trigger('ended');
         if (!this._restartBeginning) {
           this.currentTime(this._offsetEnd-this._offsetStart);
         } else {

@@ -67,22 +67,26 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
       // trigger html5 validation
       if($('form.loginForm')[0].checkValidity()) e.preventDefault();
       else return;
-      var o = $('form.loginForm').serializeObject();
-      o.username = o.identifier;
-      delete o.identifier;
-      console.log(o);
-      util.post('/register/', o,
-        function(res)
-        {
-          var data = res.data;
-          $("button.loginBtn").trigger('click');
-        },
-        function(xhr, status, data)
-        {
-          if (xhr.status === 400) alert("user already exists");
-          else alert("internal error");
-        }
-      );
+      var registered = false;
+      if (!registered)
+      {
+        var o = $('form.loginForm').serializeObject();
+        o.username = o.identifier;
+        delete o.identifier;
+        console.log(o);
+        util.post('/register/', o,
+          function(res)
+          {
+            var data = res.data;
+            $("button.loginBtn").trigger('click');
+          },
+          function(xhr, status, data)
+          {
+            if (xhr.status === 400) alert("user already exists");
+            else alert("internal error");
+          }
+        );
+      }
     });
 
     var login_callback = function(fb) {
