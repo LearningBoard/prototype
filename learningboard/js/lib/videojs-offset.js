@@ -36,6 +36,7 @@ define(['videojs'], function(videojs) {
           return x - this._offsetStart;
         }
         x = Player.__super__.currentTime.apply(this, arguments)
+        console.log(this._offsetStart);
         return x - this._offsetStart;
       };
 

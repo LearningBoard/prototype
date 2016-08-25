@@ -109,6 +109,10 @@ body > .body_container {
   background-color: white;
 }
 
+input[type=time] {
+  display: block;
+}
+
 .nav > li > a {
   padding-top: 15px;
   font-size: 14px;

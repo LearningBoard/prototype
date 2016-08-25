@@ -193,6 +193,7 @@ define(['mdls/User'], function(user) {
       console.log(time);
       var arr = time.split(":");
       console.log(arr);
+      arr = arr.map(function(ele){return parseInt(ele);})
       var x = arr[0]*3600 + arr[1]*60 + arr[2];
       console.log(x);
       return x;

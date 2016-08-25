@@ -272,7 +272,7 @@ THE SOFTWARE. */
 
     setCurrentTime :function(seconds){
       this.vimeo.api('seekTo', seconds);
-      this.player_.trigger('timeupdate');
+      // this.player_.trigger('timeupdate');
     },
 
     duration :function(){ return this.vimeoInfo.duration || 0; },
