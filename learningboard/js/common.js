@@ -33,14 +33,15 @@ requirejs.config({
     fbsdk: '//connect.facebook.net/en_US/sdk',
     facebook: 'lib/facebookAPI',
     ga: 'https://www.google-analytics.com/analytics',
-    _vjs: '//vjs.zencdn.net/5.8/video.min',
+    _vjs: 'lib/videojs',
     "video.js": 'lib/video',
     videojs: 'lib/video',
     videojs_offset: 'lib/videojs-offset',
     YouTube: 'lib/Youtube',
     Vimeo: 'lib/Vimeo',
     Timer: "lib/timer",
-    md5: "lib/md5.min"
+    md5: "lib/md5.min",
+    moment: 'lib/moment.min'
   },
   shim: {
     bootstrap: {

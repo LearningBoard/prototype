@@ -25,7 +25,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
 
     var $html = $(`
     <video
-      id="vid${this.parentModel.id}_html5_api"
+      id="vid${this.parentModel.id}"
       class="video-js vjs-default-skin ${this.model.video_type === "youtube"? "vjs-16-9": ""}"
       preload="auto"
       controls
