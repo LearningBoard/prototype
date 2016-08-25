@@ -13,13 +13,13 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
       <div class="col-xs-6">
         <div class="form-group">
           <label for="${this.type}_starttime">Video Start Time</label>
-          <input type="text" class="form-control" id="${this.type}_starttime" name="${this.type}_starttime" placeholder="00:00:00">
+          <input type="text" class="form-control" id="${this.type}_starttime" name="${this.type}_starttime" value="00:00:00">
         </div>
       </div>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="${this.type}_endtime">Video End Time</label>
-          <input type="text" class="form-control" id="${this.type}_endtime" name="${this.type}_endtime" placeholder="00:00:00">
+          <input type="text" class="form-control" id="${this.type}_endtime" name="${this.type}_endtime" value="00:00:00">
         </div>
       </div>
     </div>
