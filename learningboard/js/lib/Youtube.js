@@ -418,8 +418,6 @@ THE SOFTWARE. */
     },
 
     currentTime: function() {
-      console.log(this.ytPlayer);
-      console.log(this.ytPlayer.getCurrentTime());
       return this.ytPlayer ? this.ytPlayer.getCurrentTime() : 0;
     },
 

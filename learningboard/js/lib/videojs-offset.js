@@ -61,6 +61,7 @@ define(['videojs'], function(videojs) {
 
     this.on('timeupdate', function() {
       var curr = this.currentTime();
+      console.log(curr);
       if(curr < 0){
         this.currentTime(0);
         this.play();

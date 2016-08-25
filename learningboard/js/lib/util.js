@@ -188,5 +188,14 @@ define(['mdls/User'], function(user) {
           dest[k] = src[k];
       }
     },
+
+    toSecond: function(time) {
+      console.log(time);
+      var arr = time.split(":");
+      console.log(arr);
+      var x = arr[0]*3600 + arr[1]*60 + arr[2];
+      console.log(x);
+      return x;
+    }
   }
 });

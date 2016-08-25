@@ -46,6 +46,7 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
       if($('form.loginForm')[0].checkValidity()) e.preventDefault();
       else return;
       var o = $("form.loginForm").serializeObject();
+      var $btn = $(this).button('loading');
       util.post('/auth/local/', o,
         function(res, status, xhr)
         {
@@ -56,6 +57,7 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
         },
         function(xhr, status)
         {
+          $btn.button('reset');
           if (xhr.status === 403) alert('Username or password not correct');
           else alert("internal error");
         }
@@ -74,15 +76,18 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
         o.username = o.identifier;
         delete o.identifier;
         console.log(o);
+        var $btn = $(this).button('loading');
         util.post('/register/', o,
           function(res)
           {
             var data = res.data;
             $("button.loginBtn").trigger('click');
+            registered = false;
           },
           function(xhr, status, data)
           {
-            if (xhr.status === 400) alert("user already exists");
+            $btn.button('reset');
+            if (xhr.status === 400) alert("User already exists");
             else alert("internal error");
           }
         );

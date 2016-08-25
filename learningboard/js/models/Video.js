@@ -1,9 +1,18 @@
-define(function () {
+define(['util'], function (util) {
   "use strict";
   
   var Video = function(video)
   {
     $.extend(this, video);
+
+    if (typeof video.video_starttime === 'string')
+    {
+      this.video_starttime = util.toSecond(video.video_starttime);
+    }
+    if (typeof video.video_endtime === 'string')
+    {
+      this.video_endtime = util.toSecond(video.video_endtime);
+    }
 
     var link = this.video_link;
     if (link) {
@@ -15,8 +24,6 @@ define(function () {
           youtube: {
             disablekb: 1, 
             cc_load_policy: 0, 
-            start: 600,
-            end: 1200
           }
         };
       } 

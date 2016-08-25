@@ -45,11 +45,13 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
     Template.prototype.display.apply(this, arguments);
     var video_tag = this.$template[0];
     var self = this;
+    console.log(this.model.video_starttime)
+    console.log(this.model.video_endtime);
     var instance = videojs(video_tag, {
       plugins: {
         offset: {
-          start: 35,
-          end: 37,
+          start: self.model.video_starttime,
+          end: self.model.video_endtime,
           restart_beginning: true
         }
       }

@@ -48,6 +48,11 @@ define(['util', './Template'], function (util, Template) {
         return;
       }
 
+      // Check data on custom form
+      if (!$this.isFormDataValid()) {
+        return;
+      }
+
       var dataObject = $this.serializeObject();
 
       if ($this.$template.find('[name=id]').val()) { // edit mode
@@ -131,12 +136,16 @@ define(['util', './Template'], function (util, Template) {
     });
   };
 
+  ActivityFormTemplate.prototype.isFormDataValid = function() {
+    return true;
+  }
+
   ActivityFormTemplate.prototype.serializeObject = function() {
     var data = this.$template.find("form.addActivityForm").serializeObject();
     var editorName = this.$template.find('[name=description]').attr('id');
     data.description = CKEDITOR.instances[editorName].getData();
     return data;
-  }
+  };
 
   $.extend(ActivityFormTemplate.prototype, Template.prototype);
   return ActivityFormTemplate;
