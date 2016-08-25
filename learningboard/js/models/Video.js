@@ -1,18 +1,9 @@
-define(['util'], function (util) {
+define(function () {
   "use strict";
   
   var Video = function(video)
   {
     $.extend(this, video);
-
-    if (typeof video.video_starttime === 'string')
-    {
-      this.video_starttime = util.toSecond(video.video_starttime);
-    }
-    if (typeof video.video_endtime === 'string')
-    {
-      this.video_endtime = util.toSecond(video.video_endtime);
-    }
 
     var link = this.video_link;
     if (link) {
