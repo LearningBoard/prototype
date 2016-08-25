@@ -33,15 +33,14 @@ requirejs.config({
     fbsdk: '//connect.facebook.net/en_US/sdk',
     facebook: 'lib/facebookAPI',
     ga: 'https://www.google-analytics.com/analytics',
-    _vjs: 'lib/videojs',
+    _vjs: '//vjs.zencdn.net/5.8/video.min',
     "video.js": 'lib/video',
     videojs: 'lib/video',
     videojs_offset: 'lib/videojs-offset',
     YouTube: 'lib/Youtube',
     Vimeo: 'lib/Vimeo',
     Timer: "lib/timer",
-    md5: "lib/md5.min",
-    moment: 'https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min'
+    md5: "lib/md5.min"
   },
   shim: {
     bootstrap: {
@@ -210,20 +209,5 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, U
     var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search);
     return result && unescape(result[1]) || "";
   };
-
-  // https://github.com/angular/angular.js/blob/0400dc9c2a548a5015d5b73124a1b79f0a68566f/src/ng/filter/filters.js#L230
-  $.padNumber = function (num, digits, trim) {
-    var neg = '';
-    if (num < 0) {
-      neg =  '-';
-      num = -num;
-    }
-    num = '' + num;
-    while (num.length < digits) num = '0' + num;
-    if (trim) {
-      num = num.substr(num.length - digits);
-    }
-    return neg + num;
-  }
 
 });

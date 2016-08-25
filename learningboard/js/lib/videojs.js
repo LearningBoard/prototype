@@ -18741,6 +18741,7 @@ function on(elem, type, fn) {
     return _handleMultipleEvents(on, elem, type, fn);
   }
 
+  console.log(elem);
   var data = Dom.getElData(elem);
 
   // We need a place to store all our handler data

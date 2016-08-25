@@ -32,11 +32,9 @@ define(['videojs'], function(videojs) {
         var x;
         if(seconds !== undefined){
           x = Player.__super__.currentTime.call(this, seconds + this._offsetStart);
-          console.log(Player.__super__.currentTime.call(this));
           return x - this._offsetStart;
         }
         x = Player.__super__.currentTime.apply(this, arguments)
-        console.log(this._offsetStart);
         return x - this._offsetStart;
       };
 
@@ -62,13 +60,11 @@ define(['videojs'], function(videojs) {
 
     this.on('timeupdate', function() {
       var curr = this.currentTime();
-      console.log(curr);
       if(curr < 0){
         this.currentTime(0);
         this.play();
       }
       if(this._offsetEnd > 0 && (curr > (this._offsetEnd-this._offsetStart))) {
-        console.log("changed here");
         this.pause();
         this.trigger('ended');
         if (!this._restartBeginning) {

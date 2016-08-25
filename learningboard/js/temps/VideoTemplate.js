@@ -22,11 +22,10 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
       ] 
     }
     util.propertyExtend(setupObj, this.model.video_sup);
-    console.log(JSON.stringify(setupObj));
 
     var $html = $(`
     <video
-      id="vid${this.parentModel.id}"
+      id="vid${this.parentModel.id}_html5_api"
       class="video-js vjs-default-skin ${this.model.video_type === "youtube"? "vjs-16-9": ""}"
       preload="auto"
       controls
@@ -42,12 +41,11 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
 
 
   VideoTemplate.prototype.display = function() {
+    console.log(this.parentModel.id);
     Template.prototype.display.apply(this, arguments);
     var video_tag = this.$template[0];
     var self = this;
-    console.log(this.model.video_starttime)
-    console.log(this.model.video_endtime);
-    console.log(self.model.video_starttime);
+    console.log(video_tag);
     var instance = videojs(video_tag, {
       plugins: {
         offset: {
@@ -117,7 +115,6 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
     var currentRate = instance.playbackRate();
     var paused_time, played_time;
     var timer = this.timer;
-    console.log(instance.on);
     eventList.forEach(function(item) {
       switch (item)
       {
