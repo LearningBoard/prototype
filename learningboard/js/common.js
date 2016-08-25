@@ -41,7 +41,7 @@ requirejs.config({
     Vimeo: 'lib/Vimeo',
     Timer: "lib/timer",
     md5: "lib/md5.min",
-    moment: 'https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min'
+    moment: 'lib/moment.min'
   },
   shim: {
     bootstrap: {

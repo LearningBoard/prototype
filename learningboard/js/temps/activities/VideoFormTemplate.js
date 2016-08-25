@@ -51,10 +51,10 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
 
     var startEle = this.$template.find(`[name=${this.type}_starttime]`);
     var endEle = this.$template.find(`[name=${this.type}_endtime]`);
-    var duration = moment.duration(parseInt(act.data[`${this.type}_starttime`]), 'seconds');
-    startEle.val(duration.asSeconds() ? $.padNumber(duration.hours(), 2) + ':' + $.padNumber(duration.minutes(), 2) + ':' + $.padNumber(duration.seconds(), 2) : '');
-    duration = moment.duration(parseInt(act.data[`${this.type}_endtime`]), 'seconds');
+    var duration = moment.duration(parseInt(act.data[`${this.type}_endtime`]), 'seconds');
     endEle.val(duration.asSeconds() ? $.padNumber(duration.hours(), 2) + ':' + $.padNumber(duration.minutes(), 2) + ':' + $.padNumber(duration.seconds(), 2) : '');
+    duration = moment.duration(parseInt(act.data[`${this.type}_starttime`]), 'seconds');
+    startEle.val(duration.asSeconds() || endEle.val() ? $.padNumber(duration.hours(), 2) + ':' + $.padNumber(duration.minutes(), 2) + ':' + $.padNumber(duration.seconds(), 2) : '');
   };
 
   VideoFormTemplate.prototype.isFormDataValid = function() {
