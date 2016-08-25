@@ -12,9 +12,9 @@ define(['temps/Template', 'models/Code'], function(Template, Code) {
         link = link + 'embedded/';
       }else if(link.match(/plnkr\.co/) != null){
         link = 'https://embed.plnkr.co/'
-        + link.replace('/edit/', '/').match(/plnkr\.co\/(.*)/)[1];
+        + link.replace('/edit/', '/').match(/plnkr\.co\/(\w+)/)[1] + '?deferRun';
       }else if(link.match(/codepen\.io/) != null){
-        link = link.replace('/pen/', '/embed/');
+        link = link.replace('/pen/', '/embed/preview/');
       }
     }
 
