@@ -48,6 +48,7 @@ define(["https://apis.google.com/js/api.js"], function() {
           addView(google.picker.ViewId.DOCUMENTS).
           addView(google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS).
           setOAuthToken(oauthToken).
+          // setDeveloperKey(developerKey).
           setCallback(pickerCallback).
           enableFeature(google.picker.Feature.MULTISELECT_ENABLED).
           build();
