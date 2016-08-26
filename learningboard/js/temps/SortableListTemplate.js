@@ -17,7 +17,6 @@ define(["jquery_ui", "util"], function(jquery_ui, util) {
       opacity: 0.95,
       cursor: 'move'
     });
-    console.log(this.sortingEnabled);
     this.setSortingEnabled(this.sortingEnabled);
     $container.addClass("sortableList");
     var startIndex = -1, endIndex = -1;

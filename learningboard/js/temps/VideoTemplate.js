@@ -41,11 +41,9 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
 
 
   VideoTemplate.prototype.display = function() {
-    console.log(this.parentModel.id);
     Template.prototype.display.apply(this, arguments);
     var video_tag = this.$template[0];
     var self = this;
-    console.log(video_tag);
     var instance = videojs(video_tag, {
       plugins: {
         offset: {
@@ -236,14 +234,9 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
     for (var i = 0; i < len; ++i)
     {
       timer_result_obj["metric"+(8-i)] = this.timer.measureStop(playbackRates[i]);
-      console.log(8-i);
-      console.log(timer_result_obj["metric"+(8-i)]);
     }
-    console.log(timer_result_obj);
-    console.log(timer_result_obj["metric4"]);
     timer_result_obj['metric9'] = this.timer.measureStop("fullscreen");
 
-    console.log("haha unload");
     this.instance.__gaSend("view", timer_result_obj);
   }
 

@@ -10,6 +10,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
 
   var afterCreateActivityCallback = function(act) {
     var index = scope.actList.length;
+    console.log(act);
     var act_t = new ActivityTemplate(act, index);
     var act_c = new ActivityEditControl(act_t);
     act_c.register(scope.actList);
