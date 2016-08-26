@@ -34,7 +34,6 @@ requirejs.config({
     facebook: 'lib/facebookAPI',
     ga: 'https://www.google-analytics.com/analytics',
     _vjs: 'lib/videojs',
-    "video.js": 'lib/video',
     videojs: 'lib/video',
     videojs_offset: 'lib/videojs-offset',
     YouTube: 'lib/Youtube',
