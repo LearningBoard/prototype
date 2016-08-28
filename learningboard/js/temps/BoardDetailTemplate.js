@@ -33,7 +33,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
             </div>
           </div>
           <div class="action" style="margin-top: 15px">
-            <button type="button" class="btn btn-default subscribeBtn">
+            <button type="button" class="btn btn-default subscribeBtn"></button>
             <button type="button" class="btn btn-default shareBtn"><span class="glyphicon glyphicon-send"></span>&nbsp share</button>
           </div>
           <br/>
@@ -108,6 +108,10 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
     else $subscribeBtn.html(subscribing_html);
 
     $subscribeBtn.on('click', function(){
+      if (!User.hasToken()) {
+        alert('This feature requires login');
+        return;
+      }
       if(model.subscribing)
       {
         util.post(

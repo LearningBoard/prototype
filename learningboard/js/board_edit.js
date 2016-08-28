@@ -93,6 +93,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
           .val(board.description);
           $('form.addBoardForm input[name=level][value='+board.level+']')
           .prop('checked', true);
+          $('form.addBoardForm input[name=visibility][value='+board.visibility+']')
+          .prop('checked', true);
           if(board.activities && board.activities.length > 0){
             $('.activityListContainer .noActivity').hide();
             var activities = board.activities;

@@ -1,6 +1,10 @@
 define(['util', 'mdls/User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate', 'temps/ProfileRecentActivityTemplate', 'temps/ProfileRecentActivityListTemplate'], function(util, User, BoardBriefListTemplate, BoardBriefTemplate, ProfileSubscribeTemplate, ProfileRecentActivityTemplate, ProfileRecentActivityListTemplate) {
   $(function() {
-    if (!/\?\d+/.test(location.search)) {
+    if (location.search.endsWith(User.getId()) && !User.hasToken()) {
+      alert('This feature requires login');
+      location.href = 'login.html';
+      return;
+    } else if (!/\?\d+/.test(location.search)) {
       alert('User not found');
       location.href = 'index.html';
       return;

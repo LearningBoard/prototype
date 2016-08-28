@@ -70,7 +70,7 @@ requirejs.config({
 });
 
 define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, User, ga) {
-  var public_list = ['/', 'index.html', 'login.html', 'profile.html'];
+  var public_list = ['index.html', 'login.html', 'browse.html', 'board_view.html', 'profile.html', 'search.html', '403.html', '404.html'];
   $(function() {
     // dump the nav bar to body
     if(!location.href.includes('board_edit.html'))
@@ -135,7 +135,11 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, U
       var public = false;
       for (var i = 0; i < public_list.length; ++i)
       {
-        if (location.href.endsWith(public_list[i]))
+        if (location.href.endsWith('/')) {
+          public = true;
+          break;
+        }
+        else if (!location.href.endsWith('/') && location.href.indexOf(public_list[i]) > -1)
         {
           public = true;
           break;
@@ -143,7 +147,7 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, U
       }
       if (!public)
       {
-        alert("please login first");
+        alert("This feature requires login");
         location.href = "login.html";
         return;
       }

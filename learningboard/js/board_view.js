@@ -16,6 +16,12 @@ define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, 
         function(res) {
           var data = res.data;
 
+          if (res.success === false) {
+            alert('This Learning Board only allow registered user to view.');
+            location.href = 'login.html';
+            return;
+          }
+
           if (!data.lb.publish) {
             location.href = `board_preview.html?${data.lb.id}`;
             return false;

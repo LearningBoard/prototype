@@ -1,4 +1,4 @@
-define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
+define(['util', 'mdls/User', "temps/ControlTemplate"], function (util, User, ControlTemplate) {
 
   var ActivityActionControl = function(actTemp) {
 
@@ -31,6 +31,10 @@ define(['util', "temps/ControlTemplate"], function (util, ControlTemplate) {
     var parent = this;
     // mark as complete button
     this.$template.find('.markAsComplete').on('click', function() {
+      if (!User.hasToken()) {
+        alert('This feature requires login');
+        return;
+      }
       var $this = $(this);
       util.post('/activity/complete/'+parent.model.id, {complete: !parent.model.completed},
         function(res) {

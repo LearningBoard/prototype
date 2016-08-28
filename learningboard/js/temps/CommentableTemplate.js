@@ -5,8 +5,12 @@ define(['util', 'mdls/User', 'temps/Template', 'temps/CommentTemplate'], functio
     var cmt_field = `
       <div class="comment">
         <span class="glyphicon glyphicon-heart ${model.liked ? 'text-danger' : ''}"></span> <span class="liked_num">${model.like_num}</span>
-        <span class="glyphicon glyphicon-comment"></span> <span class="comment_num">${model.comments? model.comments.length: 0}</span> comment
-        <a class="cmt-toggle" href="#">Add comment</a>
+        <span class="glyphicon glyphicon-comment"></span> <span class="comment_num">${model.comments? model.comments.length: 0}</span> comment`;
+    if (User.hasToken()) {
+      cmt_field += `
+        <a class="cmt-toggle" href="#">Add comment</a>`;
+    }
+    cmt_field += `
         <div class="commentBox hidden">
           <form>
             <div class="input-group">
@@ -35,6 +39,10 @@ define(['util', 'mdls/User', 'temps/Template', 'temps/CommentTemplate'], functio
 
     // like activity button
     this.$cmtBox.on('click', '.glyphicon-heart', function(){
+      if (!User.hasToken()) {
+        alert('This feature requires login');
+        return;
+      }
       var $thisBtn = $(this);
       util.post('/activity/like/'+model.id, {like: !model.liked},
         function(res) {
