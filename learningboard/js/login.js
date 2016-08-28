@@ -45,6 +45,9 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
       // trigger html5 validation
       if($('form.loginForm')[0].checkValidity()) e.preventDefault();
       else return;
+      var inputGroups = $('.username-group, .password-group');
+      inputGroups.removeClass('has-warning');
+      inputGroups.find('.help-block').text('');
       var o = $("form.loginForm").serializeObject();
       var $btn = $(this).button('loading');
       util.post('/auth/local/', o,
@@ -58,7 +61,10 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
         function(xhr, status)
         {
           $btn.button('reset');
-          if (xhr.status === 403) alert('Username or password not correct');
+          if (xhr.status === 403) {
+            inputGroups.addClass('has-warning');
+            inputGroups.find('.help-block').text('Username or password not correct');
+          }
           else alert("internal error");
         }
       );
@@ -72,6 +78,9 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
       var registered = false;
       if (!registered)
       {
+        var usernameGroups = $('.username-group');
+        usernameGroups.removeClass('has-warning');
+        usernameGroups.find('.help-block').text('');
         var o = $('form.loginForm').serializeObject();
         o.username = o.identifier;
         delete o.identifier;
@@ -87,7 +96,10 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
           function(xhr, status, data)
           {
             $btn.button('reset');
-            if (xhr.status === 400) alert("User already exists");
+            if (xhr.status === 400) {
+              usernameGroups.addClass('has-warning');
+              usernameGroups.find('.help-block').text('Username already exists');
+            }
             else alert("internal error");
           }
         );

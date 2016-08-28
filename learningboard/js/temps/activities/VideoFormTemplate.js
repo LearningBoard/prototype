@@ -16,12 +16,14 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
         <div class="form-group">
           <label for="${this.type}_starttime">Video Start Time</label>
           <input type="text" class="form-control" id="${this.type}_starttime" name="${this.type}_starttime" placeholder="00:00:00">
+          <span class="help-block"></span>
         </div>
       </div>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="${this.type}_endtime">Video End Time</label>
           <input type="text" class="form-control" id="${this.type}_endtime" name="${this.type}_endtime" placeholder="00:00:00">
+          <span class="help-block"></span>
         </div>
       </div>
     </div>
@@ -60,16 +62,24 @@ define(['../ActivityFormTemplate', 'moment'], function(ActivityFormTemplate, mom
   VideoFormTemplate.prototype.isFormDataValid = function() {
     var startEle = this.$template.find(`[name=${this.type}_starttime]`);
     var endEle = this.$template.find(`[name=${this.type}_endtime]`);
+    startEle.parent('div').removeClass('has-warning');
+    startEle.siblings('.help-block').text('');
+    endEle.parent('div').removeClass('has-warning');
+    endEle.siblings('.help-block').text('');
     var start = moment.duration(startEle.val());
     var end = moment.duration(endEle.val());
     var pattern = /^(\d{2,}:[0-5][0-9]:[0-5][0-9])?$/;
     if (!pattern.test(startEle.val()) || !pattern.test(endEle.val())) {
       startEle.focus();
-      alert('Video time format should be HH:MM:SS');
+      startEle.parent('div').addClass('has-warning');
+      startEle.siblings('.help-block').text('Video time format should be HH:MM:SS');
+      endEle.parent('div').addClass('has-warning');
+      endEle.siblings('.help-block').text('Video time format should be HH:MM:SS');
       return false;
     } else if (end.subtract(start).asSeconds() < 0) {
       endEle.focus();
-      alert('Video ending time must be larger than starting time');
+      endEle.parent('div').addClass('has-warning');
+      endEle.siblings('.help-block').text('Video ending time must be larger than starting time');
       return false;
     }
     return true;
