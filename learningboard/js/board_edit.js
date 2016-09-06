@@ -240,11 +240,8 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         return;
       }
       var dataObject = $('form.addBoardForm').serializeObject();
-      if (scope.cover_img) {
-        dataObject.coverImage = scope.cover_img;
-      } else {
-        dataObject.coverImage = null;
-      }
+      dataObject.coverImage = scope.cover_img || null;
+      dataObject.category = dataObject.category || null;
       if(scope.tag_list){
         dataObject.tags = scope.tag_list;
       }
