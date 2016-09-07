@@ -1,4 +1,4 @@
-define(["OneDrive", 'util'], function(OneDrive, util) {
+define(['config', "OneDrive", 'util'], function(config, OneDrive, util) {
   "use strict";
 
   var cancel = function(data)
@@ -12,8 +12,8 @@ define(["OneDrive", 'util'], function(OneDrive, util) {
     console.log(data);
   };
 
-  var odOptions = { /* ... specify the desired options ... */ 
-    clientId: "8cfc5300-2316-4282-8781-688551f56c1c",
+  var odOptions = { /* ... specify the desired options ... */
+    clientId: config.odrive.clientId,
     action: "share",
     advanced: {
       redirectUri: util.getAppRootUrl() + "/ofilepicker.html",

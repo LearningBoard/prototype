@@ -1,4 +1,4 @@
-define(['util', 'temps/BoardDetailTemplate'], function(util, BoardDetailTemplate) {
+define(['config', 'util', 'temps/BoardDetailTemplate'], function(config, util, BoardDetailTemplate) {
   "use strict";
 
   var activity_index = 0;
@@ -23,7 +23,7 @@ define(['util', 'temps/BoardDetailTemplate'], function(util, BoardDetailTemplate
           brd_t.$subscribeBtn.show();
           var brd_m = brd_t.model;
           brd_t.display($(".body_container"));
-          document.title = brd_m.title + ' | Learning Boards';
+          document.title = brd_m.title + ' | ' + config.appName;
           // unpublish board, deny access
         },
         function(xhr)

@@ -1,9 +1,9 @@
-define(['fbsdk'], function(fb) {
+define(['config', 'fbsdk'], function(config, fb) {
   "use strict";
   
   FB.init({
-    appId   : '1677882592535443',
-    version : 'v2.4'
+    appId   : config.facebook.appId,
+    version : config.facebook.apiVersion
   });
 
 })

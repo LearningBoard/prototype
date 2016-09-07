@@ -6,11 +6,8 @@
 //except for 'app' ones, which are in a sibling
 //directory.
 
-window.GoogleAnalyticsObject = '__ga__';
-window.__ga__ = {
-  q: [['create', 'UA-79439648-1', 'auto'], ['send', 'pageview']],
-  l: Date.now()
-};
+// https://developers.google.com/analytics/devguides/collection/analyticsjs/#alternative_async_tracking_snippet
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 
 requirejs.config({
   baseUrl: 'js/',
@@ -55,7 +52,7 @@ requirejs.config({
       exports: 'FB'
     },
     ga: {
-      exports: '__ga__'
+      exports: 'ga'
     },
     Vimeo: {
       deps: ['videojs']
@@ -69,7 +66,10 @@ requirejs.config({
   },
 });
 
-define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, User, ga) {
+define(['config', 'jquery', 'bootstrap', 'mdls/User', 'ga'], function(config, jquery, bootstrap, User, ga) {
+  ga('create', config.ganalytics.trackingId, 'auto');
+  ga('send', 'pageview');
+
   var public_list = ['index.html', 'login.html', 'browse.html', 'board_view.html', 'profile.html', 'search.html', '403.html', '404.html'];
   $(function() {
     // dump the nav bar to body
@@ -85,7 +85,7 @@ define(['jquery', 'bootstrap', 'mdls/User', 'ga'], function(jquery, bootstrap, U
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="index.html">Learning Boards</a>
+              <a class="navbar-brand" href="index.html">${config.appName}</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
               <form class="navbar-form navbar-left" role="search" action="search.html">

@@ -1,4 +1,4 @@
-define(["temps/ListTemplate"], function(ListTemplate) {
+define(['config', "temps/ListTemplate"], function(config, ListTemplate) {
   "use strict";
 
   var BoardBriefListTemplate = function(temps) {
@@ -11,7 +11,7 @@ define(["temps/ListTemplate"], function(ListTemplate) {
       </div>`
     );
     var $container = $template.find('.boardBriefList');
-    var noRecentActivityHTML = '<p class="lead">Could not find any Learning Boards. Create your own one today.</p>';
+    var noRecentActivityHTML = `<p class="lead">Could not find any ${config.appName}. Create your own one today.</p>`;
 
     ListTemplate.call(this,
     {

@@ -1,10 +1,10 @@
-define(["https://apis.google.com/js/api.js"], function() {
+define(['config', "https://apis.google.com/js/api.js"], function(config) {
 
   // The Browser API key obtained from the Google Developers Console.
-  var developerKey = 'AIzaSyBTlxdegC3ouk0lOFntYqH3i6EfMKrjczU';
+  var developerKey = config.gdrive.developerKey;
 
   // The Client ID obtained from the Google Developers Console. Replace with your own Client ID.
-  var clientId = "677268176575-mclkqsbk192lhj1s0vsg65j16ovrj353"
+  var clientId = config.gdrive.clientId;
 
   // Scope to use to access user's files.
   var scope = ['https://www.googleapis.com/auth/drive.readonly'];

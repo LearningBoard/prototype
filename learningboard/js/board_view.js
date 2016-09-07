@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, BoardDetailTemplate) {
+define(['config', 'util', 'mdls/User', 'temps/BoardDetailTemplate'], function(config, util, User, BoardDetailTemplate) {
   "use strict";
 
   var activity_index = 0;
@@ -17,7 +17,7 @@ define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, 
           var data = res.data;
 
           if (res.success === false) {
-            alert('This Learning Board only allow registered user to view.');
+            alert(`This ${config.appName} only allow registered user to view.`);
             location.href = 'login.html';
             return;
           }
@@ -29,7 +29,7 @@ define(['util', 'mdls/User', 'temps/BoardDetailTemplate'], function(util, User, 
           scope.brd_t = new BoardDetailTemplate(data.lb);
           var brd_m = scope.brd_t.model;
           scope.brd_t.display($(".body_container"));
-          document.title = brd_m.title + ' | Learning Boards';
+          document.title = brd_m.title + ' | ' + config.appName;
           // unpublish board, deny access
           $("meta[property='og:title']").attr("content", "My not awesome website");
         },

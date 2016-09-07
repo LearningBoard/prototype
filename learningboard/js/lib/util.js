@@ -1,4 +1,4 @@
-define(['mdls/User'], function(user) {
+define(['config', 'mdls/User'], function(config, user) {
   "use strict";
 
   var icon_cdn = "http://cdn.webiconset.com/file-type-icons/images/icons/";
@@ -24,8 +24,8 @@ define(['mdls/User'], function(user) {
     return icon_cdn + filename + ".png";
   }
 
-  var serv_addr = "http://localhost:1337";
-  
+  var serv_addr = config.serverUrl;
+
   var default_error_func = function(res) {
     console.log(res);
   }
@@ -77,7 +77,7 @@ define(['mdls/User'], function(user) {
 
     urls: {
       serv_addr: serv_addr,
-      media_addr: serv_addr + '/media'
+      media_addr: config.mediaUrl
     },
 
     file_exts: file_exts,

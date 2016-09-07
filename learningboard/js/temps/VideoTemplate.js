@@ -71,7 +71,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'vid
 
       util.propertyExtend(obj, info);
 
-      __ga__('send', obj);
+      ga('send', obj);
     }
     var eventList = [
       // 'timeupate',
