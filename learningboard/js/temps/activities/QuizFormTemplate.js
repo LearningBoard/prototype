@@ -32,7 +32,6 @@ define(['../ActivityFormTemplate'], function(ActivityFormTemplate){
       obj.quiz_id = link.match(/\/start\/\?quiz=(\w*)/)[1];
       console.log(obj.quiz_id);
     }
-    obj[this.type+"_link"] = undefined;
     return obj;
   }
 
