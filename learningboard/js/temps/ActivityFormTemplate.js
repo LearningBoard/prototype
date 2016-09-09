@@ -142,7 +142,8 @@ define(['util', './Template'], function (util, Template) {
 
   ActivityFormTemplate.prototype.serializeObject = function() {
     var data = this.$template.find("form.addActivityForm").serializeObject();
-    data.id = data.id || null;
+    data.id = data.id || undefined;
+    data.lb = data.lb || null;
     var editorName = this.$template.find('[name=description]').attr('id');
     data.description = CKEDITOR.instances[editorName].getData();
     return data;
