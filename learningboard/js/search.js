@@ -3,6 +3,8 @@ define(['util', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate'], fun
 
   $(function()
   {
+    util.setPageTitle('Search');
+
     util.post('/search/lb', {keyword: decodeURIComponent($.getUrlVar('s').replace(/\+/g, ' '))},
       function(res)
       {

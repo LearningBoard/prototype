@@ -4,6 +4,7 @@ define(['config', 'util', 'mdls/User', 'temps/BoardDetailTemplate'], function(co
   var activity_index = 0;
 
   $(function(){
+    util.setPageTitle();
 
     var scope = {
       brd_t: null
@@ -17,7 +18,7 @@ define(['config', 'util', 'mdls/User', 'temps/BoardDetailTemplate'], function(co
           var data = res.data;
 
           if (res.success === false) {
-            alert(`This ${config.appName} only allow registered user to view.`);
+            alert(`This ${config.appName} only allows registered user to view.`);
             location.href = 'login.html';
             return;
           }
@@ -29,7 +30,7 @@ define(['config', 'util', 'mdls/User', 'temps/BoardDetailTemplate'], function(co
           scope.brd_t = new BoardDetailTemplate(data.lb);
           var brd_m = scope.brd_t.model;
           scope.brd_t.display($(".body_container"));
-          document.title = brd_m.title + ' | ' + config.appName;
+          util.setPageTitle(brd_m.title);
           // unpublish board, deny access
           $("meta[property='og:title']").attr("content", "My not awesome website");
         },

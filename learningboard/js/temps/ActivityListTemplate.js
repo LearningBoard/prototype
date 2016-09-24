@@ -1,9 +1,9 @@
-define(['util', "jquery_ui", 'temps/ListTemplate', 'mdls/Activity'], function(util, ui, ListTemplate, Activity){
+define(['util', 'config', "jquery_ui", 'temps/ListTemplate', 'mdls/Activity'], function(util, config, ui, ListTemplate, Activity){
   "use strict";
 
   var noActHTML = `
   <p class="text-center noElement">
-    <i>Currently there are no activities in the board</i>
+    <i>Currently there are no activities in the ${config.componentName.singular}</i>
   </p>`;
 
   var ActivityListTemplate = function(actTemps)

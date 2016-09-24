@@ -1,6 +1,11 @@
-define(['util', 'mdls/User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate'], function(util, user, BoardBriefListTemplate, BoardBriefTemplate) {
+define(['util', 'config', 'mdls/User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate'], function(util, config, user, BoardBriefListTemplate, BoardBriefTemplate) {
   'use strict';
   $(function(){
+    util.setPageTitle(`My ${config.componentName.plural}`);
+
+    // render page variable
+    $('h1 span.componentName').text(config.componentName.plural);
+    $('button span.componentName').text(config.componentName.singular);
 
     $('#sendNewsModal').on('shown.bs.modal', function(e){
       var modal = $(this);

@@ -1,4 +1,4 @@
-define(['util', 'temps/ListElementTemplate'], function(util, ListElementTemplate) {
+define(['util', 'config', 'temps/ListElementTemplate'], function(util, config, ListElementTemplate) {
   'use strict';
 
   var NewsTemplate = function(news, index) {
@@ -13,7 +13,7 @@ define(['util', 'temps/ListElementTemplate'], function(util, ListElementTemplate
           </div>
           <div class="col-sm-8" style="height: 150px">
             <div style="height: 30%">
-              <h4 class="ellipsis ellipsis-2-lines">New Activity <i>${news.body.title}</i> in Board <a href="board_view.html?${news.body.lb.id}">${news.body.lb.title}</a></h4>
+              <h4 class="ellipsis ellipsis-2-lines">New Activity <i>${news.body.title}</i> in ${config.componentName.singular} <a href="board_view.html?${news.body.lb.id}">${news.body.lb.title}</a></h4>
             </div>
             <div style="height: 60%">
               <p class="ellipsis ellipsis-4-lines">${news.body.description}</p>

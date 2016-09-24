@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTabTemplate', 'temps/ActivityEditControl', 'lib/ViewDispatcher', 'jquery_ui', 'fileinput', 'select2'], function (util, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTabTemplate, ActivityEditControl, ViewDispatcher, ui, fi) {
+define(['util', 'config', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTabTemplate', 'temps/ActivityEditControl', 'lib/ViewDispatcher', 'jquery_ui', 'fileinput', 'select2'], function (util, config, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTabTemplate, ActivityEditControl, ViewDispatcher, ui, fi) {
 
   var scope = {
     pk: undefined,
@@ -28,6 +28,11 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
   $.getCSS('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css');
 
   $(function(){
+    util.setPageTitle(`Edit ${config.componentName.singular}`);
+
+    // render navbar variable
+    $('a.navbar-brand').text(config.appName);
+
     // load category data
     var actTempList = [];
     util.get('/category/',
@@ -250,7 +255,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         util.put('/lb/'+scope.pk+'/', dataObject,
           function(res)
           {
-            alert('Board saved');
+            alert(`${config.componentName.singular} saved`);
             window.onbeforeunload = null;
           }
         );
@@ -273,12 +278,12 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
     {
       e.preventDefault();
       if(!scope.pk) return false;
-      var r = confirm('Are you sure to delete the board?');
+      var r = confirm(`Are you sure you want to delete this ${config.componentName.singular.toLowerCase()}?`);
       if(r){
         util.delete('/lb/'+scope.pk+'/',
           function(data)
           {
-            alert('Board deleted');
+            alert(`${config.componentName.singular} deleted`);
             location.href = 'boards.html';
           }
         );
@@ -295,7 +300,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         {
           $('.publishBoardBtn').parent().addClass('hidden');
           $('.unpublishBoardBtn').parent().removeClass('hidden');
-          alert('Board published');
+          alert(`${config.componentName.singular} published`);
         }
       );
     })
@@ -310,7 +315,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/S
         {
           $('.publishBoardBtn').parent().removeClass('hidden');
           $('.unpublishBoardBtn').parent().addClass('hidden');
-          alert('Board unpublished');
+          alert(`${config.componentName.singular} unpublished`);
         }
       );
     })

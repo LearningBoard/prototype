@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="img/favicon.ico">
-    <title>My Boards | Learning Boards</title>
+    <title></title>
     <script src="js/lib/require.js"></script>
     <script>
       requirejs(['./js/common'], function(common) {requirejs(['boards']); })
@@ -19,10 +19,9 @@
     <div class="container">
       <div class="page-header">
         <span class="pull-right">
-          <button type="button" class="btn btn-default" onclick="location.href='board_edit.html?new'">+ Add a Board</button>
-          <button type="button" class="btn btn-default">+ Statistics</button>
+          <button type="button" class="btn btn-default" onclick="location.href='board_edit.html?new'">+ Add a <span class="componentName"></span></button>
         </span>
-        <h1>My Boards</h1>
+        <h1>My <span class="componentName"></span></h1>
       </div>
       <div class="row" id="boardList">
       </div>
@@ -52,10 +51,6 @@
       </form>
     </div>
 
-    <footer class="footer">
-      <div class="container">
-        <p class="text-muted">Learning Board</p>
-      </div>
-    </footer>
+    <footer class="footer"></footer>
   </body>
 </html>

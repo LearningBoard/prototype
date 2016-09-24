@@ -1,6 +1,8 @@
 define(['util', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'isotope'], function (util, BoardBriefListTemplate, BoardBriefTemplate, Isotope) {
   $(document).ready(function()
   {
+    util.setPageTitle('Browse');
+
     var grid = new Isotope($('#boardList')[0], {
       itemSelector: '.board-brief-temp',
       layoutMode: 'fitRows'

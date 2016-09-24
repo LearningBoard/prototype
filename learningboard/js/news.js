@@ -1,6 +1,8 @@
 define(['util', 'temps/NewsListTemplate', 'temps/NewsTemplate'], function(util, NewsListTemplate, NewsTemplate)
 {
   $(function(){
+    util.setPageTitle("What's New");
+
     // fetch and render news
     util.get('/user/news',
       function(res)

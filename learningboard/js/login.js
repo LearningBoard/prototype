@@ -3,6 +3,8 @@ define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
 
   $(function()
   {
+    util.setPageTitle('Login');
+
     // redirect if logged in
     if (User.hasToken()) {
       location.href = 'index.html';

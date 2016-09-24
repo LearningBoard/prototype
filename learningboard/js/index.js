@@ -1,7 +1,12 @@
-define(['util', 'User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'test/dataSet'], function(util, User, BoardBriefListTemplate, BoardBriefTemplate, test) {
+define(['util', 'config', 'User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'test/dataSet'], function(util, config, User, BoardBriefListTemplate, BoardBriefTemplate, test) {
 
   $(function()
   {
+    util.setPageTitle();
+
+    // render page variable
+    $('span.componentName').text(config.componentName.plural);
+
     util.get('/lb/',
       function(res)
       {

@@ -1,5 +1,7 @@
-define(['util', 'mdls/User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate', 'temps/ProfileRecentActivityTemplate', 'temps/ProfileRecentActivityListTemplate'], function(util, User, BoardBriefListTemplate, BoardBriefTemplate, ProfileSubscribeTemplate, ProfileRecentActivityTemplate, ProfileRecentActivityListTemplate) {
+define(['util', 'config', 'mdls/User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'temps/ProfileSubscribeTemplate', 'temps/ProfileRecentActivityTemplate', 'temps/ProfileRecentActivityListTemplate'], function(util, config, User, BoardBriefListTemplate, BoardBriefTemplate, ProfileSubscribeTemplate, ProfileRecentActivityTemplate, ProfileRecentActivityListTemplate) {
   $(function() {
+    util.setPageTitle('Profile');
+
     if (location.search.endsWith(User.getId()) && !User.hasToken()) {
       alert('This feature requires login');
       location.href = 'login.html';
@@ -81,7 +83,7 @@ define(['util', 'mdls/User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTe
         if (data.subscribedlb.length < 1) {
           $("div.subscribinglb").append(`
             <div class="col-sm-12 thumbnail sidebar-item opaque-75">
-              <i>Hasn't subscribed any board</i>
+              <i>Hasn't subscribed any ${config.componentName.singular}</i>
             </div>
           `);
         } else {

@@ -104,7 +104,7 @@ define(['config', 'jquery', 'bootstrap', 'mdls/User', 'ga'], function(config, jq
                 </a></li>
                 <li class="top-fixed-btn ${location.href.includes('boards.html') ? 'active' : ''}"><a href="boards.html">
                   <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
-                  <br />My Boards
+                  <br />My ${config.componentName.plural}
                 </a></li>
                 <li class="top-fixed-btn ${location.href.includes('news.html') ? 'active' : ''}"><a href="news.html">
                   <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>
@@ -124,6 +124,14 @@ define(['config', 'jquery', 'bootstrap', 'mdls/User', 'ga'], function(config, jq
         </nav>`
       );
     }
+
+    // dump footer
+    $('footer').html(`
+      <div class="container">
+        <p class="text-muted">${config.appName}</p>
+      </div>`
+    );
+
     // display login/logout
     if(User.hasToken())
     {

@@ -4,6 +4,7 @@ define(['config', 'util', 'temps/BoardDetailTemplate'], function(config, util, B
   var activity_index = 0;
 
   $(function(){
+    util.setPageTitle(`Preview ${config.componentName.singular}`);
 
     // fetch and render board data
     if(/\?\d+/.test(location.search))
@@ -23,7 +24,7 @@ define(['config', 'util', 'temps/BoardDetailTemplate'], function(config, util, B
           brd_t.$subscribeBtn.show();
           var brd_m = brd_t.model;
           brd_t.display($(".body_container"));
-          document.title = brd_m.title + ' | ' + config.appName;
+          util.setPageTitle(brd_m.title + ' (Preview)');
           // unpublish board, deny access
         },
         function(xhr)

@@ -152,7 +152,7 @@ define(['config', 'mdls/User'], function(config, user) {
       // If we haven't been passed the event get the window.event
       e = e || window.event;
 
-      var message = "Your board haven't been saved. \nDo you want to leave the page?";
+      var message = `Your ${config.componentName.singular} haven't been saved. \nDo you want to leave the page?`;
 
       // For IE6-8 and Firefox prior to version 4
       if (e) 
@@ -162,6 +162,14 @@ define(['config', 'mdls/User'], function(config, user) {
 
       // For Chrome, Safari, IE8+ and Opera 12+
       return message;
+    },
+
+    setPageTitle: function (title, postfixAppName) {
+      if (title) {
+        document.title = title + (postfixAppName === false ? '' : ` | ${config.appName}`);
+      } else {
+        document.title = config.appName;
+      }
     },
 
     getAppRootUrl: function() {

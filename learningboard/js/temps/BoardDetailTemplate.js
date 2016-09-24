@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl, fb) {
+define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl, fb) {
   var BoardDetailTemplate = function(board)
   {
     /* this.variables:
@@ -64,7 +64,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
         html += `
         </div>
         <div class="col-md-offset-1 col-md-3">
-          <h4>About This Board</h4>
+          <h4>About This ${config.componentName.singular}</h4>
           <div class="board_description">${model.description}</div>
         `;
         if (model.category) {
@@ -76,7 +76,7 @@ define(['util', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemp
           <h4>Tags</h4>
           <div class="tagList">`;
         var length = model.tags.length;
-        if (length === 0) html += "This board currently has no tags.";
+        if (length === 0) html += `This ${config.componentName.singular} currently has no tags.`;
         else {
           html+=
             `<ul>`;

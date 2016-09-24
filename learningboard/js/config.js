@@ -7,6 +7,12 @@ define(function() {
     // Name of the application
     appName: 'Learning Boards',
 
+    // Name of the component (will be use in title, e.g. Popular {NAME}, Add a {NAME}, etc)
+    componentName: {
+      singular: 'Board', // singular noun
+      plural: 'Boards' // plural noun
+    },
+
     // RESTful API URL
     serverUrl: 'http://localhost:1337',
 
