@@ -39,6 +39,44 @@ define(function() {
     // OneDrive picker
     odrive: {
       clientId: '8cfc5300-2316-4282-8781-688551f56c1c'
+    },
+
+    // Activity types
+    actTypes: {
+      /*
+      {ACTIVITY_NAMESPACE}: { // Do not change it after set. Very important!
+        view: {PATH_TO_TEMPLATE}, // Template for rendering display view
+        createFormView: {PATH_TO_TEMPLATE} // Template for rendering add activity form view
+      }
+      */
+      'video': {
+        view: 'temps/VideoTemplate',
+        createFormView: 'temps/activities/VideoFormTemplate'
+      },
+      'text': {
+        view: 'temps/TextTemplate',
+        createFormView: 'temps/activities/TextFormTemplate'
+      },
+      'code': {
+        view: 'temps/CodeTemplate',
+        createFormView: 'temps/activities/CodeFormTemplate'
+      },
+      'audio': {
+        view: 'temps/AudioTemplate',
+        createFormView: 'temps/activities/AudioFormTemplate'
+      },
+      'gdrive': {
+        view: 'temps/GDriveTemplate',
+        createFormView: 'temps/activities/GDriveFormTemplate'
+      },
+      'odrive': {
+        view: 'temps/ODriveTemplate',
+        createFormView: 'temps/activities/ODriveFormTemplate'
+      },
+      'quiz': {
+        view: 'temps/QuizTemplate',
+        createFormView: 'temps/activities/QuizFormTemplate'
+      }
     }
 
     /* <-- END CUSTOM CONFIG */
