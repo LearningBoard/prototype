@@ -15,6 +15,8 @@ define(['temps/Template', 'models/Code'], function(Template, Code) {
         + link.replace('/edit/', '/').match(/plnkr\.co\/(\w+)/)[1] + '?deferRun';
       }else if(link.match(/codepen\.io/) != null){
         link = link.replace('/pen/', '/embed/preview/');
+      }else if(link.match(/repl\.it/) != null){
+        link = link.replace('/repl.it/', '/repl.it/embed/');
       }
     }
 

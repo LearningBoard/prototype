@@ -27,6 +27,11 @@ define(function () {
           vimeo: {iv_load_policy: 1}
         };
       }
+      else if(link.match(/\.mp4$/) != null)
+      {
+        this.video_type = 'mp4';
+        this.video_techOrder = ['html5', 'flash'];
+      }
     }
   };
 

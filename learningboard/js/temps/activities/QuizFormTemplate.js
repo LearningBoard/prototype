@@ -7,7 +7,7 @@ define(['../ActivityFormTemplate'], function(ActivityFormTemplate){
     var customFormHtml = `
     <div class="form-group">
       <label for="${this.type}_link">Quiz Link</label>
-      <input type="text" class="form-control" id="${this.type}_link" name="${this.type}_link" placeholder="Quiz link (support Qzzr and ClassMarker)" pattern=".*(qzzr.com|classmarker.com).*" required>
+      <input type="text" class="form-control" id="${this.type}_link" name="${this.type}_link" placeholder="quiz link (support Qzzr and ClassMarker)" pattern=".*(qzzr.com|classmarker.com).*" required>
     </div>`;
     this.$template.find('.customForm').append(customFormHtml);
   };

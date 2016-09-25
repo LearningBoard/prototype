@@ -7,7 +7,7 @@ define(['../ActivityFormTemplate'], function(ActivityFormTemplate){
     var customFormHtml = `
     <div class="form-group">
       <label for="${this.type}_link">Code Link</label>
-      <input type="url" class="form-control" id="${this.type}_link" name="${this.type}_link" placeholder="code link (support JSFiddle, Plunker, CodePen)" pattern=".*(jsfiddle.net|plnkr.co|codepen.io).*" required>
+      <input type="url" class="form-control" id="${this.type}_link" name="${this.type}_link" placeholder="code link (support JSFiddle, Plunker, CodePen, repl.it)" pattern=".*(jsfiddle.net|plnkr.co|codepen.io|repl.it).*" required>
     </div>`;
     this.$template.find('.customForm').append(customFormHtml);
   };

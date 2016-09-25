@@ -13,15 +13,15 @@ define(['util', 'mdls/GFile', 'temps/ListElementTemplate'], function(util, GFile
     switch (fileObject.mimeType)
     {
       case "application/vnd.google-apps.presentation":
-      icon_src = "/img/google-product-logos/logo_slides_128px.png";
+      icon_src = "img/google-product-logos/logo_slides_128px.png";
       break;
 
       case "application/vnd.google-apps.document":
-      icon_src = "/img/google-product-logos/logo_docs_128px.png";
+      icon_src = "img/google-product-logos/logo_docs_128px.png";
       break;
 
       case "application/vnd.google-apps.spreadsheet":
-      icon_src = "/img/google-product-logos/logo_sheets_128px.png";
+      icon_src = "img/google-product-logos/logo_sheets_128px.png";
       break;
 
       case "application/pdf":
@@ -34,7 +34,7 @@ define(['util', 'mdls/GFile', 'temps/ListElementTemplate'], function(util, GFile
     }
 
     var html = `
-    <div class="fileDisplay">
+    <div class="fileDisplay" title="${this.model.name}">
       <img src=${icon_src} class="fileIcon"></img>
       <br/>
       <p>${util.strTrunc(this.model.name, 8)}</p>
