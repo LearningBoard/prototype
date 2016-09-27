@@ -41,6 +41,11 @@ define(function() {
       clientId: '8cfc5300-2316-4282-8781-688551f56c1c'
     },
 
+    // YouTube
+    youtube: {
+      apiKey: 'AIzaSyAFUos8U9yB6sgKFFJu2AdhodCo9q3Lf6Q'
+    },
+
     // Activity types
     actTypes: {
       /*
