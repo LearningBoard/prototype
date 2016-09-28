@@ -13,31 +13,37 @@ requirejs.config({
   baseUrl: 'js/',
   waitSeconds: 30,
   paths: {
+    // Path
     temps: 'temps/',
     mdls: 'models/',
     test: 'test/',
+
+    // Library
     OneDrive: 'https://js.live.net/v7.0/OneDrive',
     jquery: 'lib/jquery-2.2.4.min',
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
     bootstrap: 'lib/bootstrap.min',
-    util: 'lib/util',
-    User: "models/User",
-    // fileinput: 'https://raw.githubusercontent.com/kartik-v/bootstrap-fileinput/master/js/fileinput',
     fileinput: 'https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min',
-
     select2: 'https://cdn.jsdelivr.net/select2/4.0.3/js/select2.min',
     isotope: 'https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min',
     fbsdk: '//connect.facebook.net/en_US/sdk',
-    facebook: 'lib/facebookAPI',
     ga: 'https://www.google-analytics.com/analytics',
     _vjs: 'lib/videojs',
-    videojs: 'lib/video',
     videojs_offset: 'lib/videojs-offset',
     YouTube: 'lib/Youtube',
     Vimeo: 'lib/Vimeo',
     Timer: "lib/timer",
     md5: "lib/md5.min",
-    moment: 'lib/moment.min'
+    moment: 'lib/moment.min',
+    ckeditor: 'https://cdn.ckeditor.com/4.5.11/standard-all/ckeditor',
+
+    // Application related
+    util: 'lib/util',
+    User: "models/User",
+
+    // Wrapper
+    facebook: 'lib/facebookAPI',
+    videojs: 'lib/video',
   },
   shim: {
     bootstrap: {
@@ -62,6 +68,9 @@ requirejs.config({
     },
     videojs_offset: {
       deps: ['videojs']
+    },
+    ckeditor: {
+      exports: 'CKEDITOR'
     }
   },
 });

@@ -1,4 +1,4 @@
-define(['util', './Template'], function (util, Template) {
+define(['util', './Template', 'ckeditor'], function (util, Template, CKEDITOR) {
   'use strict';
 
   /**
@@ -33,8 +33,6 @@ define(['util', './Template'], function (util, Template) {
       </form>
     </div>`;
     Template.call(this, $(html));
-
-    _initCkeditor(this.$template);
 
     var $this = this;
 
@@ -127,15 +125,6 @@ define(['util', './Template'], function (util, Template) {
     this.afterEditCallback = callback;
   };
 
-  var _initCkeditor = function(template) {
-    $.getScript('https://cdn.ckeditor.com/4.5.9/standard/ckeditor.js', function(){
-      var editorName = template.find('[name=description]').attr('id');
-      CKEDITOR.replace(editorName, {
-        language: 'en'
-      });
-    });
-  };
-
   ActivityFormTemplate.prototype.isFormDataValid = function() {
     return true;
   }
@@ -150,5 +139,18 @@ define(['util', './Template'], function (util, Template) {
   };
 
   $.extend(ActivityFormTemplate.prototype, Template.prototype);
+
+  ActivityFormTemplate.prototype.display = function() {
+    Template.prototype.display.apply(this, arguments);
+
+    var editorName = this.$template.find('[name=description]').attr('id');
+    CKEDITOR.plugins.addExternal('autoiframe', util.getAppRootUrl() + '/js/lib/ckeditor/plugins/autoiframe/', 'plugin.js');
+    CKEDITOR.replace(editorName, {
+      language: 'en',
+      extraPlugins: 'autolink,autoiframe,iframe,colorbutton,colordialog,specialchar',
+      removePlugins: 'sourcearea'
+    });
+  };
+
   return ActivityFormTemplate;
 });
