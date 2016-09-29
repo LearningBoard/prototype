@@ -1,19 +1,17 @@
-define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTemplate, util) {
+define(['../ActivityFormTemplate', 'util', 'fileinput', 'WebAudioRecorder.min'], function(ActivityFormTemplate, util) {
   'use strict';
 
   var AudioFormTemplate = function(data) {
     ActivityFormTemplate.call(this, 'Audio', 'audio');
 
     this.dataObj = [];
+    this.recorderInstance = {};
 
     var customFormHtml = `
-    <label class="control-label">Select File</label>
-    <input id="${this.type}_image_placeholder" type="file" class="file-loading" multiple>
-    <div class="form-group">
-      <label for="${this.type}_audio">Audio</label>
-      <p>Please upload at least one image before recording</p>
-      <div class="${this.type}_group"></div>
-    </div>`;
+    <label class="control-label">Images (Allows to record audio per image after upload)</label>
+    <input id="${this.type}_image_placeholder" type="file" class="file-loading" accept="image/*" multiple>
+    <div><span class="help-block"></span></div>
+    <div class="playerArea hidden"></div>`;
     this.$template.find('.customForm').append(customFormHtml);
 
     _initAudioActivity(this, null);
@@ -24,8 +22,9 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
   AudioFormTemplate.prototype.reset = function() {
     ActivityFormTemplate.prototype.reset.call(this);
     this.dataObj = [];
+    this.recorderInstance = {};
     _initAudioActivity(this, null);
-    this.$template.find('.audio_group').empty();
+    this.$template.find('.playerArea').empty();
   };
 
   AudioFormTemplate.prototype.setData = function(act) {
@@ -34,14 +33,29 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
     if (act.data[`${this.type}_image`] && act.data[`${this.type}_audio`]) {
       _initAudioActivity(this, act.data[`${this.type}_image`]);
       act.data[`${this.type}_audio`].forEach(function(item, i) {
-        var instance = _addAudioGroup($this, i);
-        instance.find('div.lbRecorder').html(`
-          <audio controls>
-            <source src="${item}" type="audio/mpeg">
-          </audio>`).removeClass('hidden');
-          $this.dataObj.push({key: i, file: act.data[`${$this.type}_image`][i], audio: item});
+        var preview = $this.$template.find(`.file-preview-frame[data-fileindex="init_${i}"]`);
+        var id = preview.attr('id');
+        if (item) {
+          preview.find('button.kv-file-play').prop('disabled', false);
+          _addAudioGroup($this, id, item);
+        }
+        $this.dataObj.push({key: id, file: act.data[`${$this.type}_image`][i], audio: item});
       });
     }
+  };
+
+  AudioFormTemplate.prototype.isFormDataValid = function() {
+    var helpEle = this.$template.find('.help-block');
+    // Clear old label
+    helpEle.parent('div').removeClass('has-warning');
+    helpEle.text('');
+    // Start checking
+    if (this.dataObj.length < 1) {
+      helpEle.parent('div').addClass('has-warning');
+      helpEle.text('Audio activity requires at least one image');
+      return false;
+    }
+    return true;
   };
 
   AudioFormTemplate.prototype.serializeObject = function() {
@@ -63,24 +77,36 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       uploadUrl: util.serv_addr + '/media', // force display drag zone
       showClose: false,
       showCaption: false,
-      showBrowse: false,
+      showBrowse: true,
       showRemove: false,
       showUpload: false,
-      browseOnZoneClick: true,
+      dropZoneEnabled: false,
       overwriteInitial: false,
+      browseLabel: 'Browse Images',
+      otherActionButtons: `
+      <button type="button" class="kv-file-record btn btn-xs btn-default" title="Record Audio">
+        <i class="glyphicon glyphicon-record"></i> Record
+      </button>
+      <button type="button" class="kv-file-play btn btn-xs btn-default" title="Play Audio" disabled>
+        <i class="glyphicon glyphicon-play-circle"></i> Play
+      </button>`,
       layoutTemplates: {
         footer: `
         <div class="file-thumbnail-footer">
-          {progress} {actions}
+          {actions}
         </div>`,
         actions: `
         <div class="file-actions">
           <div class="file-footer-buttons">
-            {delete} {other}
+            {zoom} {delete} {other}
           </div>
           <div class="clearfix"></div>
         </div>`,
-      }
+      },
+      previewZoomSettings: {
+        image: {width: '', height: 'auto', 'max-width': '100%'}
+      },
+      allowedFileTypes: ['image']
     };
     if (url) {
       url = url.map(function(value) {
@@ -89,117 +115,117 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
       $.extend(options, {initialPreview: url, initialPreviewAsData: true});
     }
     var instance = inputEle.fileinput('destroy').fileinput(options);
-    (function(instance) {
-      $(document).off('click', '.kv-file-remove').on('click', '.kv-file-remove', function() {
-        var idEle = $(this).parents('.file-preview-frame');
-        var id;
-        var isInit = false;
-        if (idEle.hasClass('file-preview-initial')) {
-          id = idEle.data('fileindex').replace('init_', '');
-          isInit = true;
-        } else {
-          id = idEle.attr('id');
+
+    // Record audio button
+    $this.$template.off('click', '.kv-file-record').on('click', '.kv-file-record', function() {
+      var id = $(this).parents('.file-preview-frame').attr('id');
+      if ($(this).data('processing')) { // deny action when newly recorded audio is processing
+        return false;
+      } else if ($(this).data('recording')) { // request to end record
+        $this.recorderInstance[id].finishRecording();
+      } else { // request to start record
+        var thisArg = $(this);
+        navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream) { // request browser permission
+          var audioContext = new AudioContext;
+          var input = audioContext.createMediaStreamSource(stream);
+          var recorder = new WebAudioRecorder(input, {
+            workerDir: 'js/',
+            encoding: 'mp3',
+            options: {
+              encodeAfterRecord: true
+            }
+          });
+          recorder.onEncoderLoaded = function(rec, encoding) { // start recording
+            rec.startRecording();
+            $this.recorderInstance[id] = rec;
+            thisArg.data('recording', true);
+            thisArg.html('<span class="text-danger"><i class="fa fa-circle-o-notch fa-spin"></i> Stop record</span>');
+            thisArg.next('.kv-file-play').prop('disabled', true);
+          };
+          recorder.onEncodingProgress = function(rec, progress) { // process after record
+            thisArg.data('processing', true);
+            thisArg.html('<span class="text-success"><i class="fa fa-circle-o-notch fa-spin"></i> Processing</span>');
+          };
+          recorder.onComplete = function(rec, blob) { // record is ready to play
+            var reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = function() {
+              for (var i = 0; i < $this.dataObj.length; i++) {
+                if ($this.dataObj[i].key == id) {
+                  $this.dataObj[i].audio = reader.result;
+                  break;
+                }
+              }
+              $this.recorderInstance[id] = undefined;
+              thisArg.data('processing', false);
+              thisArg.data('recording', false);
+              thisArg.html('<i class="glyphicon glyphicon-record"></i> Record');
+              thisArg.next('.kv-file-play').prop('disabled', false);
+              _addAudioGroup($this, id, URL.createObjectURL(blob));
+            }
+          };
+        }, function(e) { // user denied browser to get permission
+          alert('Could not provide recording feature. Please make sure you have connected the microphone to this device.');
+        });
+      }
+    });
+
+    // Play audio button
+    $this.$template.off('click', '.kv-file-play').on('click', '.kv-file-play', function() {
+      var thisArg = $(this);
+      var id = $(this).parents('.file-preview-frame').attr('id');
+      var audioEle = $('.playerArea').find(`audio[data-id="${id}"]`);
+      if (!audioEle[0].paused) {
+        $(this).html('<i class="glyphicon glyphicon-play-circle"></i> Play');
+        audioEle[0].pause();
+      } else {
+        $(this).html('<i class="fa fa-pause-circle-o"></i> Pause');
+        audioEle[0].play();
+      }
+      audioEle.off('ended').on('ended', function() {
+        thisArg.html('<i class="glyphicon glyphicon-play-circle"></i> Play');
+      });
+    });
+
+    // Remove image button
+    $this.$template.off('click', '.kv-file-remove').on('click', '.kv-file-remove', function() {
+      var preview = $(this).parents('.file-preview-frame');
+      var id = preview.attr('id');
+      for (var i = 0; i < $this.dataObj.length; i++) {
+        if ($this.dataObj[i].key == id) {
+          $this.dataObj.splice(i, 1);
+          break;
         }
-        for (var i = 0; i < $this.dataObj.length; i++) {
-          if ($this.dataObj[i].key == id) {
-            $this.dataObj.splice(i, 1);
-            break;
-          }
-        }
-        $this.$template.find(`.recorder[data-id="${id}"]`).fadeOut('fast', function(e) {
+      }
+      $this.$template.find(`div.playerArea audio[data-id="${id}"]`).remove();
+      if ($this.dataObj.length < 1) {
+        _initAudioActivity($this, null);
+      } else if (preview.data('fileindex').startsWith('init_')) {
+        preview.fadeOut('fast', function() {
           $(this).remove();
         });
-        if (isInit) {
-          idEle.remove();
-          if ($this.dataObj.length < 1) {
-            _initAudioActivity($this, null);
-          }
-        }
+      }
+    });
+    // Upload image after select
+    instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader) {
+      util.post('/media', {data: reader.result}, function(res) {
+        $this.dataObj.push({key: previewId, file: res.data.file, audio: ''});
       });
-      instance.off('fileloaded').on('fileloaded', function(e, file, previewId, index, reader) {
-        util.post('/media', {data: reader.result}, function(res) {
-          $this.dataObj.push({key: previewId, file: res.data.file, audio: ''});
-          _addAudioGroup($this, previewId);
-        });
-      });
-    })(instance);
-  };
+    });
 
-  var _initRecorder = function($this, instance) {
-    $.getScript('js/WebAudioRecorder.min.js', function() {
-      (function($this, instance) {
-        var init = false;
-        var recording = false;
-        var audioContext, input, recorder;
-        var controlEle = instance.find('button.audioRecorderControl');
-        var playerEle = instance.find('div.lbRecorder');
-        var id = instance.data('id');
-        controlEle.on('click', function() {
-          if (!init) {
-            navigator.getUserMedia({audio: true}, function(stream) {
-              audioContext = new AudioContext();
-              input = audioContext.createMediaStreamSource(stream);
-              recorder = new WebAudioRecorder(input, {
-                workerDir: 'js/',
-                encoding: 'mp3',
-                options: {
-                  encodeAfterRecord: true
-                }
-              });
-              recorder.onComplete = function(rec, blob) {
-                var reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = function() {
-                  for (var i = 0; i < $this.dataObj.length; i++) {
-                    if ($this.dataObj[i].key == id) {
-                      $this.dataObj[i].audio = reader.result;
-                      break;
-                    }
-                  }
-                  playerEle.html(`<audio controls>
-                    <source src="${URL.createObjectURL(blob)}" type="audio/mpeg">
-                  </audio>`).removeClass('hidden');
-                }
-              };
-              record(recorder, id);
-              init = true;
-            }, function(e) {
-              alert('Could not provide recording feature. Please make sure you have connected the microphone to this device.');
-            });
-          } else {
-            record(recorder, id);
-          }
-        });
-        var record = function(recorder) {
-          if (recording) {
-            recorder.finishRecording();
-            controlEle.text('Record');
-            recording = false;
-          } else {
-            recorder.startRecording();
-            controlEle.text('Stop');
-            for (var i = 0; i < $this.dataObj.length; i++) {
-              if ($this.dataObj[i].key == id) {
-                delete $this.dataObj[i].audio;
-                break;
-              }
-            }
-            playerEle.text('').addClass('hidden');
-            recording = true;
-          }
-        }
-      })($this, instance);
+    // Add scrollbar in file zoom in order to fit large images
+    instance.off('filezoomshow').on('filezoomshow', function(e, params) {
+      params.modal.find('.kv-zoom-body').css('overflow', 'auto');
     });
   };
 
-  var _addAudioGroup = function($this, id) {
-    var instance = $(`<div class="recorder" data-id="${id}">
-      <button type="button" class="btn btn-default audioRecorderControl">Record</button>
-      <div class="lbRecorder"></div>
-    </div>`);
-    $this.$template.find('.audio_group').append(instance);
-    _initRecorder($this, instance);
-    return instance;
+  // Add hidden player
+  var _addAudioGroup = function($this, id, data) {
+    $this.$template.find(`div.playerArea audio[data-id="${id}"]`).remove();
+    var instance = $(`<audio controls data-id="${id}">
+      <source src="${data}" type="audio/mpeg">
+    </audio>`);
+    $this.$template.find('div.playerArea').append(instance);
   };
 
   return AudioFormTemplate;

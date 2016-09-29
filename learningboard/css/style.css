@@ -216,10 +216,6 @@ p.minor {
   color: #FFF;
 }
 
-.lbRecorder {
-  padding: 5px 0;
-}
-
 /* single board detail */
 .board_status > div {
   border-right: 1px solid #CCC;

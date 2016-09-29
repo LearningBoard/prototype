@@ -23,7 +23,7 @@ requirejs.config({
     jquery: 'lib/jquery-2.2.4.min',
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
     bootstrap: 'lib/bootstrap.min',
-    fileinput: 'https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.2/js/fileinput.min',
+    fileinput: 'https://cdn.jsdelivr.net/bootstrap.fileinput/4.3.5/js/fileinput.min',
     select2: 'https://cdn.jsdelivr.net/select2/4.0.3/js/select2.min',
     isotope: 'https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min',
     fbsdk: '//connect.facebook.net/en_US/sdk',
