@@ -39,7 +39,7 @@ define(['util', 'temps/Template', 'models/Audio', 'videojs'], function(util, Tem
           sources: [
             {
               type: 'audio/mpeg',
-              src: audios[i]
+              src: util.urls.media_addr + '/' + audios[i]
             }
           ]
         };

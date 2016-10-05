@@ -36,8 +36,8 @@ define(['../ActivityFormTemplate', 'util', 'fileinput', 'WebAudioRecorder.min'],
         var preview = $this.$template.find(`.file-preview-frame[data-fileindex="init_${i}"]`);
         var id = preview.attr('id');
         if (item) {
+          _addAudioGroup($this, id, util.urls.media_addr + '/' + item);
           preview.find('button.kv-file-play').prop('disabled', false);
-          _addAudioGroup($this, id, item);
         }
         $this.dataObj.push({key: id, file: act.data[`${$this.type}_image`][i], audio: item});
       });
@@ -148,21 +148,23 @@ define(['../ActivityFormTemplate', 'util', 'fileinput', 'WebAudioRecorder.min'],
           };
           recorder.onComplete = function(rec, blob) { // record is ready to play
             var reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onloadend = function() {
-              for (var i = 0; i < $this.dataObj.length; i++) {
-                if ($this.dataObj[i].key == id) {
-                  $this.dataObj[i].audio = reader.result;
-                  break;
-                }
-              }
+            reader.onload = function(e) {
               $this.recorderInstance[id] = undefined;
-              thisArg.data('processing', false);
-              thisArg.data('recording', false);
-              thisArg.html('<i class="glyphicon glyphicon-record"></i> Record');
-              thisArg.next('.kv-file-play').prop('disabled', false);
               _addAudioGroup($this, id, URL.createObjectURL(blob));
-            }
+              thisArg.next('.kv-file-play').prop('disabled', false);
+              util.post('/media', {data: reader.result.replace('audio/mpeg', 'audio/mp3')}, function(res) {
+                for (var i = 0; i < $this.dataObj.length; i++) {
+                  if ($this.dataObj[i].key == id) {
+                    $this.dataObj[i].audio = res.data.file;
+                    break;
+                  }
+                }
+                thisArg.data('processing', false);
+                thisArg.data('recording', false);
+                thisArg.html('<i class="glyphicon glyphicon-record"></i> Record');
+              });
+            };
+            reader.readAsDataURL(blob);
           };
         }, function(e) { // user denied browser to get permission
           alert('Could not provide recording feature. Please make sure you have connected the microphone to this device.');
