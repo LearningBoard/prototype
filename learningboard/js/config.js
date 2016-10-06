@@ -62,13 +62,17 @@ define(function() {
         view: 'temps/TextTemplate',
         createFormView: 'temps/activities/TextFormTemplate'
       },
-      'code': {
-        view: 'temps/CodeTemplate',
-        createFormView: 'temps/activities/CodeFormTemplate'
-      },
       'audio': {
         view: 'temps/AudioTemplate',
         createFormView: 'temps/activities/AudioFormTemplate'
+      },
+      'quiz': {
+        view: 'temps/QuizTemplate',
+        createFormView: 'temps/activities/QuizFormTemplate'
+      },
+      'code': {
+        view: 'temps/CodeTemplate',
+        createFormView: 'temps/activities/CodeFormTemplate'
       },
       'gdrive': {
         view: 'temps/GDriveTemplate',
@@ -77,10 +81,6 @@ define(function() {
       'odrive': {
         view: 'temps/ODriveTemplate',
         createFormView: 'temps/activities/ODriveFormTemplate'
-      },
-      'quiz': {
-        view: 'temps/QuizTemplate',
-        createFormView: 'temps/activities/QuizFormTemplate'
       }
     }
 
