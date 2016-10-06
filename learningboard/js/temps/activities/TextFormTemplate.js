@@ -2,7 +2,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput'], function(ActivityFormTe
   'use strict';
 
   var TextFormTemplate = function() {
-    ActivityFormTemplate.call(this, 'Text', 'text');
+    ActivityFormTemplate.call(this, 'Web/Text', 'text');
 
     var customFormHtml = `
     <input type="file" id="${this.type}_image_placeholder">
