@@ -13,7 +13,7 @@ define(['util', 'temps/Template', 'models/Audio', 'videojs'], function(util, Tem
 
     var $html = $(`
       <div>
-        <div id="audioViewCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel slide" data-ride="carousel" data-interval="false">
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox"></div>
 
@@ -63,11 +63,12 @@ define(['util', 'temps/Template', 'models/Audio', 'videojs'], function(util, Tem
     });
     $html.find('.carousel-inner').append(itemHtml);
 
+    var $carousel = $html.find('.carousel.slide');
     $html.find('.left').on('click', function() {
-      $('#audioViewCarousel').carousel('prev');
+      $carousel.carousel('prev');
     });
     $html.find('.right').on('click', function() {
-      $('#audioViewCarousel').carousel('next');
+      $carousel.carousel('next');
     });
     Template.call(this, $html);
   };
