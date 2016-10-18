@@ -1,4 +1,4 @@
-define(["jquery_ui", "util"], function(jquery_ui, util) {
+define(["util", "jquery_ui"], function(util) {
 
   var SortableListTemplate = function(listTemplate, initialSortingEnabled)
   {

@@ -1,4 +1,4 @@
-define(['util', 'config', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTabTemplate', 'temps/ActivityEditControl', 'lib/ViewDispatcher', 'jquery_ui', 'fileinput', 'select2'], function (util, config, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTabTemplate, ActivityEditControl, ViewDispatcher, ui, fi) {
+define(['util', 'config', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate', 'temps/SortableListTemplate', 'temps/ActivityListTemplate', 'temps/ActivityTabTemplate', 'temps/ActivityEditControl', 'lib/ViewDispatcher', 'jquery_ui', 'fileinput', 'select2'], function (util, config, user, Activity, ActivityTemplate, SortableListTemplate, ActivityListTemplate, ActivityTabTemplate, ActivityEditControl, ViewDispatcher) {
 
   var scope = {
     pk: undefined,

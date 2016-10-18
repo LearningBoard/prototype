@@ -1,4 +1,4 @@
-define(['util', 'jquery_ui', 'temps/ListTemplate'], function(util, jquery_ui, ListTemplate) {
+define(['util', 'temps/ListTemplate', 'jquery_ui'], function(util, ListTemplate) {
   "use strict";
 
   var noFileHTML = `

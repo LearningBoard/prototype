@@ -1,4 +1,4 @@
-define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl, fb) {
+define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl) {
   var BoardDetailTemplate = function(board)
   {
     /* this.variables:

@@ -1,4 +1,4 @@
-define(['util', 'config', "jquery_ui", 'temps/ListTemplate', 'mdls/Activity'], function(util, config, ui, ListTemplate, Activity){
+define(['util', 'config', 'temps/ListTemplate', 'mdls/Activity', 'jquery_ui'], function(util, config, ListTemplate, Activity){
   "use strict";
 
   var noActHTML = `

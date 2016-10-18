@@ -1,4 +1,5 @@
-define(['util', 'temps/Template', 'models/Video', 'models/User', 'videojs', 'videojs_offset', 'Timer', 'YouTube', 'Vimeo', 'md5'], function(util, Template, Video, User, videojs, videojs_off, Timer, ytb, vmo, md5) {"use strict";
+define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'videojs', 'videojs_offset', 'YouTube', 'Vimeo'], function(util, Template, Video, User, Timer, videojs) {
+  "use strict";
 
   var playbackRates = [ 2, 1.5, 1.25, 1, 0.5];
   var parentId, cliendId, authorId;

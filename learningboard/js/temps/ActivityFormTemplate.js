@@ -1,4 +1,4 @@
-define(['util', './Template', 'ckeditor'], function (util, Template, CKEDITOR) {
+define(['util', './Template', 'ckeditor'], function (util, Template) {
   'use strict';
 
   /**

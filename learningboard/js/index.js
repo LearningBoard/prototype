@@ -1,4 +1,4 @@
-define(['util', 'config', 'User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate', 'test/dataSet'], function(util, config, User, BoardBriefListTemplate, BoardBriefTemplate, test) {
+define(['util', 'config', 'User', 'temps/BoardBriefListTemplate', 'temps/BoardBriefTemplate'], function(util, config, User, BoardBriefListTemplate, BoardBriefTemplate) {
 
   $(function()
   {

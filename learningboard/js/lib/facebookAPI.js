@@ -1,4 +1,4 @@
-define(['config', 'fbsdk'], function(config, fb) {
+define(['config', 'fbsdk'], function(config) {
   "use strict";
   
   FB.init({

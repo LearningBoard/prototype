@@ -19,6 +19,7 @@ requirejs.config({
     test: 'test/',
 
     // Library
+    webshim: 'https://cdn.jsdelivr.net/webshim/1.15.10/polyfiller',
     OneDrive: 'https://js.live.net/v7.0/OneDrive',
     jquery: 'lib/jquery-2.2.4.min',
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
@@ -46,13 +47,38 @@ requirejs.config({
     videojs: 'lib/video',
   },
   shim: {
-    bootstrap: {
+    webshim: {
       deps: ['jquery'],
-      exports: 'bootstrap'
+      exports: 'webshim',
+      init: function() {
+        // https://github.com/jquery/jquery/issues/2058
+        $.swap = function( elem, options, callback, args ) {
+          var ret, name,
+          old = {};
+
+          // Remember the old values, and insert the new ones
+          for ( name in options ) {
+            old[ name ] = elem.style[ name ];
+            elem.style[ name ] = options[ name ];
+          }
+
+          ret = callback.apply( elem, args || [] );
+
+          // Revert the old values
+          for ( name in options ) {
+            elem.style[ name ] = old[ name ];
+          }
+
+          return ret;
+        };
+        webshim.polyfill('forms');
+      }
+    },
+    bootstrap: {
+      deps: ['jquery']
     },
     jquery_ui: {
-      deps: ['jquery'],
-      exports: 'jquery_ui'
+      deps: ['jquery']
     },
     facebook: {
       exports: 'FB'
@@ -75,7 +101,7 @@ requirejs.config({
   },
 });
 
-define(['config', 'jquery', 'bootstrap', 'mdls/User', 'ga'], function(config, jquery, bootstrap, User, ga) {
+define(['config', 'mdls/User', 'webshim', 'jquery', 'bootstrap', 'ga'], function(config, User) {
   ga('create', config.ganalytics.trackingId, 'auto');
   ga('send', 'pageview');
 

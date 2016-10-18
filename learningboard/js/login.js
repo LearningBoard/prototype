@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'facebook'], function(util, User, fb) {
+define(['util', 'mdls/User', 'facebook'], function(util, User) {
   "use strict";
 
   $(function()
