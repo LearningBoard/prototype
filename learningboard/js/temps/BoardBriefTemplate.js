@@ -49,8 +49,10 @@ define(['mdls/User', 'mdls/Board', 'temps/ListElementTemplate'], function (User,
     ';
 
     html = $(html);
-    html.on('mouseenter mouseleave', function(e) {
-      html.find('.boardControlBtn').toggleClass('hidden');
+    html.on('mouseenter', function(e) {
+      html.find('.boardControlBtn').removeClass('hidden');
+    }).on('mouseleave', function(e) {
+      html.find('.boardControlBtn').addClass('hidden');
     });
 
     ListElementTemplate.call(this, html, index);
