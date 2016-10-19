@@ -1,4 +1,4 @@
-define(['../ActivityFormTemplate', 'util', 'fileinput', 'WebAudioRecorder.min'], function(ActivityFormTemplate, util) {
+define(['../ActivityFormTemplate', 'util', 'fileinput', 'webrtcpolyfill', 'WebAudioRecorder.min'], function(ActivityFormTemplate, util) {
   'use strict';
 
   var AudioFormTemplate = function(data) {

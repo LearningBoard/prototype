@@ -20,6 +20,7 @@ requirejs.config({
 
     // Library
     webshim: 'https://cdn.jsdelivr.net/webshim/1.15.10/polyfiller',
+    webrtcpolyfill: 'https://cdnjs.cloudflare.com/ajax/libs/adapterjs/0.14.0/adapter.min',
     OneDrive: 'https://js.live.net/v7.0/OneDrive',
     jquery: 'lib/jquery-2.2.4.min',
     jquery_ui: 'https://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min',
@@ -216,14 +217,6 @@ define(['config', 'mdls/User', 'webshim', 'jquery', 'bootstrap', 'ga'], function
         User.set("id", track.get("clientId"));
     });
   });
-
-  // polyfill
-  navigator.getUserMedia = (
-    navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia
-  );
 
   $.getCSS = function(url)
   {
