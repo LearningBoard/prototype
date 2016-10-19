@@ -144,6 +144,7 @@ define(['util', './Template', 'ckeditor'], function (util, Template) {
     Template.prototype.display.apply(this, arguments);
 
     var editorName = this.$template.find('[name=description]').attr('id');
+    CKEDITOR.plugins.addExternal('autolink', util.getAppRootUrl() + '/js/lib/ckeditor/plugins/autolink/', 'plugin.js');
     CKEDITOR.plugins.addExternal('autoiframe', util.getAppRootUrl() + '/js/lib/ckeditor/plugins/autoiframe/', 'plugin.js');
     CKEDITOR.replace(editorName, {
       language: 'en',
