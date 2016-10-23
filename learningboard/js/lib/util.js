@@ -26,8 +26,8 @@ define(['config', 'mdls/User'], function(config, user) {
 
   var serv_addr = config.serverUrl;
 
-  var default_error_func = function(res) {
-    console.log(res);
+  var default_error_func = function(jqXHR, textStatus, errorThrown) {
+    console.log(jqXHR, textStatus, errorThrown);
   }
 
   function ajax(type, args)
@@ -60,7 +60,14 @@ define(['config', 'mdls/User'], function(config, user) {
       contentType: "application/json",
       type: type,
       success: success_func,
-      error: error_func
+      error: function(jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 401) {
+          user.clear();
+          location.href = '403.html';
+          return;
+        }
+        error_func(jqXHR, textStatus, errorThrown);
+      }
     };
 
     if (type.toUpperCase() !== "GET")
