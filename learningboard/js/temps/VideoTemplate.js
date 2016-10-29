@@ -33,6 +33,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
       data-setup=${JSON.stringify(setupObj)}
     >
     </video>
+    <small>Source: <a href="${this.model.video_link}" target="_blank">${this.model.video_link}</a></small>
     `);
 
     Template.call(this, $html);

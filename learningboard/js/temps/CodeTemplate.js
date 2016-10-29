@@ -24,6 +24,7 @@ define(['temps/Template', 'models/Code'], function(Template, Code) {
       <div class="embed-responsive embed-responsive-16by9 activity-code">
         <iframe class="embed-responsive-item" src="${link}" allowfullscreen></iframe>
       </div>
+      <small>Source: <a href="${this.model.code_link}" target="_blank">${this.model.code_link}</a></small>
     `);
     Template.call(this, $html);
   };

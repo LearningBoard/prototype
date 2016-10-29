@@ -18,7 +18,7 @@
 
 				var match = evt.data.dataValue.match( validLinkRegExp );
 				if ( match != null && decodeURI( match[ 1 ] ) == decodeURI( match[ 2 ] ) ) {
-					evt.data.dataValue = '<iframe src="' + decodeURI( match[ 1 ] ) + '" width="100%" height="400" frameborder="1" scrolling="yes"></iframe>';
+					evt.data.dataValue = '<iframe src="' + decodeURI( match[ 1 ] ) + '" width="100%" height="400" frameborder="1" scrolling="yes"></iframe><br /><small>Source: <a href="' + decodeURI( match[ 1 ] ) + '" target="_blank">' + decodeURI( match[ 1 ] ) + '</a></small>';
 					evt.data.type = 'html';
 				}
 			}, null, null, 20 ); // Execute after autolink.

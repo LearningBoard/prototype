@@ -27,7 +27,6 @@ define(['util', 'temps/Template', 'models/Audio', 'videojs'], function(util, Tem
             <span class="sr-only">Next</span>
           </a>
         </div>
-        <div class="audioViewPlayer text-center" style="margin-top:10px;"></div>
       </div>`);
 
     var itemHtml = '';
