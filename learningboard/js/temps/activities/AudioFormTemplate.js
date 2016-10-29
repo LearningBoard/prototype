@@ -8,7 +8,7 @@ define(['../ActivityFormTemplate', 'util', 'fileinput', 'webrtcpolyfill', 'WebAu
     this.recorderInstance = {};
 
     var customFormHtml = `
-    <label class="control-label">Images (Allows to record audio per image after upload)</label>
+    <label class="control-label">Images<span class="text-danger">*</span> (Allows to record audio per image after upload)</label>
     <input id="${this.type}_image_placeholder" type="file" class="file-loading" accept="image/*" multiple>
     <div><span class="help-block"></span></div>
     <div class="playerArea hidden"></div>`;

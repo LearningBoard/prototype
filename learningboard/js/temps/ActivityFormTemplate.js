@@ -19,7 +19,7 @@ define(['util', './Template', 'ckeditor'], function (util, Template) {
         <input type="hidden" name="lb" value="">
         <input type="hidden" name="type" value="${this.type}">
         <div class="form-group">
-          <label for="${this.type}_title">Title</label>
+          <label for="${this.type}_title">Title<span class="text-danger">*</span></label>
           <input type="text" class="form-control" id="${this.type}_title" name="title" placeholder="activity title" required>
         </div>
         <div class="customForm"></div>
@@ -27,6 +27,7 @@ define(['util', './Template', 'ckeditor'], function (util, Template) {
           <label for="${this.type}_description">Description</label>
           <textarea class="form-control" id="${this.type}_description" name="description" rows="3" placeholder="Description"></textarea>
         </div>
+        <p><span class="text-danger">*</span> Indicates required field</p>
         <button type="submit" class="btn btn-default addActivityBtn">Submit</button>
         <button type="button" class="btn btn-default cancelActivityBtn">Cancel</button>
         <span class="result_msg"></span>

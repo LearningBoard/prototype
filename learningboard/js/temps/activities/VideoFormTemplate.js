@@ -8,7 +8,7 @@ define(['util', 'config', '../ActivityFormTemplate', 'models/Video', 'moment'], 
 
     var customFormHtml = `
     <div class="form-group">
-      <label for="${this.type}_link">Video Link</label>
+      <label for="${this.type}_link">Video Link<span class="text-danger">*</span></label>
       <input type="url" class="form-control" id="${this.type}_link" name="${this.type}_link" placeholder="video link (support YouTube, Vimeo, .mp4)" pattern=".*(youtube.com.*|vimeo.com.*|(.mp4$))" required>
     </div>
     <div class="row">
