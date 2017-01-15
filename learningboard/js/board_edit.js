@@ -280,7 +280,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate'
       if(!scope.pk) return false;
       var r = confirm(`Are you sure you want to delete this ${config.componentName.singular.toLowerCase()}?`);
       if(r){
-        util.delete('/learningboard/'+scope.pk+'/',
+        util.delete('/lb/'+scope.pk+'/',
           function(data)
           {
             alert(`${config.componentName.singular} deleted`);
