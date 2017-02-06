@@ -114,43 +114,45 @@ THE SOFTWARE. */
 
     initPlayer: function() {
       var self = this;
-      var vimeoVideoID = Vimeo.parseUrl(this.options_.source.src).videoId;
-      //load vimeo
-      if (this.vimeo && this.vimeo.api) {
-        this.vimeo.api('unload');
-        delete this.vimeo;
-      }
+      self.iframe.onload = function(e) {
+        var vimeoVideoID = Vimeo.parseUrl(self.options_.source.src).videoId;
+        //load vimeo
+        if (self.vimeo && self.vimeo.api) {
+          self.vimeo.api('unload');
+          delete self.vimeo;
+        }
 
-      self.vimeo = $f(self.iframe);
+        self.vimeo = $f(self.iframe);
 
-      self.vimeoInfo = {
-        state: VimeoState.UNSTARTED,
-        volume: 1,
-        muted: false,
-        muteVolume: 1,
-        time: 0,
-        duration: 0,
-        buffered: 0,
-        url: self.baseUrl + self.videoId,
-        error: null
+        self.vimeoInfo = {
+          state: VimeoState.UNSTARTED,
+          volume: 1,
+          muted: false,
+          muteVolume: 1,
+          time: 0,
+          duration: 0,
+          buffered: 0,
+          url: self.baseUrl + self.videoId,
+          error: null
+        };
+
+        self.vimeo.addEvent('ready', function(id){
+          self.onReady();
+
+          self.vimeo.addEvent('loadProgress', function(data, id){ self.onLoadProgress(data); });
+          self.vimeo.addEvent('playProgress', function(data, id){ self.onPlayProgress(data); });
+          self.vimeo.addEvent('play', function(id){ self.onPlay(); });
+          self.vimeo.addEvent('pause', function(id){ self.onPause(); });
+          self.vimeo.addEvent('finish', function(id){ self.onFinish(); });
+          self.vimeo.addEvent('seek', function(data, id){ self.onSeek(data); });
+
+        });
       };
-
-      this.vimeo.addEvent('ready', function(id){
-        self.onReady();
-
-        self.vimeo.addEvent('loadProgress', function(data, id){ self.onLoadProgress(data); });
-        self.vimeo.addEvent('playProgress', function(data, id){ self.onPlayProgress(data); });
-        self.vimeo.addEvent('play', function(id){ self.onPlay(); });
-        self.vimeo.addEvent('pause', function(id){ self.onPause(); });
-        self.vimeo.addEvent('finish', function(id){ self.onFinish(); });
-        self.vimeo.addEvent('seek', function(data, id){ self.onSeek(data); });
-
-      });
 
     },
 
     onReady: function(){
-      this.isReady_ = true;
+      this.playerReady_ = true;
       this.triggerReady();
       this.trigger('loadedmetadata');
       if (this.startMuted) {

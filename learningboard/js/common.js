@@ -32,7 +32,7 @@ requirejs.config({
     ga: 'https://www.google-analytics.com/analytics',
     _vjs: 'https://cdnjs.cloudflare.com/ajax/libs/video.js/5.8.8/video.min',
     videojs_offset: 'lib/videojs-offset',
-    YouTube: 'lib/Youtube',
+    YouTube: 'https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.3.2/Youtube.min',
     Vimeo: 'lib/Vimeo',
     Timer: "lib/timer",
     moment: 'https://cdn.jsdelivr.net/momentjs/2.17.1/moment.min',
