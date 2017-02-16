@@ -17,11 +17,7 @@ define(['config', 'util', 'temps/BoardDetailTemplate'], function(config, util, B
             location.href = `board_view.html?${data.lb.id}`;
             return false;
           }
-          var brd_t = new BoardDetailTemplate(data.lb);
-          console.log(brd_t.$subscribeBtn);
-          brd_t.$subscribeBtn.off("click");
-          brd_t.$subscribeBtn.on("click", function(){alert("You can't subscribe in preview mode.");});
-          brd_t.$subscribeBtn.show();
+          var brd_t = new BoardDetailTemplate(data.lb, true);
           var brd_m = brd_t.model;
           brd_t.display($(".body_container"));
           util.setPageTitle(brd_m.title + ' (Preview)');

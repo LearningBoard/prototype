@@ -4,6 +4,7 @@ define(['util', 'mdls/User', "temps/ControlTemplate"], function (util, User, Con
 
     var $html;
     this.model = actTemp.model;
+    this.preview = actTemp.preview;
 
     $html = $(`
       <div class="control" data-id="${this.model.id}">
@@ -33,6 +34,9 @@ define(['util', 'mdls/User', "temps/ControlTemplate"], function (util, User, Con
     this.$template.find('.markAsComplete').on('click', function() {
       if (!User.hasToken()) {
         alert('This feature requires login');
+        return;
+      } else if (parent.preview) {
+        alert('Complete feature is disabled in preview mode');
         return;
       }
       var $this = $(this);

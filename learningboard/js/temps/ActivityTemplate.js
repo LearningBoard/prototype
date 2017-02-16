@@ -1,12 +1,10 @@
 define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temps/CommentableTemplate', 'temps/ActivityEditControl', 'temps/ActivityActionControl', 'lib/ViewDispatcher'], function(util, User, Activity, ListElementTemplate, CommentableTemplate, ActivityEditControl, ActivityActionControl, ViewDispatcher) {
   "use strict";
 
-  var _get_html = function(model, index)
+  var _get_html = function(model, index, preview)
   {
-    var html = '';
-    var $html, $dif;
     index++;
-    $html = $(`
+    var $html = $(`
       <div class="activity ${model.published() ? '' : 'unpublish'}">
         <h2 class="index">${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${model['title']}</p>
@@ -26,7 +24,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
         <div class="activityComment"></div>
       </div>
     `);
-    $dif = $html.find("[name='dif']");
+    var $dif = $html.find("[name='dif']");
     ViewDispatcher.activities.getView(model.type).then(function(temp) {
       var rsc = new temp(model.data, model);
       rsc.display($dif);
@@ -34,9 +32,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
       throw err;
     });
 
-    var editMode = location.href.includes('board_edit.html');
-
-    if (!editMode) {
+    if (!preview) {
       var $activityComment = $html.find('div.activityComment');
       var commentTemp = new CommentableTemplate(model);
       commentTemp.display($activityComment);
@@ -51,15 +47,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
    * @param index - for the order of displaying
    * @param BoardDetailTemplate - the board detail template
    */
-  var ActivityTemplate = function(activity, index)
+  var ActivityTemplate = function(activity, index, preview)
   {
     this.model = new Activity(activity);
     this.controller = null;
+    this.preview = preview;
 
-    if(activity){
-      this.model = new Activity(activity);
-    }
-    ListElementTemplate.call(this, _get_html(this.model, index), index);
+    ListElementTemplate.call(this, _get_html(this.model, index, preview), index);
   };
 
   $.extend(ActivityTemplate.prototype, ListElementTemplate.prototype);

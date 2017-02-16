@@ -1,5 +1,6 @@
 define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl) {
   var BoardDetailTemplate = function(board)
+  var BoardDetailTemplate = function(board, preview)
   {
     /* this.variables:
       model: the model object stores the board data
@@ -95,11 +96,9 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
     `;
 
     var $template = $(html);
-    var $subscribeBtn = $template.find(".subscribeBtn");
-
     Template.call(this, $template);
-    this.$subscribeBtn = $subscribeBtn;
 
+    var $subscribeBtn = $template.find(".subscribeBtn");
     $subscribeBtn.hover(
       function(){if(model.subscribing) $(this).html(unsubscribe_html);},
       function(){if(model.subscribing) $(this).html(subscribing_html);}
@@ -110,6 +109,9 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
     $subscribeBtn.on('click', function(){
       if (!User.hasToken()) {
         alert('This feature requires login');
+        return;
+      } else if (preview) {
+        alert('You can\'t subscribe in preview mode');
         return;
       }
       if(model.subscribing)
@@ -148,28 +150,27 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
       }
     });
 
-    if (User.getId() === this.model.author.id) 
       $subscribeBtn.hide(); 
+    if (User.getId() === this.model.author.id && !preview)
 
-    this.$shareBtn = $template.find(".shareBtn");
-    this.$shareBtn.on("click", function(e) {
+    var $shareBtn = $template.find(".shareBtn");
+    $shareBtn.on("click", function(e) {
       e.preventDefault();
       FB.ui({
         method: "share",
-        href: util.getAppRootUrl() + '/board_view.html?1'
+        href: util.getAppRootUrl() + '/board_view.html?' + $this.model.id
       }, function(res) {
       });
     });
 
     $actList = $template.find(".activityList");
 
-    var parent = this;
     var length = 0;
     var constructor = function(array, ele) {
       if (!ele.publish) return array;
-      var act_t = new ActivityTemplate(ele, length++);
+      var act_t = new ActivityTemplate(ele, length++, preview);
       var act_c = new ActivityActionControl(act_t);
-      act_c.register(parent);
+      act_c.register($this);
       act_t.addControl(act_c);
       array.push(act_t);
       return array;
