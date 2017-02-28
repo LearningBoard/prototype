@@ -17,7 +17,7 @@ define(['config', 'util', 'temps/BoardDetailTemplate'], function(config, util, B
             location.href = `board_view.html?${data.lb.id}`;
             return false;
           }
-          var brd_t = new BoardDetailTemplate(data.lb, true);
+          var brd_t = new BoardDetailTemplate(data.lb, util.constant.PREVIEW_MODE);
           var brd_m = brd_t.model;
           brd_t.display($(".body_container"));
           util.setPageTitle(brd_m.title + ' (Preview)');

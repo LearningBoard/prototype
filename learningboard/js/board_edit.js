@@ -11,7 +11,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate'
   var afterCreateActivityCallback = function(act) {
     var index = scope.actList.length;
     console.log(act);
-    var act_t = new ActivityTemplate(act, index, true);
+    var act_t = new ActivityTemplate(act, index, util.constant.PREVIEW_MODE);
     var act_c = new ActivityEditControl(act_t);
     act_c.register(scope.actList);
     act_t.addControl(act_c);
@@ -106,7 +106,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Activity', 'temps/ActivityTemplate'
             var length = activities.length;
             var actTemps = activities.map(
               function(activity, index) {
-                return new ActivityTemplate(activity, index, true);
+                return new ActivityTemplate(activity, index, util.constant.PREVIEW_MODE);
               }
             );
             scope.actList = new SortableListTemplate(new ActivityListTemplate(actTemps), false);

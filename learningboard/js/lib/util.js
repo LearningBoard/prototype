@@ -82,6 +82,12 @@ define(['config', 'mdls/User'], function(config, user) {
 
   return {
 
+    constant: {
+      VIEW_MODE: 1,
+      EDIT_MODE: 2,
+      ANALYTICS_MODE: 3
+    },
+
     urls: {
       serv_addr: serv_addr,
       media_addr: config.mediaUrl

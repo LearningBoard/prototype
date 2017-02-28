@@ -1,7 +1,7 @@
 define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temps/CommentableTemplate', 'temps/ActivityEditControl', 'temps/ActivityActionControl', 'lib/ViewDispatcher'], function(util, User, Activity, ListElementTemplate, CommentableTemplate, ActivityEditControl, ActivityActionControl, ViewDispatcher) {
   "use strict";
 
-  var _get_html = function(model, index, preview)
+  var _get_html = function(model, index, mode)
   {
     index++;
     var $html = $(`
@@ -32,7 +32,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
       throw err;
     });
 
-    if (!preview) {
+    if (util.constant.VIEW_MODE) {
       var $activityComment = $html.find('div.activityComment');
       var commentTemp = new CommentableTemplate(model);
       commentTemp.display($activityComment);
@@ -47,13 +47,13 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
    * @param index - for the order of displaying
    * @param BoardDetailTemplate - the board detail template
    */
-  var ActivityTemplate = function(activity, index, preview)
+  var ActivityTemplate = function(activity, index, mode)
   {
     this.model = new Activity(activity);
     this.controller = null;
-    this.preview = preview;
+    this.mode = mode;
 
-    ListElementTemplate.call(this, _get_html(this.model, index, preview), index);
+    ListElementTemplate.call(this, _get_html(this.model, index, mode), index);
   };
 
   $.extend(ActivityTemplate.prototype, ListElementTemplate.prototype);

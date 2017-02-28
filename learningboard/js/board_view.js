@@ -27,7 +27,7 @@ define(['config', 'util', 'mdls/User', 'temps/BoardDetailTemplate'], function(co
             location.href = `board_preview.html?${data.lb.id}`;
             return false;
           }
-          scope.brd_t = new BoardDetailTemplate(data.lb, false);
+          scope.brd_t = new BoardDetailTemplate(data.lb, util.constant.VIEW_MODE);
           var brd_m = scope.brd_t.model;
           scope.brd_t.display($(".body_container"));
           util.setPageTitle(brd_m.title);

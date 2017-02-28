@@ -1,6 +1,6 @@
 define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl) {
   var BoardDetailTemplate = function(board)
-  var BoardDetailTemplate = function(board, preview)
+  var BoardDetailTemplate = function(board, mode)
   {
     /* this.variables:
       model: the model object stores the board data
@@ -8,6 +8,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
     */
 
     this.model = new Board(board);
+    this.mode = mode;
     var $this = this;
     var model = this.model;
     var subscribe_html = '<span class="glyphicon glyphicon-envelope"></span>&nbsp subscribe</button>';
@@ -110,7 +111,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
       if (!User.hasToken()) {
         alert('This feature requires login');
         return;
-      } else if (preview) {
+      } else if ($this.mode !== util.constant.VIEW_MODE) {
         alert('You can\'t subscribe in preview mode');
         return;
       }
@@ -151,7 +152,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
     });
 
       $subscribeBtn.hide(); 
-    if (User.getId() === this.model.author.id && !preview)
+    if (User.getId() === this.model.author.id && this.mode === util.constant.VIEW_MODE)
 
     var $shareBtn = $template.find(".shareBtn");
     $shareBtn.on("click", function(e) {
@@ -168,7 +169,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
     var length = 0;
     var constructor = function(array, ele) {
       if (!ele.publish) return array;
-      var act_t = new ActivityTemplate(ele, length++, preview);
+      var act_t = new ActivityTemplate(ele, length++, $this.mode);
       var act_c = new ActivityActionControl(act_t);
       act_c.register($this);
       act_t.addControl(act_c);
