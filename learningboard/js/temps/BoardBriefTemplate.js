@@ -13,7 +13,10 @@ define(['mdls/User', 'mdls/Board', 'temps/ListElementTemplate'], function (User,
     if (User.getId() === this.model.author.id) {
       html += '\
           <ul class="boardControlBtn hidden">\
-            <li class="boardEditButton">\
+            <li>\
+              <a href="board_analytics.html?'+this.model.id+'">Analytics</a>\
+            </li>\
+            <li>\
               <a href="board_edit.html?'+this.model.id+'">Edit</a>\
             </li>\
           </ul>\

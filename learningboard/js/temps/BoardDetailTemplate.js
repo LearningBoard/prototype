@@ -1,5 +1,4 @@
-define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl) {
-  var BoardDetailTemplate = function(board)
+define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'heatmap', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl, HeatMap) {
   var BoardDetailTemplate = function(board, mode)
   {
     /* this.variables:
@@ -92,6 +91,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
         }
           html += `
           </div>
+          <div class="analyticsTool"></div>
         </div>
       </div>
     `;
@@ -151,8 +151,8 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
       }
     });
 
-      $subscribeBtn.hide(); 
     if (User.getId() === this.model.author.id && this.mode === util.constant.VIEW_MODE)
+      $subscribeBtn.hide();
 
     var $shareBtn = $template.find(".shareBtn");
     $shareBtn.on("click", function(e) {
@@ -163,6 +163,10 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
       }, function(res) {
       });
     });
+
+    if (this.mode !== util.constant.ANALYTICS_MODE) {
+      $template.find('.analyticsTool').hide();
+    }
 
     $actList = $template.find(".activityList");
 
@@ -183,6 +187,126 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
   };
 
   $.extend(BoardDetailTemplate.prototype, Template.prototype);
+
+  BoardDetailTemplate.prototype.display = function () {
+    Template.prototype.display.apply(this, arguments);
+    $this = this;
+
+    if (this.mode === util.constant.VIEW_MODE) {
+      var points = {
+        min: 0,
+        max: 1,
+        data: []
+      };
+      this.$template.on('click', function(e) {
+        var offset = $(this).offset();
+        points.data.push({
+          x: e.pageX - offset.left,
+          y: e.pageY - offset.top,
+          radius: 20,
+          value: 1,
+          time: new Date().getTime()
+        });
+      });
+      window.onbeforeunload = function() {
+        $.ajaxSetup({async:false}); // ensure ajax request is finish before exit
+        util.post('/analytics', {
+          user: User.getId(),
+          lb: $this.model.id,
+          data: points
+        });
+      }
+    } else if (this.mode === util.constant.ANALYTICS_MODE) {
+      util.get('/analytics?where={"lb":' + this.model.id + '}&populate=user', function(dataSet) {
+        // count total user
+        var userArray = [];
+        var totalUser = dataSet.reduce(function(total, current) {
+          if (userArray.indexOf(current.user.username) === -1) {
+            userArray.push(current.user.username);
+            total++;
+          }
+          return total;
+        }, 0);
+        // render layout
+        var html = `
+        <h4>Analytics</h4>
+        <p>Total view session: ${dataSet.length}</p>
+        <p>Total user viewed: ${totalUser}</p>
+        <select>
+          <option value="">---Please select a session---</option>`;
+        for (var i = 0; i < dataSet.length; i++) {
+          html += `<option value="${i}">Session ${i+1} (User: ${dataSet[i]['user']['username']})</option>`;
+        }
+        html += `
+        </select>
+        <div class="totalClick badge" title="Total clicks" style="position:fixed;z-index:100;top:15px;left:20px;font-size:15px;"></div>
+        <div class="timer badge" title="Timer" style="position:fixed;z-index:100;top:40px;left:20px;font-size:15px;"></div>`;
+        var $analyticsArea = $this.$template.find('.analyticsTool');
+        $analyticsArea.html(html);
+
+        // logic
+        var action = [], timer;
+        var heatmapInstance = HeatMap.create({
+          container: $('.body_container')[0],
+          radius: 20
+        });
+        $('.body_container canvas').css('pointer-events', 'none'); // make content clickable
+        $analyticsArea.find('select').on('change', function(e) {
+          e.preventDefault();
+          // test is empty dataSet
+          try {
+            var data = dataSet[this.value].data;
+          } catch (err) {
+            var data = {data: []};
+          }
+          // clear all unfinish works
+          clearInterval(timer);
+          for (var x = 0; x < action.length; x++) {
+            clearTimeout(action[x]);
+          }
+          // reset existing drawing
+          $analyticsArea.find('.totalClick').text('').hide();
+          $analyticsArea.find('.timer').text('').css('background-color', 'green').hide();
+          heatmapInstance.setData({
+            max: 0,
+            min: 0,
+            data: []
+          });
+          // render new drawing
+          var lastTime = 0, delay = 1000;
+          for (var i = 0; i < data.data.length; i++) {
+            if (i !== 0) {
+              delay += data.data[i].time - lastTime;
+            }
+            lastTime = data.data[i].time;
+            // draw heatmap
+            (function(data, time) {
+              action.push(setTimeout(function() {
+                heatmapInstance.addData(data);
+              }, time));
+            })(data.data[i], delay);
+            // start timer
+            if (i == 0) {
+              var second = 0;
+              setTimeout(function() {
+                $analyticsArea.find('.totalClick').text(data.data.length).show();
+                $analyticsArea.find('.timer').text(second++).show();
+                timer = setInterval(function() {
+                  if (heatmapInstance.getData().data.length === data.data.length) {
+                    $analyticsArea.find('.timer').css('background', 'red');
+                    clearInterval(timer);
+                  }
+                  $analyticsArea.find('.timer').text(second++);
+                }, 1000);
+              }, delay);
+            }
+          }
+        });
+      }, function(err) {
+        alert('Cannot retrieve analytics data');
+      });
+    }
+  }
 
   BoardDetailTemplate.prototype.onActivityComplete = function(model) {
     var progrssElement = this.$template.find('.progressBox .progress-bar');
