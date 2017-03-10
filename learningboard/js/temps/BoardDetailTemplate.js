@@ -1,4 +1,4 @@
-define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'heatmap', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl, HeatMap) {
+define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl) {
   var BoardDetailTemplate = function(board, mode)
   {
     /* this.variables:
@@ -14,6 +14,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
     var unsubscribe_html = '<span class="glyphicon glyphicon-remove"></span>&nbsp unsubscribe';
     var subscribing_html = '<span class="glyphicon glyphicon-ok"></span>&nbsp subscribed';
     var html = `
+      <div class="analyticsPoint"></div>
       <div class="row">
         <div class="col-md-8">
           <h3 class="title board_title">`+util.toTitle(model.title)+`</h3>
@@ -246,11 +247,6 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
 
         // logic
         var action = [], timer;
-        var heatmapInstance = HeatMap.create({
-          container: $('.body_container')[0],
-          radius: 20
-        });
-        $('.body_container canvas').css('pointer-events', 'none'); // make content clickable
         $analyticsArea.find('select').on('change', function(e) {
           e.preventDefault();
           // test is empty dataSet
@@ -267,24 +263,22 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
           // reset existing drawing
           $analyticsArea.find('.totalClick').text('').hide();
           $analyticsArea.find('.timer').text('').css('background-color', 'green').hide();
-          heatmapInstance.setData({
-            max: 0,
-            min: 0,
-            data: []
-          });
+          $('body').find('.analyticsPoint').empty();
           // render new drawing
           var lastTime = 0, delay = 1000;
           for (var i = 0; i < data.data.length; i++) {
             if (i !== 0) {
               delay += data.data[i].time - lastTime;
             }
-            lastTime = data.data[i].time;
-            // draw heatmap
-            (function(data, time) {
+            // draw points
+            (function(index, data, lastClickTime, time) {
               action.push(setTimeout(function() {
-                heatmapInstance.addData(data);
+                $('body').find('.analyticsPoint').append(
+                  `<div style="position:absolute;margin-left:${data.x}px;margin-top:${data.y}px;background:url(img/mouse_pointer.png);width:20px;height:20px;z-index:1;padding-left:3px;font-size:10px;color:white;cursor:help;" title="Clicked on: ${new Date(data.time)}\nClick step: ${index}\nDuration from last click: ${!lastClickTime ? 0 : (data.time - lastClickTime)/1000}s">${index}</div>`
+                );
               }, time));
-            })(data.data[i], delay);
+            })(i+1, data.data[i], lastTime, delay);
+            lastTime = data.data[i].time;
             // start timer
             if (i == 0) {
               var second = 0;
@@ -292,7 +286,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
                 $analyticsArea.find('.totalClick').text(data.data.length).show();
                 $analyticsArea.find('.timer').text(second++).show();
                 timer = setInterval(function() {
-                  if (heatmapInstance.getData().data.length === data.data.length) {
+                  if ($('body').find('.analyticsPoint > div').length === data.data.length) {
                     $analyticsArea.find('.timer').css('background', 'red');
                     clearInterval(timer);
                   }
