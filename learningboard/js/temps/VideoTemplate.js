@@ -1,26 +1,23 @@
 define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'videojs', 'videojs_offset', 'YouTube', 'Vimeo'], function(util, Template, Video, User, Timer, videojs) {
   "use strict";
 
-  var playbackRates = [ 2, 1.5, 1.25, 1, 0.5];
-  var parentId, cliendId, authorId;
+  var playbackRates = [2, 1.5, 1.25, 1, 0.5];
 
-  var VideoTemplate = function(video, parentModel) {
-
-    parentId = parentModel.id;
-    authorId = parentModel.author.id;
+  var VideoTemplate = function(video, parentModel, mode) {
     this.parentModel = parentModel; // parent model
+    this.mode = mode;
     this.model = new Video(video);
     this.timer = new Timer();
 
     var setupObj = {
-      techOrder: this.model.video_techOrder, 
+      techOrder: this.model.video_techOrder,
       playbackRates: playbackRates,
       sources: [
         {
           type: "video/"+this.model.video_type,
           src: this.model.video_link
         }
-      ] 
+      ]
     }
     util.propertyExtend(setupObj, this.model.video_sup);
 
@@ -57,49 +54,47 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
     });
     this.instance = instance;
 
-    instance.__gaSend = function (action, info) {
+    instance._analyticsSend = function (action, info) {
+      if (self.mode !== util.constant.VIEW_MODE) return false;
       info = info || {};
       var obj = {
-        hitType: 'event',
-        eventCategory: `Activity_video`,
-        eventAction: action,
-        eventLabel: util.uuid(),
-        eventValue: parseInt(this.currentTime()),
-        userId: User.getId(),
-        dimension1: parentId,
-        dimension2: authorId,
-        dimension3: User.getId()
-      }
-
+        action: action,
+        videoCurrentTime: this.currentTime()
+      };
       util.propertyExtend(obj, info);
-
-      ga('send', obj);
-    }
+      util.post('/analytics', {
+        user: User.getId(),
+        lb: self.parentModel.lb,
+        activity: self.parentModel.id,
+        session: self.parentModel.session,
+        data: obj,
+        createdAt: new Date()
+      });
+    };
     var eventList = [
       // 'timeupate',
       // 'loadmetadata',
-      'play', 
-      'playing', 
-      'pause', 
-      'ended', 
-      'seeked', 
-      'seeking', 
-      'volumechange', 
-      'enterfullscreen', 
-      'exitfullscreen', 
-      'captionsenabled', 
+      'play',
+      'playing',
+      'pause',
+      'ended',
+      'seeked',
+      'seeking',
+      'volumechange',
+      'enterfullscreen',
+      'exitfullscreen',
+      'captionsenabled',
       'captionsdisabled',
       'ratechange',
       'timeupdate'
     ];
-    var self = this;
 
     var gaOnSeeked = util.funcCalledWhenNotActive(function(info, callback) {
       // a "seek" here is counted as a user move the slider and doesn't move it again for 1.5 seconds
-      instance.__gaSend("seek", {
-        metric1: info.seek_from,
-        metric2: info.seek_to,
-        metric10: info.tstamp2 - info.tstamp1, // time cost for seeking
+      instance._analyticsSend("seek", {
+        from: info.seek_from,
+        to: info.seek_to,
+        timeCost: info.tstamp2 - info.tstamp1, // time cost for seeking
       });
       callback.apply(null, Array.prototype.slice(arguments, 2));
     }, 2500);
@@ -109,7 +104,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
       activity: null,
       tstamp1: null,
       tstamp2: null,// time stamps
-      seek_from: null, 
+      seek_from: null,
       seek_to: null, // progress of the video
     }
     var currentRate = instance.playbackRate();
@@ -120,7 +115,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
       {
         case "playing": break;
         case "timeupdate": break;
-        case "play": 
+        case "play":
         instance.on(item, function(e) {
           console.log("play");
           currentRate = instance.playbackRate();
@@ -131,7 +126,9 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
           if (instance.isFullscreen())
             timer.measureStart("fullscreen");
           if (paused_time)
-            instance.__gaSend("play", {metric3: paused_time});
+            instance._analyticsSend("play", {totalPausedTime: paused_time});
+          else
+            instance._analyticsSend("play");
         });
         break;
         case "stalled":
@@ -145,8 +142,8 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
           timer.measureStart("pause");
           played_time = timer.measurePause("play");
           timer.measurePause("fullscreen");
-          if (played_time) instance.__gaSend("pause", {metric11: played_time});
-          else instance.__gaSend("pause");
+          if (played_time) instance._analyticsSend("pause", {totalPlayedTime: played_time});
+          else instance._analyticsSend("pause");
         });
         break;
         case "ratechange":
@@ -159,10 +156,10 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
           if (changeFrom)
           {
             console.log("ratechange");
-            instance.__gaSend("ratechange");
+            instance._analyticsSend("ratechange");
           }
           else currentRate = undefined;
-        }); 
+        });
         break;
         case "seeking":
         instance.on(item, function(e) {
@@ -181,7 +178,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
         instance.on(item, function(e) {
           seek_info.tstamp2 = new Date();
           seek_info.seek_to = instance.currentTime();
-          // will log the seek behavior in ga 
+          // will log the seek behavior in ga
           // if the user don't seek again in 2 seconds
           gaOnSeeked(seek_info, function() {
             seeking = false; // seeking stops
@@ -203,7 +200,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
             measurePause("fullscreen");
           }
           console.log("enterfullscreen");
-          instance.__gaSend(e.type);
+          instance._analyticsSend(e.type);
 
         })
         break;
@@ -211,7 +208,7 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
         instance.on(item, function(e) {
           console.log("exitfullscreen");
           timer.measurePause("fullscreen");
-          instance.__gaSend(e.type);
+          instance._analyticsSend(e.type);
         });
         break;
         default:
@@ -219,28 +216,41 @@ define(['util', 'temps/Template', 'models/Video', 'models/User', 'Timer', 'video
           console.log(item);
           console.log(e);
           console.log(instance);
-          instance.__gaSend(e.type);
+          instance._analyticsSend(e.type);
         });
       }
-    });       
+    });
   }
 
-  VideoTemplate.prototype.onBeforeUnload = function(e) 
+  VideoTemplate.prototype.onBeforeUnload = function(e)
   {
     var self = this;
     var timer_result_obj = {
-      metric11: self.timer.measureStop("play")
+      totalPlayTime: this.timer.measureStop("play"),
+      totalPauseTime: this.timer.measureStop("pause")
     };
     var len = playbackRates.length;
-    timer_result_obj['metric3'] = this.timer.measureStop("pause");
     for (var i = 0; i < len; ++i)
     {
-      timer_result_obj["metric"+(8-i)] = this.timer.measureStop(playbackRates[i]);
+      timer_result_obj['totalPlayTimeAt' + playbackRates[i]] = this.timer.measureStop(playbackRates[i]);
     }
-    timer_result_obj['metric9'] = this.timer.measureStop("fullscreen");
+    timer_result_obj['totalFullScreenTime'] = this.timer.measureStop("fullscreen");
 
-    this.instance.__gaSend("view", timer_result_obj);
-  }
+    this.instance._analyticsSend("view", timer_result_obj);
+  };
+
+  VideoTemplate.prototype.replay = function(data)
+  {
+    switch(data.data.action) {
+      case 'play':
+        this.instance.currentTime(data.videoCurrentTime);
+        this.instance.play();
+        break;
+      case 'pause':
+        this.instance.pause();
+        break;
+    }
+  };
 
   return VideoTemplate;
 });

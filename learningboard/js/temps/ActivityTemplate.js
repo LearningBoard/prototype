@@ -1,7 +1,24 @@
 define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temps/CommentableTemplate', 'temps/ActivityEditControl', 'temps/ActivityActionControl', 'lib/ViewDispatcher'], function(util, User, Activity, ListElementTemplate, CommentableTemplate, ActivityEditControl, ActivityActionControl, ViewDispatcher) {
   "use strict";
 
-  var _get_html = function(model, index, mode)
+  /**
+   * @constructor
+   * @param activity - the activity data
+   * @param index - for the order of displaying
+   * @param BoardDetailTemplate - the board detail template
+   */
+  var ActivityTemplate = function(activity, index, mode)
+  {
+    this.model = new Activity(activity);
+    this.controller = null;
+    this.mode = mode;
+
+    ListElementTemplate.call(this, this._get_html(this.model, index), index);
+  };
+
+  $.extend(ActivityTemplate.prototype, ListElementTemplate.prototype);
+
+  ActivityTemplate.prototype._get_html = function(model, index)
   {
     index++;
     var $html = $(`
@@ -25,38 +42,23 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
       </div>
     `);
     var $dif = $html.find("[name='dif']");
+    var $this = this;
     ViewDispatcher.activities.getView(model.type).then(function(temp) {
-      var rsc = new temp(model.data, model);
+      var rsc = new temp(model.data, model, $this.mode);
       rsc.display($dif);
+      $this.contentTemplate = rsc;
     }).catch(function(err) {
       throw err;
     });
 
-    if (util.constant.VIEW_MODE) {
+    if (this.mode === util.constant.VIEW_MODE) {
       var $activityComment = $html.find('div.activityComment');
       var commentTemp = new CommentableTemplate(model);
       commentTemp.display($activityComment);
     }
 
     return $html;
-  }
-
-  /**
-   * @constructor
-   * @param activity - the activity data
-   * @param index - for the order of displaying
-   * @param BoardDetailTemplate - the board detail template
-   */
-  var ActivityTemplate = function(activity, index, mode)
-  {
-    this.model = new Activity(activity);
-    this.controller = null;
-    this.mode = mode;
-
-    ListElementTemplate.call(this, _get_html(this.model, index, mode), index);
   };
-
-  $.extend(ActivityTemplate.prototype, ListElementTemplate.prototype);
 
   ActivityTemplate.prototype.updateIndex = function(index)
   {
@@ -68,7 +70,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
   ActivityTemplate.prototype.update = function(model, index)
   {
     if (index === undefined) index = this.index;
-    var new_html = _get_html(model, index);
+    var new_html = this._get_html(model, index);
     this.model = model;
     this.$template.replaceWith(new_html);
     this.$template = new_html;
