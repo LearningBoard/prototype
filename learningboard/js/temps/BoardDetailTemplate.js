@@ -268,9 +268,7 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
                     `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;background:url(img/mouse_pointer.png) no-repeat;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}">${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
                   );
                 } else {
-                  if (typeof $this.actTemps[data.activity.order].contentTemplate.replay === 'function') {
-                    $this.actTemps[data.activity.order].contentTemplate.replay(data);
-                  }
+                  $this.actTemps[data.activity.order].replay(data);
                 }
                 executed++;
               }, delay));

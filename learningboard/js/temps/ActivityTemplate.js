@@ -57,6 +57,31 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
       commentTemp.display($activityComment);
     }
 
+    // Log iframe behavior
+    $html.find('.description iframe').each(function(i, value) {
+      var parent = $(value).wrap(`<div class="iframe_logger" \
+                style="height:${$(value).height()}px;overflow:auto;"></div>`
+      ).attr({
+        height: '1000%',
+        scrolling: 'no'
+      }).parent('.iframe_logger');
+      parent.on('scroll', function(e) {
+        if ($this.mode !== util.constant.VIEW_MODE) return false;
+        util.post('/analytics', {
+          user: User.getId(),
+          lb: $this.model.lb,
+          activity: $this.model.id,
+          session: $this.model.session,
+          data: {
+            action: 'iframescroll',
+            current: $(this).scrollTop(),
+            src: $(value).attr('src')
+          },
+          createdAt: new Date()
+        });
+      });
+    });
+
     return $html;
   };
 
@@ -85,6 +110,25 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
 
     return this;
   }
+
+  ActivityTemplate.prototype.replay = function(data)
+  {
+    switch(data.data.action) {
+      case 'iframescroll':
+        this.$template.find('.description iframe').each(function(i, value) {
+          if ($(value).attr('src') == data.data.src) {
+            $(value).parent('.iframe_logger').animate({
+              scrollTop: data.data.current
+            }, 50);
+            return false;
+          }
+        });
+        break;
+    }
+    if (typeof this.contentTemplate.replay === 'function') {
+      this.contentTemplate.replay(data);
+    }
+  };
 
   return ActivityTemplate;
 });
