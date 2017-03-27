@@ -1,4 +1,4 @@
-define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'moment', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl, moment) {
+define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/ActivityTemplate', 'temps/ActivityListTemplate', 'temps/ActivityActionControl', 'temps/BoardAnalyticsTemplate', 'facebook'], function (util, config, User, Board, Template, ActivityTemplate, ActivityListTemplate, ActivityActionControl, BoardAnalyticsTemplate) {
   var BoardDetailTemplate = function(board, mode)
   {
     /* this.variables:
@@ -166,9 +166,8 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
       });
     });
 
-    if (this.mode !== util.constant.ANALYTICS_MODE) {
-      $template.find('.analyticsTool').hide();
-    }
+    var analyticsTemplate = new BoardAnalyticsTemplate(this);
+    analyticsTemplate.display($template.find('.analyticsTool'));
 
     $actList = $template.find(".activityList");
 
@@ -190,113 +189,6 @@ define(['util', 'config', 'mdls/User', 'mdls/Board', 'temps/Template', 'temps/Ac
   };
 
   $.extend(BoardDetailTemplate.prototype, Template.prototype);
-
-  BoardDetailTemplate.prototype.display = function () {
-    Template.prototype.display.apply(this, arguments);
-    $this = this;
-
-    if (this.mode === util.constant.VIEW_MODE) {
-      this.$template.on('click', function(e) {
-        var offset = $(this).offset();
-        util.post('/analytics', {
-          user: User.getId(),
-          lb: $this.model.id,
-          session: $this.uuid,
-          data: {
-            action: 'click',
-            x: e.pageX - offset.left,
-            y: e.pageY - offset.top
-          },
-          createdAt: new Date()
-        });
-      });
-    } else if (this.mode === util.constant.ANALYTICS_MODE) {
-      util.get('/analytics/lb/' + this.model.id, function(dataSet) {
-        dataSet = dataSet.data;
-        // render layout
-        var html = `
-        <h4>Analytics</h4>
-        <p>Total view session: ${Object.keys(dataSet.session).length}</p>
-        <p>Total user viewed: ${dataSet.totalUser}</p>
-        <select>
-          <option value="">---Please select a session---</option>`;
-        $.each(dataSet.session, function(index, value) {
-          html += `<option value="${index}">${index}</option>`;
-        });
-        html += `
-        </select>
-        <div class="totalClick badge" title="Total clicks" style="position:fixed;z-index:100;top:15px;left:20px;font-size:15px;"></div>
-        <div class="timer badge" title="Timer" style="position:fixed;z-index:100;top:40px;left:20px;font-size:15px;"></div>`;
-        var $analyticsArea = $this.$template.find('.analyticsTool');
-        $analyticsArea.html(html);
-
-        // logic
-        var action = [], timer;
-        $analyticsArea.find('select').on('change', function(e) {
-          e.preventDefault();
-          // test is empty dataSet
-          try {
-            var data = dataSet.session[this.value];
-          } catch (err) {
-            var data = [];
-          }
-          // clear all unfinish works
-          clearInterval(timer);
-          for (var x = 0; x < action.length; x++) {
-            clearTimeout(action[x]);
-          }
-          // reset existing drawing
-          $analyticsArea.find('.totalClick').text('').hide();
-          $analyticsArea.find('.timer').text('').css('background-color', 'green').hide();
-          $('body').find('.analyticsPoint').empty();
-          // count total click
-          var totalClick = data.reduce(function(total, current) {
-            if (current.data.action == 'click') total++;
-            return total;
-          }, 0);
-          // render new drawing
-          var lastTime = 0, delay = 1000, index = 1, executed = 0;
-          for (var i = 0; i < data.length; i++) {
-            if (i !== 0) {
-              delay += moment(data[i].createdAt).diff(moment(lastTime));
-            }
-            // draw points
-            (function(index, data, lastClickTime, delay) {
-              action.push(setTimeout(function() {
-                if (!data.activity) {
-                  $('body').find('.analyticsPoint').append(
-                    `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;background:url(img/mouse_pointer.png) no-repeat;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}">${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
-                  );
-                } else {
-                  $this.actTemps[data.activity.order].replay(data);
-                }
-                executed++;
-              }, delay));
-            })(index, data[i], lastTime, delay);
-            lastTime = data[i].createdAt;
-            if (!data.activity) index++;
-            // start timer
-            if (i == 0) {
-              var second = 0;
-              setTimeout(function() {
-                $analyticsArea.find('.totalClick').text(totalClick).show();
-                $analyticsArea.find('.timer').text(second++).show();
-                timer = setInterval(function() {
-                  if (executed === totalClick) {
-                    $analyticsArea.find('.timer').css('background', 'red');
-                    clearInterval(timer);
-                  }
-                  $analyticsArea.find('.timer').text(second++);
-                }, 1000);
-              }, delay);
-            }
-          }
-        });
-      }, function(err) {
-        alert('Cannot retrieve analytics data');
-      });
-    }
-  }
 
   BoardDetailTemplate.prototype.onActivityComplete = function(model) {
     var progrssElement = this.$template.find('.progressBox .progress-bar');
