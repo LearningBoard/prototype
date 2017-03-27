@@ -104,7 +104,7 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
                 $this.$template.find('.totalClick').text(totalClick).show();
                 $this.$template.find('.timer').text(second++).show();
                 timer = setInterval(function() {
-                  if (executed === totalClick) {
+                  if (executed === data.length) {
                     $this.$template.find('.timer').css('background', 'red');
                     clearInterval(timer);
                   }
