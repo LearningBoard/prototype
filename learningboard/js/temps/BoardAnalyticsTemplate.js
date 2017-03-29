@@ -10,11 +10,41 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
         html = `
         <div>
           <h4>Analytics</h4>
-          <p>Total view session: <span class="stat_view_session">N/A</span></p>
-          <p>Total user viewed: <span class="stat_user_viewed">N/A</span></p>
-          <select>
-            <option value="">Select a session to replay</option>
-          </select>
+          <div class="table-responsive">
+            <table class="table table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th>View Session</th>
+                  <th>User Viewed</th>
+                </td>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="stat_view_session">N/A</span></td>
+                  <td><span class="stat_user_viewed">N/A</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <p class="text-muted">
+              <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Replay
+            </p>
+            <select name="replay">
+              <option value="">Select a session to replay</option>
+            </select>
+          </div>
+          <div>
+            <p class="text-muted">
+              <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+              Aggregate Data
+            </p>
+            <ul>
+              <li>
+                <button type="button" class="btn btn-default btn-sm allClicks">Display All Clicks</button>
+              </li>
+            </ul>
+          </div>
           <div class="totalClick badge" title="Total clicks" style="position:fixed;z-index:100;top:15px;left:20px;font-size:15px;"></div>
           <div class="timer badge" title="Timer" style="position:fixed;z-index:100;top:40px;left:20px;font-size:15px;"></div>
         </div>`;
@@ -54,7 +84,7 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
 
         // replay
         var action = [], timer;
-        $this.$template.on('change', 'select', function(e) {
+        $this.$template.find('select[name=replay]').on('change', function(e) {
           e.preventDefault();
           // test is empty dataSet
           try {
@@ -71,6 +101,7 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
           $this.$template.find('.totalClick').text('').hide();
           $this.$template.find('.timer').text('').css('background-color', 'green').hide();
           $('body').find('.analyticsPoint').empty();
+          if (!data) return false;
           // count total click
           var totalClick = data.reduce(function(total, current) {
             if (current.data.action == 'click') total++;
@@ -87,7 +118,7 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
               action.push(setTimeout(function() {
                 if (!data.activity) {
                   $('body').find('.analyticsPoint').append(
-                    `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;background:url(img/mouse_pointer.png) no-repeat;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}">${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
+                    `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}"><i class="fa fa-mouse-pointer" style="font-size:25px;color:#72A540;"></i> ${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
                   );
                 } else {
                   parent.actTemps[data.activity.order].replay(data);
@@ -114,6 +145,27 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
             }
           }
         });
+
+        // Display all clicks
+        $this.$template.find('button.allClicks').on('click', function() {
+          // reset
+          $this.$template.find('select[name=replay] option:first').prop('selected', true);
+          $this.$template.find('select[name=replay]').trigger('change');
+
+          $.each(dataSet.session, function(id, value) {
+            var color = "#"+((1<<24)*Math.random()|0).toString(16);
+            var lastClickTime = 0;
+            $.each(value, function(index, data) {
+              if (data.data.action === 'click') {
+                $('body').find('.analyticsPoint').append(
+                  `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}"><i class="fa fa-mouse-pointer" style="font-size:25px;color:${color}"></i> ${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
+                );
+                lastClickTime = data.createdAt;
+              }
+            });
+          });
+        });
+
       }, function(err) {
         alert('Cannot retrieve analytics data');
       });
