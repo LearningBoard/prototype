@@ -43,6 +43,11 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
               <li>
                 <button type="button" class="btn btn-default btn-sm allClicks">Display All Clicks</button>
               </li>
+              <li>
+                <input type="text" size="3" name="user" placeholder="0" /> Random users<br />
+                Click between <input type="text" size="3" name="click1" placeholder="0" /> - <input type="text" size="3" name="click2" placeholder="0" />
+                <button type="button" class="btn btn-default btn-sm randomClickDisplay">Display</button>
+              </li>
             </ul>
           </div>
           <div class="totalClick badge" title="Total clicks" style="position:fixed;z-index:100;top:15px;left:20px;font-size:15px;"></div>
@@ -162,6 +167,46 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
                 );
                 lastClickTime = data.createdAt;
               }
+            });
+          });
+        });
+
+        // Display clicks from random users
+        $this.$template.find('button.randomClickDisplay').on('click', function() {
+          // reset
+          $this.$template.find('select[name=replay] option:first').prop('selected', true);
+          $this.$template.find('select[name=replay]').trigger('change');
+
+          var selectTotal = $(this).parents('div').find('input[name=user]').val();
+          var fromClick = $(this).parents('div').find('input[name=click1]').val();
+          var toClick = $(this).parents('div').find('input[name=click2]').val();
+          var selected = [];
+          if (!selectTotal) selectTotal = 0;
+          if (!fromClick) fromClick = 0;
+          if (!toClick) toClick = 0;
+          var sessionKey = Object.keys(dataSet.session);
+          while (selected.length < selectTotal && selected.length != sessionKey.length) {
+            var index = Math.floor(Math.random() * sessionKey.length);
+            if (selected.indexOf(dataSet.session[sessionKey[index]]) === -1) {
+              selected.push(dataSet.session[sessionKey[index]]);
+            }
+          }
+          $.each(selected, function(id, value) {
+            var color = "#" + ((1<<24) * Math.random()|0).toString(16);
+            var lastClickTime = 0;
+            var filteredValue = value.reduce(function(array, current) {
+              if (current.data.action == 'click') {
+                array.push(current);
+              }
+              return array;
+            }, []);
+            $.each(filteredValue, function(index, data) {
+              if (index >= fromClick && index <= toClick) {
+                $('body').find('.analyticsPoint').append(
+                  `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}"><i class="fa fa-mouse-pointer" style="font-size:25px;color:${color}"></i> ${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
+                );
+              }
+              lastClickTime = data.createdAt;
             });
           });
         });
