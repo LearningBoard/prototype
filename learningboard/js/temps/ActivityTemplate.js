@@ -65,6 +65,17 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
         height: '1000%',
         scrolling: 'no'
       }).parent('.iframe_logger');
+      parent.on('mouseover mouseleave', function(e) {
+        switch (e.type) {
+          case 'mouseover':
+            $(window).data('interactingOER', true);
+            break;
+          case 'mouseleave':
+            $(window).data('interactingOER', false);
+            $html.find('div:first').focus();
+            break;
+        }
+      });
       parent.on('scroll', function(e) {
         if ($this.mode !== util.constant.VIEW_MODE) return false;
         util.post('/analytics', {

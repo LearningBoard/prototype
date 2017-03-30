@@ -52,6 +52,7 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
           </div>
           <div class="totalClick badge" title="Total clicks" style="position:fixed;z-index:100;top:15px;left:20px;font-size:15px;"></div>
           <div class="timer badge" title="Timer" style="position:fixed;z-index:100;top:40px;left:20px;font-size:15px;"></div>
+          <div class="currenttab badge" style="position:fixed;z-index:100;top:65px;left:20px;font-size:12px;"></div>
         </div>`;
         break;
       default:
@@ -62,6 +63,23 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
 
     // logic
     if (parent.mode === util.constant.VIEW_MODE) {
+      $(window).on('blur focus', function(e) {
+        var prevType = $(this).data('prevType');
+        var interactingOER = $(this).data('interactingOER');
+        if (prevType != e.type && interactingOER == false) {
+          util.post('/analytics', {
+            user: User.getId(),
+            lb: parent.model.id,
+            session: parent.uuid,
+            data: {
+              action: 'inCurrentTab',
+              status: (e.type === 'focus')
+            },
+            createdAt: new Date()
+          });
+        }
+        $(this).data('prevType', e.type);
+      });
       parent.$template.on('click', function(e) {
         var offset = $(this).offset();
         util.post('/analytics', {
@@ -91,12 +109,7 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
         var action = [], timer;
         $this.$template.find('select[name=replay]').on('change', function(e) {
           e.preventDefault();
-          // test is empty dataSet
-          try {
-            var data = dataSet.session[this.value];
-          } catch (err) {
-            var data = [];
-          }
+          var data = dataSet.session[this.value];
           // clear all unfinish works
           clearInterval(timer);
           for (var x = 0; x < action.length; x++) {
@@ -105,6 +118,7 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
           // reset existing drawing
           $this.$template.find('.totalClick').text('').hide();
           $this.$template.find('.timer').text('').css('background-color', 'green').hide();
+          $this.$template.find('.currenttab').text('').hide();
           $('body').find('.analyticsPoint').empty();
           if (!data) return false;
           // count total click
@@ -122,9 +136,20 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
             (function(index, data, lastClickTime, delay) {
               action.push(setTimeout(function() {
                 if (!data.activity) {
-                  $('body').find('.analyticsPoint').append(
-                    `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}"><i class="fa fa-mouse-pointer" style="font-size:25px;color:#72A540;"></i> ${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
-                  );
+                  switch(data.data.action) {
+                    case 'click':
+                      $('body').find('.analyticsPoint').append(
+                        `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}"><i class="fa fa-mouse-pointer" style="font-size:25px;color:#72A540;"></i> ${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
+                      );
+                      break;
+                    case 'inCurrentTab':
+                      if (data.data.status) {
+                        $this.$template.find('.currenttab').text('').hide();
+                      } else {
+                        $this.$template.find('.currenttab').text('Not focusing').css('background', 'red').show();
+                      }
+                      break;
+                  }
                 } else {
                   parent.actTemps[data.activity.order].replay(data);
                 }
@@ -142,6 +167,7 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
                 timer = setInterval(function() {
                   if (executed === data.length) {
                     $this.$template.find('.timer').css('background', 'red');
+                    $this.$template.find('.currenttab').text('Exited').css('background', 'red').show();
                     clearInterval(timer);
                   }
                   $this.$template.find('.timer').text(second++);
