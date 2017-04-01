@@ -59,8 +59,9 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
 
     // Log iframe behavior
     $html.find('.description iframe').each(function(i, value) {
+      var iframeHeight = $(value).attr('height') || 400;
       var parent = $(value).wrap(`<div class="iframe_logger" \
-                style="height:${$(value).height()}px;overflow:auto;"></div>`
+                style="height:${iframeHeight}px;overflow:auto;"></div>`
       ).attr({
         height: '1000%',
         scrolling: 'no'
