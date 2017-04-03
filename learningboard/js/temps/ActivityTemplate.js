@@ -66,6 +66,15 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
         height: '1000%',
         scrolling: 'no'
       }).parent('.iframe_logger');
+      parent.prepend('<div style="position:absolute;width:94%;height:100%;margin:0;padding:0;z-index:100;"></div>');
+      parent.find('div').on('click', function(e) {
+        $(this).css('z-index', -1);
+        (function(ele) {
+          setTimeout(function(){
+            ele.css('z-index', 100);
+          }, 1000);
+        })($(this));
+      });
       parent.on('mouseover mouseleave', function(e) {
         switch (e.type) {
           case 'mouseover':
