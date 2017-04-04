@@ -37,7 +37,8 @@ requirejs.config({
     Timer: "lib/timer",
     moment: 'https://cdn.jsdelivr.net/momentjs/2.17.1/moment.min',
     ckeditor: 'https://cdn.ckeditor.com/4.5.11/standard-all/ckeditor',
-    heatmap: 'https://cdnjs.cloudflare.com/ajax/libs/heatmap.js/2.0.2/heatmap.min',
+    highcharts: 'https://cdn.jsdelivr.net/highcharts/5.0.9/highcharts',
+    'bootstrap-dialog': 'https://cdn.jsdelivr.net/bootstrap3-dialog/1.35.3/bootstrap-dialog.min',
 
     // Application related
     util: 'lib/util',
@@ -98,6 +99,13 @@ requirejs.config({
     },
     ckeditor: {
       exports: 'CKEDITOR'
+    },
+    highcharts: {
+      exports: 'Highcharts'
+    },
+    'bootstrap-dialog': {
+      deps: ['jquery', 'bootstrap'],
+      exports: 'BootstrapDialog'
     }
   },
 });

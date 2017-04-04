@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temps/CommentableTemplate', 'temps/ActivityEditControl', 'temps/ActivityActionControl', 'lib/ViewDispatcher'], function(util, User, Activity, ListElementTemplate, CommentableTemplate, ActivityEditControl, ActivityActionControl, ViewDispatcher) {
+define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temps/CommentableTemplate', 'temps/ActivityEditControl', 'temps/ActivityActionControl', 'temps/ActivityAnalyticsTemplate', 'lib/ViewDispatcher'], function(util, User, Activity, ListElementTemplate, CommentableTemplate, ActivityEditControl, ActivityActionControl, ActivityAnalyticsTemplate, ViewDispatcher) {
   "use strict";
 
   /**
@@ -23,6 +23,7 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
     index++;
     var $html = $(`
       <div class="activity ${model.published() ? '' : 'unpublish'}">
+        <div class="analyticsTool"></div>
         <h2 class="index">${index < 10 ? '0' + index : index}</h2>
         <p class="title lead">${model['title']}</p>
         <p class="text-muted">
@@ -55,6 +56,11 @@ define(['util', 'mdls/User', 'mdls/Activity', 'temps/ListElementTemplate', 'temp
       var $activityComment = $html.find('div.activityComment');
       var commentTemp = new CommentableTemplate(model);
       commentTemp.display($activityComment);
+    }
+
+    if (this.mode === util.constant.ANALYTICS_MODE) {
+      var analyticsTemp = new ActivityAnalyticsTemplate(this.model.id);
+      analyticsTemp.display($html.find('.analyticsTool'));
     }
 
     // Log iframe behavior
