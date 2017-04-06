@@ -127,19 +127,19 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
             return total;
           }, 0);
           // render new drawing
-          var lastTime = 0, delay = 1000, index = 1, executed = 0;
+          var lastTime = 0, delay = 1000, currentClick = 1, executed = 0;
           for (var i = 0; i < data.length; i++) {
             if (i !== 0) {
               delay += moment(data[i].createdAt).diff(moment(lastTime));
             }
             // draw points
-            (function(index, data, lastClickTime, delay) {
+            (function(data, lastClickTime, delay) {
               action.push(setTimeout(function() {
                 if (!data.activity) {
                   switch(data.data.action) {
                     case 'click':
                       $('body').find('.analyticsPoint').append(
-                        `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}"><i class="fa fa-mouse-pointer" style="font-size:25px;color:#72A540;"></i> ${index}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
+                        `<div style="position:absolute;margin-left:${data.data.x}px;margin-top:${data.data.y}px;z-index:1;padding-left:30px;cursor:help;" title="Clicked on: ${new Date(data.createdAt)}"><i class="fa fa-mouse-pointer" style="font-size:25px;color:#72A540;"></i> ${currentClick++}<br />+ ${!lastClickTime ? 0 : (moment(data.createdAt).diff(moment(lastClickTime)))}ms</div>`
                       );
                       break;
                     case 'inCurrentTab':
@@ -155,9 +155,8 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
                 }
                 executed++;
               }, delay));
-            })(index, data[i], lastTime, delay);
+            })(data[i], lastTime, delay);
             lastTime = data[i].createdAt;
-            if (!data.activity) index++;
             // start timer
             if (i == 0) {
               var second = 0;
