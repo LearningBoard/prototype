@@ -1,4 +1,4 @@
-define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, Template, moment) {
+define(['util', 'mdls/User', 'temps/Template', 'moment', 'bootstrap-dialog', 'highcharts'], function (util, User, Template, moment, BootstrapDialog, Highcharts) {
 
   var BoardAnalyticsTemplate = function(parent) {
     var $this = this;
@@ -50,6 +50,13 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
               </li>
             </ul>
           </div>
+          <div>
+            <p class="text-muted">
+              <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
+              Chart
+            </p>
+            <button type="button" class="btn btn-default analyticsUserGroup">User Group (k-means clustering)</button>
+          </div>
           <div class="totalClick badge" title="Total clicks" style="position:fixed;z-index:100;top:15px;left:20px;font-size:15px;"></div>
           <div class="timer badge" title="Timer" style="position:fixed;z-index:100;top:40px;left:20px;font-size:15px;"></div>
           <div class="currenttab badge" style="position:fixed;z-index:100;top:65px;left:20px;font-size:12px;"></div>
@@ -95,14 +102,82 @@ define(['util', 'mdls/User', 'temps/Template', 'moment'], function (util, User, 
         });
       });
     } else if (parent.mode === util.constant.ANALYTICS_MODE) {
+      var totalSession = 0;
       util.get('/analytics/lb/' + parent.model.id, function(dataSet) {
         dataSet = dataSet.data;
 
         // update layout
-        $this.$template.find('.stat_view_session').text(Object.keys(dataSet.session).length);
+        totalSession = Object.keys(dataSet.session).length;
+        $this.$template.find('.stat_view_session').text(totalSession);
         $this.$template.find('.stat_user_viewed').text(dataSet.totalUser);
         $.each(dataSet.session, function(index, value) {
           $this.$template.find('select').append(`<option value="${index}">${index}</option>`);
+        });
+
+        // chart
+        html.find('.analyticsUserGroup').on('click', function() {
+          var activity = [];
+          for (var i = 0; i < parent.model.activities.length; i++) {
+            activity.push("Activity " + i + " (" + parent.model.activities[i].type + ')');
+          }
+          BootstrapDialog.show({
+            title: '[Chart] User Group (k-means clustering)',
+            message: `
+              Enter number of cluster:
+              <input type="number" class="form-control" placeholder="0" />
+              <div id="analyticsChartDialog"></div>
+            `,
+            buttons: [{
+                label: 'Close',
+                action: function(dialogRef) {
+                  dialogRef.close();
+                }
+            }],
+            onshown: function(dialogRef) {
+              var chart = Highcharts.chart('analyticsChartDialog', {
+                chart: {
+                  type: 'column'
+                },
+                title: {
+                  text: null
+                },
+                xAxis: {
+                  categories: activity,
+                },
+                yAxis: {
+                  title: {
+                    text: 'Interact Times'
+                  }
+                },
+                series: [
+                  {
+                    name: 'N/A',
+                    data: []
+                  }
+                ]
+              });
+              var body = dialogRef.getModalBody();
+              body.find('input').on('change keyup', function() {
+                var cluster = $(this).val();
+                util.post('/analytics/lb/clustering', {
+                  lb: parent.model.id,
+                  cluster: cluster
+                }, function(clusterData) {
+                  console.log(clusterData);
+                  for(var i = chart.series.length - 1; i >= 0; i--) {
+                    chart.series[i].remove();
+                  }
+                  for (var i = 0; i < clusterData.data.length; i++) {
+                    chart.addSeries({
+                      name: 'Cluster ' + i,
+                      data: clusterData.data[i].centroid
+                    });
+                    chart.redraw();
+                  }
+                });
+              });
+            }
+          });
         });
 
         // replay
