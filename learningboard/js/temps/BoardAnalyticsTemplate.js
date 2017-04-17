@@ -162,18 +162,64 @@ define(['util', 'mdls/User', 'temps/Template', 'moment', 'bootstrap-dialog', 'hi
                 util.post('/analytics/lb/clustering', {
                   lb: parent.model.id,
                   cluster: cluster
-                }, function(clusterData) {
-                  console.log(clusterData);
+                }, function(response) {
+                  console.log(response);
+                  // clear existing data
                   for(var i = chart.series.length - 1; i >= 0; i--) {
                     chart.series[i].remove();
                   }
-                  for (var i = 0; i < clusterData.data.length; i++) {
-                    chart.addSeries({
-                      name: 'Cluster ' + i,
-                      data: clusterData.data[i].centroid
+                  // update chart base on number of activity
+                  if (parent.model.activities.length === 2) {
+                    chart.update({
+                      xAxis: {
+                        categories: null,
+                        title: {
+                          text: activity[0]
+                        }
+                      },
+                      yAxis: {
+                        title: {
+                          text: activity[1]
+                        }
+                      }
                     });
-                    chart.redraw();
+                    // prepare for new graph
+                    var data = {};
+                    for (var i = 0; i < response.result.clusters.length; i++) {
+                      if (!data[response.result.clusters[i]]) {
+                        data[response.result.clusters[i]] = [];
+                      }
+                      data[response.result.clusters[i]].push(response.rawData[i]);
+                    }
+                    for (var index in data) {
+                      chart.addSeries({
+                        type: 'scatter',
+                        zoomType: 'xy',
+                        name: 'Cluster ' + index,
+                        data: data[index]
+                      });
+                    }
+                  } else {
+                    chart.update({
+                      type: 'column',
+                      xAxis: {
+                        categories: activity
+                      },
+                      yAxis: {
+                        title: {
+                          text: 'Interact Times'
+                        }
+                      }
+                    });
+                    for (var i = 0; i < response.result.centroids.length; i++) {
+                      chart.addSeries({
+                        name: 'Cluster ' + i,
+                        data: response.result.centroids[i].centroid
+                      });
+                    }
                   }
+                }, function() {
+                  alert('Error occur when executing k-means clustering');
                 });
               });
             }
